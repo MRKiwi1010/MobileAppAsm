@@ -12,5 +12,7 @@ class MainActivity : AppCompatActivity() {
 
 
         //cibi liang
+
+        //y = mx+c
     }
 }
