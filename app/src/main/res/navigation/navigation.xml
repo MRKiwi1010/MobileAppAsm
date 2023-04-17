@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/AAHomePage">
+
+    <fragment
+        android:id="@+id/AAHomePage"
+        android:name="com.example.mobileappasm.AAHomePage"
+        android:label="fragment_a_a_home_page"
+        tools:layout="@layout/fragment_a_a_home_page" >
+        <action
+            android:id="@+id/action_AAHomePage_to_cusLoginPage"
+            app:destination="@id/cusLoginPage" />
+        <action
+            android:id="@+id/action_AAHomePage_to_adminLoginPage"
+            app:destination="@id/adminLoginPage" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminLoginPage"
+        android:name="com.example.mobileappasm.ui.login.AdminLoginPage"
+        android:label="fragment_admin_login_page"
+        tools:layout="@layout/fragment_admin_login_page" />
+    <fragment
+        android:id="@+id/cusLoginPage"
+        android:name="com.example.mobileappasm.ui.login.CusLoginPage"
+        android:label="fragment_cus_login_page"
+        tools:layout="@layout/fragment_cus_login_page" >
+        <action
+            android:id="@+id/action_cusLoginPage_to_cusSignUp"
+            app:destination="@id/cusSignUp" />
+        <action
+            android:id="@+id/action_cusLoginPage_to_cusForgetPass"
+            app:destination="@id/cusForgetPass" />
+        <action
+            android:id="@+id/action_cusLoginPage_to_cusMainPage"
+            app:destination="@id/cusMainPage" />
+    </fragment>
+    <fragment
+        android:id="@+id/cusSignUp"
+        android:name="com.example.mobileappasm.CusSignUp"
+        android:label="fragment_cus_sign_up"
+        tools:layout="@layout/fragment_cus_sign_up" />
+    <fragment
+        android:id="@+id/cusForgetPass"
+        android:name="com.example.mobileappasm.CusForgetPass"
+        android:label="fragment_cus_forget_pass"
+        tools:layout="@layout/fragment_cus_forget_pass" />
+    <fragment
+        android:id="@+id/cusMainPage"
+        android:name="com.example.mobileappasm.CusMainPage"
+        android:label="fragment_cus_main_page"
+        tools:layout="@layout/fragment_cus_main_page" />
+</navigation>
