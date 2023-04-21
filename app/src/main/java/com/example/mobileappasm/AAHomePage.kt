@@ -38,14 +38,13 @@ class AAHomePage : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_a_a_home_page, container, false)
-//
-//        binding.testingBtn.setOnClickListener{
-//            it.findNavController().navigate(R.id.action_titleFragment_to_gameFragment)
-//        }
+        val binding = FragmentAAHomePageBinding.inflate(inflater, container, false)
+        binding.playBtn.setOnClickListener{
+            it.findNavController().navigate(R.id.action_AAHomePage_to_cusLoginPage)
+        }
 
-
+        // Return the root view of the binding
+        return binding.root
     }
 
 

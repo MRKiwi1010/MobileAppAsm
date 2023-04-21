@@ -6,4 +6,9 @@
     tools:context=".AAHomePage">
 
 
+    <Button
+        android:id="@+id/playBtn"
+        android:layout_width="251dp"
+        android:layout_height="219dp"
+        android:text="Play" />
 </FrameLayout>
