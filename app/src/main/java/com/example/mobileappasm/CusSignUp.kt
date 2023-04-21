@@ -21,8 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.mobileappasm.ui.login.CusLoginPage
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 
 class CusSignUp : Fragment() {
     private lateinit var signupName: EditText
@@ -53,6 +52,7 @@ class CusSignUp : Fragment() {
 
         signupButton.setOnClickListener {
             if (!validatename() or !validateemail() or !validateUsername() or !validatePassword())  {
+                checkUser()
             } else {
                 addUser()
             }
@@ -130,6 +130,44 @@ class CusSignUp : Fragment() {
             true
         }
     }
+    private fun checkUser() {
+        val userEmail = signupEmail!!.text.toString().trim()
+        val userName = signupUsername!!.text.toString().trim()
+
+        val reference = FirebaseDatabase.getInstance().getReference("users")
+
+        val checkEmailQuery: Query = reference.orderByChild("email").equalTo(userEmail)
+        checkEmailQuery.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    signupEmail!!.error = "Email already exists"
+                    signupEmail!!.requestFocus()
+                } else {
+                    val checkUsernameQuery: Query = reference.orderByChild("username").equalTo(userName)
+                    checkUsernameQuery.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if (snapshot.exists()) {
+                                signupUsername!!.error = "Username already exists"
+                                signupUsername!!.requestFocus()
+                            } else {
+                                // User doesn't exist, continue with sign up process
+                                // ...
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            // Handle error
+                        }
+                    })
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle error
+            }
+        })
+    }
+
 
 
     private fun addUser() {
