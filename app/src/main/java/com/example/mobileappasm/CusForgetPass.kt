@@ -1,59 +1,120 @@
 package com.example.mobileappasm
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import com.example.mobileappasm.R
+import com.example.mobileappasm.ui.login.CusLoginPage
+import com.google.firebase.database.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CusForgetPass.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CusForgetPass : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var resetEmail: EditText
+    private lateinit var resetPassword: EditText
+    private lateinit var reset_button: Button
+    private lateinit var loginRedirectText: TextView
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_cus_forget_pass, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CusForgetPass.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CusForgetPass().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        resetEmail = view.findViewById(R.id.reset_email)
+        resetPassword = view.findViewById(R.id.reset_password)
+        reset_button = view.findViewById(R.id.reset_button)
+        loginRedirectText = view.findViewById(R.id.loginRedirectText)
+        reset_button.setOnClickListener {
+            if (!validateUseremail() or !validatePassword()) {
+            } else {
+                checkUser()
+            }
+        }
+
+        loginRedirectText.setOnClickListener{
+            view.findNavController().navigate(R.id.cusLoginPage)
+        }
+
+    }
+
+
+    private fun validateUseremail(): Boolean {
+        val `val` = resetEmail!!.text.toString()
+        return if (`val`.isEmpty()) {
+            resetEmail!!.error = "Email cannot be empty"
+            false
+        } else {
+            resetEmail!!.error = null
+            true
+        }
+    }
+
+    private fun validatePassword(): Boolean {
+        val `val` = resetPassword!!.text.toString()
+        return if (`val`.isEmpty()) {
+            resetPassword!!.error = "Password cannot be empty"
+            false
+        } else {
+            resetPassword!!.error = null
+            true
+        }
+    }
+    private fun checkUser() {
+        val userEmail = resetEmail!!.text.toString().trim { it <= ' ' }
+        val userPassword = resetPassword!!.text.toString().trim { it <= ' ' }
+        val reference = FirebaseDatabase.getInstance().getReference("users")
+        val checkUserDatabase: Query = reference.orderByChild("email").equalTo(userEmail)
+        checkUserDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    resetEmail!!.error = null
+                    val userNode = snapshot.child(userEmail)
+                    val userPasswordFromDB = userNode.child("password").getValue(String::class.java)
+                    if (userPasswordFromDB == userPassword) {
+                        // User entered the same password as in the database, no need to update
+                        val toast = Toast.makeText(activity, "Password is same. No changes will be made", Toast.LENGTH_SHORT)
+                        toast.show()
+                        // Navigate to CusLoginPage fragment using Navigation Component
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            findNavController().navigate(R.id.cusLoginPage)
+                        }, 2000)
+                    } else {
+                        // Update password
+                        val updatedUserData = HashMap<String, Any>()
+                        updatedUserData["password"] = userPassword
+                        reference.child(userNode.key!!).updateChildren(updatedUserData)
+                        val toast = Toast.makeText(activity, "Password changed successfully", Toast.LENGTH_SHORT)
+                        toast.show()
+                        // Navigate to CusLoginPage fragment using Navigation Component
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            findNavController().navigate(R.id.cusLoginPage)
+                        }, 2000)
+                    }
+                } else {
+                    resetEmail!!.error = "User Email does not exist"
+                    resetEmail!!.requestFocus()
                 }
             }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
     }
+
 }

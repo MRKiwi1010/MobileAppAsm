@@ -18,7 +18,7 @@ import com.example.mobileappasm.ui.login.CusLoginPage
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
-class CusSignUpFragment : Fragment() {
+class CusSignUp : Fragment() {
 
     private lateinit var signupName: EditText
     private lateinit var signupUsername: EditText
@@ -47,11 +47,11 @@ class CusSignUpFragment : Fragment() {
         signupButton.setOnClickListener {
             database = FirebaseDatabase.getInstance()
             reference = database!!.getReference("users")
-            val name = signupName.text.toString()
-            val email = signupEmail.text.toString()
+            val userfullname = signupName.text.toString()
+            val useremail = signupEmail.text.toString()
             val username = signupUsername.text.toString()
-            val password = signupPassword.text.toString()
-            val helperClass = HelperClass(name, email, username, password)
+            val userpassword = signupPassword.text.toString()
+            val helperClass = HelperClass(userfullname, useremail, username, userpassword)
             reference!!.child(username).setValue(helperClass)
             Toast.makeText(
                 requireContext(),

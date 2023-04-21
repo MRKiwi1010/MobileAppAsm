@@ -24,6 +24,7 @@ class CusLoginPage : Fragment() {
     private lateinit var loginPassword: EditText
     private lateinit var loginButton: Button
     private lateinit var signupRedirectText: TextView
+    private lateinit var forgotRedirectText: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,6 +41,7 @@ class CusLoginPage : Fragment() {
         loginPassword = view.findViewById(R.id.login_password)
         loginButton = view.findViewById(R.id.login_button)
         signupRedirectText = view.findViewById(R.id.signupRedirectText)
+        forgotRedirectText = view.findViewById(R.id.forgotRedirectText)
 
         loginButton.setOnClickListener {
             if (!validateUsername() or !validatePassword()) {
@@ -50,6 +52,10 @@ class CusLoginPage : Fragment() {
 
         signupRedirectText.setOnClickListener {
             view.findNavController().navigate(R.id.cusSignUp)
+        }
+
+        forgotRedirectText.setOnClickListener{
+            view.findNavController().navigate(R.id.cusForgetPass)
         }
 
     }
