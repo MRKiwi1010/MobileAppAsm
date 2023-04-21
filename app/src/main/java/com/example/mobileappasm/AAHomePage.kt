@@ -42,7 +42,7 @@ class AAHomePage : Fragment() {
         return inflater.inflate(R.layout.fragment_a_a_home_page, container, false)
 
         binding.testingBtn.setOnClickListener{
-            it.findNavController().navigate(R.id.action_titleFragment_to_gameFragment)
+            it.findNavController().navigate(R.id.action_AAHomePage_to_cusLoginPage)
         }
 
 
