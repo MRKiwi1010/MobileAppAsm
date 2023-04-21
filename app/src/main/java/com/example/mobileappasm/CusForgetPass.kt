@@ -67,15 +67,23 @@ class CusForgetPass : Fragment() {
     }
 
     private fun validatePassword(): Boolean {
-        val `val` = resetPassword!!.text.toString()
-        return if (`val`.isEmpty()) {
-            resetPassword!!.error = "Password cannot be empty"
+        val password = resetPassword.text.toString()
+        val pattern = "^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,}$".toRegex()
+        return if (password.isEmpty()) {
+            resetPassword.error = "Password cannot be empty"
+            false
+        } else if (password.contains(" ")) {
+            resetPassword.error = "Password cannot contain spaces"
+            false
+        } else if (!pattern.matches(password)) {
+            resetPassword.error = "Password should be at least 8 characters long and contain at least one uppercase and one lowercase letter"
             false
         } else {
-            resetPassword!!.error = null
+            resetPassword.error = null
             true
         }
     }
+
     private fun checkUser() {
         val userEmail = resetEmail!!.text.toString().trim { it <= ' ' }
         val userPassword = resetPassword!!.text.toString().trim { it <= ' ' }

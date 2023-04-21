@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/pagebkg"
+    android:background="@drawable/cus_pagebkg"
     tools:context=".CusForgetPass">
 
 
@@ -23,7 +23,7 @@
             android:orientation="vertical"
             android:layout_gravity="center_horizontal"
             android:padding="24dp"
-            android:background="@drawable/lavender_border">
+            android:background="@drawable/cus_lavender_border">
 
             <TextView
                 android:layout_width="match_parent"
@@ -38,11 +38,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:id="@+id/reset_email"
-                android:background="@drawable/lavender_border"
+                android:background="@drawable/cus_lavender_border"
                 android:layout_marginTop="40dp"
                 android:padding="8dp"
                 android:hint="Email"
-                android:drawableLeft="@drawable/baseline_email_24"
+                android:drawableLeft="@drawable/cus_email"
                 android:drawablePadding="8dp"
                 android:textColor="@color/black"/>
 
@@ -50,12 +50,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:id="@+id/reset_password"
-                android:background="@drawable/lavender_border"
+                android:background="@drawable/cus_lavender_border"
                 android:layout_marginTop="20dp"
                 android:padding="8dp"
                 android:hint="Password"
                 android:inputType="textPassword"
-                android:drawableLeft="@drawable/baseline_lock_24"
+                android:drawableLeft="@drawable/cus_lock"
                 android:drawablePadding="8dp"
                 android:textColor="@color/black"/>
 
@@ -65,7 +65,7 @@
                 android:text="Reset"
                 android:id="@+id/reset_button"
                 android:textSize="18sp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="100dp"
                 android:backgroundTint="@color/lavender"
                 app:cornerRadius = "20dp"/>
 

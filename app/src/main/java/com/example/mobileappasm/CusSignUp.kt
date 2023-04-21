@@ -3,10 +3,15 @@ package com.example.mobileappasm
 import com.example.mobileappasm.R
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.service.autofill.Validators.or
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -14,18 +19,19 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.mobileappasm.ui.login.CusLoginPage
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
 class CusSignUp : Fragment() {
-
     private lateinit var signupName: EditText
     private lateinit var signupUsername: EditText
     private lateinit var signupEmail: EditText
     private lateinit var signupPassword: EditText
     private lateinit var loginRedirectText: TextView
     private lateinit var signupButton: Button
+    private lateinit var checkBox: CheckBox
     private lateinit var database: FirebaseDatabase
     private lateinit var reference: DatabaseReference
 
@@ -42,9 +48,92 @@ class CusSignUp : Fragment() {
         signupPassword = view.findViewById(R.id.signup_password)
         loginRedirectText = view.findViewById(R.id.loginRedirectText)
         signupButton = view.findViewById(R.id.signup_button)
+        checkBox = view.findViewById(R.id.checkBox)
 
 
         signupButton.setOnClickListener {
+            if (!validatename() or !validateemail() or !validateUsername() or !validatePassword())  {
+            } else {
+                addUser()
+            }
+
+        }
+
+        loginRedirectText.setOnClickListener {
+            view.findNavController().navigate(R.id.cusLoginPage)
+
+        }
+
+        return view
+    }
+
+
+
+    private fun validatename(): Boolean {
+        val name = signupName.text.toString().trim()
+        return if (name.isEmpty()) {
+            signupName.error = "Full Name cannot be empty"
+            false
+        } else if (!name.matches("^[a-zA-Z]*$".toRegex())) {
+            signupName.error = "Full Name should only contain letters"
+            false
+        } else {
+            signupName.error = null
+            true
+        }
+    }
+
+
+    private fun validateemail(): Boolean {
+        val email = signupEmail.text.toString()
+        val emailPattern = Patterns.EMAIL_ADDRESS
+        return if (email.isEmpty()) {
+            signupEmail.error = "Email cannot be empty"
+            false
+        } else if (!emailPattern.matcher(email).matches()) {
+            signupEmail.error = "Invalid email address"
+            false
+        } else {
+            signupEmail.error = null
+            true
+        }
+    }
+
+    private fun validateUsername(): Boolean {
+        val username = signupUsername.text.toString().trim()
+        return if (username.isEmpty()) {
+            signupUsername.error = "Username cannot be empty"
+            false
+        } else if (!username.matches("^[a-zA-Z0-9]*$".toRegex())) {
+            signupUsername.error = "Username should only contain letters and numbers"
+            false
+        } else {
+            signupUsername.error = null
+            true
+        }
+    }
+
+    private fun validatePassword(): Boolean {
+        val password = signupPassword.text.toString()
+        val pattern = "^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,}$".toRegex()
+        return if (password.isEmpty()) {
+            signupPassword.error = "Password cannot be empty"
+            false
+        } else if (password.contains(" ")) {
+            signupPassword.error = "Password cannot contain spaces"
+            false
+        } else if (!pattern.matches(password)) {
+            signupPassword.error = "Password should be at least 8 characters long and contain at least one uppercase and one lowercase letter"
+            false
+        } else {
+            signupPassword.error = null
+            true
+        }
+    }
+
+
+    private fun addUser() {
+        if (checkBox.isChecked) {
             database = FirebaseDatabase.getInstance()
             reference = database!!.getReference("users")
             val userfullname = signupName.text.toString()
@@ -55,19 +144,19 @@ class CusSignUp : Fragment() {
             reference!!.child(username).setValue(helperClass)
             Toast.makeText(
                 requireContext(),
-                "You have signed up successfully!",
+                "You have registered successfully!",
                 Toast.LENGTH_SHORT
             ).show()
-            view.findNavController().navigate(R.id.cusSignUp)
-        }
+            Handler(Looper.getMainLooper()).postDelayed({
+                findNavController().navigate(R.id.cusLoginPage)
+            }, 1000)
+        }else
+            Toast.makeText(
+                requireContext(),
+                "Please agree the terms and conditions",
+                Toast.LENGTH_SHORT
+            ).show()
 
-
-        loginRedirectText.setOnClickListener {
-            view.findNavController().navigate(R.id.cusLoginPage)
-
-        }
-
-        return view
     }
 
 }

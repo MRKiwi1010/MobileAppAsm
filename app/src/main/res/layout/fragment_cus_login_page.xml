@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/pagebkg"
+    android:background="@drawable/cus_pagebkg"
     tools:context=".ui.login.CusLoginPage">
 
     <androidx.cardview.widget.CardView
@@ -23,7 +23,7 @@
             android:orientation="vertical"
             android:layout_gravity="center_horizontal"
             android:padding="24dp"
-            android:background="@drawable/lavender_border">
+            android:background="@drawable/cus_lavender_border">
 
             <TextView
                 android:layout_width="match_parent"
@@ -38,11 +38,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:id="@+id/login_username"
-                android:background="@drawable/lavender_border"
+                android:background="@drawable/cus_lavender_border"
                 android:layout_marginTop="40dp"
                 android:padding="8dp"
                 android:hint="Username"
-                android:drawableLeft="@drawable/baseline_person_pin_24"
+                android:drawableLeft="@drawable/cus_person_img"
                 android:drawablePadding="8dp"
                 android:textColor="@color/black"/>
 
@@ -50,12 +50,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:id="@+id/login_password"
-                android:background="@drawable/lavender_border"
+                android:background="@drawable/cus_lavender_border"
                 android:layout_marginTop="20dp"
                 android:padding="8dp"
                 android:hint="Password"
                 android:inputType="textPassword"
-                android:drawableLeft="@drawable/baseline_lock_24"
+                android:drawableLeft="@drawable/cus_lock"
                 android:drawablePadding="8dp"
                 android:textColor="@color/black"/>
 
