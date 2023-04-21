@@ -40,10 +40,10 @@ class AAHomePage : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_a_a_home_page, container, false)
-
-        binding.testingBtn.setOnClickListener{
-            it.findNavController().navigate(R.id.action_AAHomePage_to_cusLoginPage)
-        }
+//
+//        binding.testingBtn.setOnClickListener{
+//            it.findNavController().navigate(R.id.action_titleFragment_to_gameFragment)
+//        }
 
 
     }

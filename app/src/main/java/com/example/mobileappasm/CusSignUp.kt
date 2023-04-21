@@ -1,59 +1,202 @@
 package com.example.mobileappasm
 
+import com.example.mobileappasm.R
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.Handler
+import android.os.Looper
+import android.service.autofill.Validators.or
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat.startActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import com.example.mobileappasm.ui.login.CusLoginPage
+import com.google.firebase.database.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CusSignUp.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CusSignUp : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var signupName: EditText
+    private lateinit var signupUsername: EditText
+    private lateinit var signupEmail: EditText
+    private lateinit var signupPassword: EditText
+    private lateinit var loginRedirectText: TextView
+    private lateinit var signupButton: Button
+    private lateinit var checkBox: CheckBox
+    private lateinit var database: FirebaseDatabase
+    private lateinit var reference: DatabaseReference
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_cus_sign_up, container, false)
+
+        signupName = view.findViewById(R.id.signup_name)
+        signupEmail = view.findViewById(R.id.signup_email)
+        signupUsername = view.findViewById(R.id.signup_username)
+        signupPassword = view.findViewById(R.id.signup_password)
+        loginRedirectText = view.findViewById(R.id.loginRedirectText)
+        signupButton = view.findViewById(R.id.signup_button)
+        checkBox = view.findViewById(R.id.checkBox)
+
+
+        signupButton.setOnClickListener {
+            if (!validatename() or !validateemail() or !validateUsername() or !validatePassword())  {
+                checkUser()
+            } else {
+                addUser()
+            }
+
+        }
+
+        loginRedirectText.setOnClickListener {
+            view.findNavController().navigate(R.id.cusLoginPage)
+
+        }
+
+        return view
+    }
+
+
+
+    private fun validatename(): Boolean {
+        val name = signupName.text.toString().trim()
+        return if (name.isEmpty()) {
+            signupName.error = "Full Name cannot be empty"
+            false
+        } else if (!name.matches("^[a-zA-Z]*$".toRegex())) {
+            signupName.error = "Full Name should only contain letters"
+            false
+        } else {
+            signupName.error = null
+            true
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cus_sign_up, container, false)
+
+    private fun validateemail(): Boolean {
+        val email = signupEmail.text.toString()
+        val emailPattern = Patterns.EMAIL_ADDRESS
+        return if (email.isEmpty()) {
+            signupEmail.error = "Email cannot be empty"
+            false
+        } else if (!emailPattern.matcher(email).matches()) {
+            signupEmail.error = "Invalid email address"
+            false
+        } else {
+            signupEmail.error = null
+            true
+        }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CusSignUp.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CusSignUp().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun validateUsername(): Boolean {
+        val username = signupUsername.text.toString().trim()
+        return if (username.isEmpty()) {
+            signupUsername.error = "Username cannot be empty"
+            false
+        } else if (!username.matches("^[a-zA-Z0-9]*$".toRegex())) {
+            signupUsername.error = "Username should only contain letters and numbers"
+            false
+        } else {
+            signupUsername.error = null
+            true
+        }
+    }
+
+    private fun validatePassword(): Boolean {
+        val password = signupPassword.text.toString()
+        val pattern = "^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,}$".toRegex()
+        return if (password.isEmpty()) {
+            signupPassword.error = "Password cannot be empty"
+            false
+        } else if (password.contains(" ")) {
+            signupPassword.error = "Password cannot contain spaces"
+            false
+        } else if (!pattern.matches(password)) {
+            signupPassword.error = "Password should be at least 8 characters long and contain at least one uppercase and one lowercase letter"
+            false
+        } else {
+            signupPassword.error = null
+            true
+        }
+    }
+    private fun checkUser() {
+        val userEmail = signupEmail!!.text.toString().trim()
+        val userName = signupUsername!!.text.toString().trim()
+
+        val reference = FirebaseDatabase.getInstance().getReference("users")
+
+        val checkEmailQuery: Query = reference.orderByChild("email").equalTo(userEmail)
+        checkEmailQuery.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    signupEmail!!.error = "Email already exists"
+                    signupEmail!!.requestFocus()
+                } else {
+                    val checkUsernameQuery: Query = reference.orderByChild("username").equalTo(userName)
+                    checkUsernameQuery.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if (snapshot.exists()) {
+                                signupUsername!!.error = "Username already exists"
+                                signupUsername!!.requestFocus()
+                            } else {
+                                // User doesn't exist, continue with sign up process
+                                // ...
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            // Handle error
+                        }
+                    })
                 }
             }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle error
+            }
+        })
     }
+
+
+
+    private fun addUser() {
+        if (checkBox.isChecked) {
+            database = FirebaseDatabase.getInstance()
+            reference = database!!.getReference("users")
+            val userfullname = signupName.text.toString()
+            val useremail = signupEmail.text.toString()
+            val username = signupUsername.text.toString()
+            val userpassword = signupPassword.text.toString()
+            val helperClass = HelperClass(userfullname, useremail, username, userpassword)
+            reference!!.child(username).setValue(helperClass)
+            Toast.makeText(
+                requireContext(),
+                "You have registered successfully!",
+                Toast.LENGTH_SHORT
+            ).show()
+            Handler(Looper.getMainLooper()).postDelayed({
+                findNavController().navigate(R.id.cusLoginPage)
+            }, 1000)
+        }else
+            Toast.makeText(
+                requireContext(),
+                "Please agree the terms and conditions",
+                Toast.LENGTH_SHORT
+            ).show()
+
+    }
+
 }
+
+

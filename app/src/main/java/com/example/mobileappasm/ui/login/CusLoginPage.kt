@@ -1,131 +1,128 @@
 package com.example.mobileappasm.ui.login
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.annotation.StringRes
-import androidx.fragment.app.Fragment
+import com.example.mobileappasm.R
+import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
-import com.example.mobileappasm.databinding.FragmentCusLoginPageBinding
-
-import com.example.mobileappasm.R
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
+import com.example.mobileappasm.MainActivity
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.Query
 
 class CusLoginPage : Fragment() {
 
-    private lateinit var loginViewModel: LoginViewModel
-    private var _binding: FragmentCusLoginPageBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private lateinit var loginUsername: EditText
+    private lateinit var loginPassword: EditText
+    private lateinit var loginButton: Button
+    private lateinit var signupRedirectText: TextView
+    private lateinit var forgotRedirectText: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        _binding = FragmentCusLoginPageBinding.inflate(inflater, container, false)
-        return binding.root
-
+        return inflater.inflate(R.layout.fragment_cus_login_page, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
-            .get(LoginViewModel::class.java)
 
-        val usernameEditText = binding.username
-        val passwordEditText = binding.password
-        val loginButton = binding.login
-        val loadingProgressBar = binding.loading
-
-        loginViewModel.loginFormState.observe(viewLifecycleOwner,
-            Observer { loginFormState ->
-                if (loginFormState == null) {
-                    return@Observer
-                }
-                loginButton.isEnabled = loginFormState.isDataValid
-                loginFormState.usernameError?.let {
-                    usernameEditText.error = getString(it)
-                }
-                loginFormState.passwordError?.let {
-                    passwordEditText.error = getString(it)
-                }
-            })
-
-        loginViewModel.loginResult.observe(viewLifecycleOwner,
-            Observer { loginResult ->
-                loginResult ?: return@Observer
-                loadingProgressBar.visibility = View.GONE
-                loginResult.error?.let {
-                    showLoginFailed(it)
-                }
-                loginResult.success?.let {
-                    updateUiWithUser(it)
-                }
-            })
-
-        val afterTextChangedListener = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                // ignore
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                // ignore
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                loginViewModel.loginDataChanged(
-                    usernameEditText.text.toString(),
-                    passwordEditText.text.toString()
-                )
-            }
-        }
-        usernameEditText.addTextChangedListener(afterTextChangedListener)
-        passwordEditText.addTextChangedListener(afterTextChangedListener)
-        passwordEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loginViewModel.login(
-                    usernameEditText.text.toString(),
-                    passwordEditText.text.toString()
-                )
-            }
-            false
-        }
+        loginUsername = view.findViewById(R.id.login_username)
+        loginPassword = view.findViewById(R.id.login_password)
+        loginButton = view.findViewById(R.id.login_button)
+        signupRedirectText = view.findViewById(R.id.signupRedirectText)
+        forgotRedirectText = view.findViewById(R.id.forgotRedirectText)
 
         loginButton.setOnClickListener {
-            loadingProgressBar.visibility = View.VISIBLE
-            loginViewModel.login(
-                usernameEditText.text.toString(),
-                passwordEditText.text.toString()
-            )
+            if (!validateUsername() or !validatePassword()) {
+            } else {
+                checkUser()
+            }
+        }
+
+        signupRedirectText.setOnClickListener {
+            view.findNavController().navigate(R.id.cusSignUp)
+        }
+
+        forgotRedirectText.setOnClickListener{
+            view.findNavController().navigate(R.id.cusForgetPass)
+        }
+
+    }
+
+    private fun validateUsername(): Boolean {
+        val `val` = loginUsername!!.text.toString()
+        return if (`val`.isEmpty()) {
+            loginUsername!!.error = "Username cannot be empty"
+            false
+        } else {
+            loginUsername!!.error = null
+            true
         }
     }
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome) + model.displayName
-        // TODO : initiate successful logged in experience
-        val appContext = context?.applicationContext ?: return
-        Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
+    private fun validatePassword(): Boolean {
+        val `val` = loginPassword!!.text.toString()
+        return if (`val`.isEmpty()) {
+            loginPassword!!.error = "Password cannot be empty"
+            false
+        } else {
+            loginPassword!!.error = null
+            true
+        }
     }
 
-    private fun showLoginFailed(@StringRes errorString: Int) {
-        val appContext = context?.applicationContext ?: return
-        Toast.makeText(appContext, errorString, Toast.LENGTH_LONG).show()
-    }
+    private fun checkUser() {
+        val userUsername = loginUsername!!.text.toString().trim { it <= ' ' }
+        val userPassword = loginPassword!!.text.toString().trim { it <= ' ' }
+        val reference = FirebaseDatabase.getInstance().getReference("users")
+        val checkUserDatabase: Query = reference.orderByChild("username").equalTo(userUsername)
+        checkUserDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    loginUsername!!.error = null
+                    val passwordFromDB = snapshot.child(userUsername).child("password").getValue(
+                        String::class.java
+                    )
+                    if (passwordFromDB == userPassword) {
+                        loginUsername!!.error = null
+                        val nameFromDB = snapshot.child(userUsername).child("name").getValue(
+                            String::class.java
+                        )
+                        val emailFromDB = snapshot.child(userUsername).child("email").getValue(
+                            String::class.java
+                        )
+                        val usernameFromDB =
+                            snapshot.child(userUsername).child("username").getValue(
+                                String::class.java
+                            )
+                        val intent = Intent(activity, MainActivity::class.java)
+                        intent.putExtra("name", nameFromDB)
+                        intent.putExtra("email", emailFromDB)
+                        intent.putExtra("username", usernameFromDB)
+                        intent.putExtra("password", passwordFromDB)
+                        startActivity(intent)
+                    } else {
+                        loginPassword!!.error = "Invalid Credentials"
+                        loginPassword!!.requestFocus()
+                    }
+                } else {
+                    loginUsername!!.error = "User does not exist"
+                    loginUsername!!.requestFocus()
+                }
+            }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+            override fun onCancelled(error: DatabaseError) {}
+        })
     }
 }

@@ -1,14 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+android:gravity="center"
+android:background="@drawable/cus_pagebkg"
+tools:context=".CusSignUp">
+
+<androidx.cardview.widget.CardView
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".CusSignUp">
+    android:layout_height="wrap_content"
+    android:layout_margin="30dp"
+    app:cardCornerRadius="30dp"
+    app:cardElevation="20dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        android:padding="24dp"
+        android:background="@drawable/cus_lavender_border">
 
-</FrameLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign Up"
+            android:textSize="36sp"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textColor="@color/lavender"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/signup_name"
+            android:background="@drawable/cus_lavender_border"
+            android:layout_marginTop="40dp"
+            android:padding="8dp"
+            android:hint="Name"
+            android:drawableLeft="@drawable/cus_person"
+            android:drawablePadding="8dp"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/signup_email"
+            android:background="@drawable/cus_lavender_border"
+            android:layout_marginTop="20dp"
+            android:padding="8dp"
+            android:hint="Email"
+            android:drawableLeft="@drawable/cus_email"
+            android:drawablePadding="8dp"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/signup_username"
+            android:background="@drawable/cus_lavender_border"
+            android:layout_marginTop="20dp"
+            android:padding="8dp"
+            android:hint="Username"
+            android:drawableLeft="@drawable/cus_person_img"
+            android:drawablePadding="8dp"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/signup_password"
+            android:background="@drawable/cus_lavender_border"
+            android:layout_marginTop="20dp"
+            android:padding="8dp"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:drawableLeft="@drawable/cus_lock"
+            android:drawablePadding="8dp"
+            android:textColor="@color/black"/>
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:textSize="15sp"
+            android:layout_marginTop="50dp"
+            android:backgroundTint="@color/lavender"
+            android:text="I agree the terms and conditions" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Sign Up"
+            android:id="@+id/signup_button"
+            android:textSize="18sp"
+            android:layout_marginTop="0dp"
+            android:backgroundTint="@color/lavender"
+            app:cornerRadius = "20dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/loginRedirectText"
+            android:text="Already an user? Sign In ->"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:layout_marginTop="0dp"
+            android:textColor="@color/lavender"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
+
+</LinearLayout>
