@@ -4,6 +4,6 @@
 
     <item
         android:id="@+id/cusMainPage"
-        android:title="Item" />
+        android:title="Main Page" />
     <item android:title="Item" />
 </menu>
