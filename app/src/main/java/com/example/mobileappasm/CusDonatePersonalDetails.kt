@@ -1,59 +1,72 @@
 package com.example.mobileappasm
 
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.GridView
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.fragment.app.Fragment
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CusDonatePersonalDetails.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CusDonatePersonalDetails : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cus_donate_personal_details, container, false)
+        val view = inflater.inflate(R.layout.fragment_cus_donate_personal_details, container, false)
+
+        val context: Context? = activity
+        val flowerName = arrayOf("Rose","Lotus","Lily","Jasmine",
+            "Tulip","Orchid","Levender","RoseMarry","Sunflower","Carnation")
+        val image = intArrayOf(R.drawable.a,R.drawable.b,R.drawable.c,R.drawable.d,R.drawable.e,R.drawable.f,R.drawable.g,
+            R.drawable.h,R.drawable.i,R.drawable.j)
+
+        val gridView = view.findViewById<GridView>(R.id.gridView)
+        gridView.adapter = CustomGridAdapter(context, flowerName, image)
+
+        gridView.setOnItemClickListener { _, _, position, _ ->
+            // Handle click event for each item in the grid view
+            val selectedFlower = flowerName[position]
+            // Do something with the selected flower
+        }
+
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CusDonatePersonalDetails.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CusDonatePersonalDetails().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    class CustomGridAdapter(context: Context?, private val flowerName: Array<String>, private val image: IntArray) :
+        ArrayAdapter<String>(context!!, R.layout.cus_view_child_grid, flowerName) {
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            var convertView = convertView
+            val viewHolder: ViewHolder
+
+            if (convertView == null) {
+                convertView = LayoutInflater.from(context).inflate(R.layout.cus_view_child_grid, parent, false)
+
+                viewHolder = ViewHolder()
+                viewHolder.imageView = convertView.findViewById(R.id.grid_image)
+                viewHolder.textView = convertView.findViewById(R.id.item_name)
+
+                convertView.tag = viewHolder
+            } else {
+                viewHolder = convertView.tag as ViewHolder
             }
+
+            viewHolder.imageView.setImageResource(image[position])
+            viewHolder.textView.text = flowerName[position]
+
+            return convertView!!
+        }
+
+        private class ViewHolder {
+            lateinit var imageView: ImageView
+            lateinit var textView: TextView
+        }
     }
+
 }
