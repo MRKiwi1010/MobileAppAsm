@@ -1,59 +1,50 @@
 package com.example.mobileappasm
-
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.example.mobileappasm.Domain.ItemsDomain
+import java.text.DecimalFormat
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CusViewChild.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CusViewChild : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var titleTxt: TextView
+    private lateinit var addressTxt: TextView
+    private lateinit var bedTxt: TextView
+    private lateinit var bathTxt: TextView
+    private lateinit var wifiTxt: TextView
+    private lateinit var descriptionTxt: TextView
+    private lateinit var priceTxt: TextView
+    private var item: ItemsDomain? = null
+    private lateinit var pic: ImageView
+    private val formatter = DecimalFormat("###,###,###.##")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cus_view_child, container, false)
+        val view = inflater.inflate(R.layout.fragment_cus_view_child, container, false)
+        titleTxt = view.findViewById(R.id.titleTxt)
+        addressTxt = view.findViewById(R.id.addressTxt)
+        bedTxt = view.findViewById(R.id.bedTxt)
+        bathTxt = view.findViewById(R.id.bathTxt)
+        wifiTxt = view.findViewById(R.id.wifiTxt)
+        descriptionTxt = view.findViewById(R.id.descriptionTxt)
+        pic = view.findViewById(R.id.pic)
+        priceTxt = view.findViewById(R.id.priceTxt)
+
+        item?.pic?.let {
+            val drawableResourceId = resources.getIdentifier(it, "drawable", context?.packageName)
+            Glide.with(this)
+                .load(drawableResourceId)
+                .into(pic)
+        }
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CusViewChild.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CusViewChild().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }
