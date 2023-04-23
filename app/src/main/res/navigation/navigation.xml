@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/cusDonatePersonalDetails">
+    app:startDestination="@id/adminCustomerList">
 
     <fragment
         android:id="@+id/AAHomePage"
@@ -113,4 +113,8 @@
         android:name="com.example.mobileappasm.CusTotalDonation"
         android:label="fragment_cus_total_donation"
         tools:layout="@layout/fragment_cus_total_donation" />
+    <fragment
+        android:id="@+id/adminCustomerList"
+        android:name="com.example.mobileappasm.AdminCustomerList"
+        android:label="AdminCustomerList" />
 </navigation>
