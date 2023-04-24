@@ -11,22 +11,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
 import android.widget.Toast
+import com.example.mobileappasm.AdminProfile
 import com.example.mobileappasm.databinding.FragmentAdminLoginPageBinding
 
 import com.example.mobileappasm.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 
 class AdminLoginPage : Fragment() {
 
     private lateinit var loginViewModel: LoginViewModel
     private var _binding: FragmentAdminLoginPageBinding? = null
+    private lateinit var auth: FirebaseAuth
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        auth = FirebaseAuth.getInstance()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,10 +49,48 @@ class AdminLoginPage : Fragment() {
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
 
-        val usernameEditText = binding.username
-        val passwordEditText = binding.password
+        val username = binding.username
+        val password = binding.password
         val loginButton = binding.login
         val loadingProgressBar = binding.loading
+
+        binding.login.setOnClickListener{
+            val username = username.text.toString()
+            val password = password.text.toString()
+
+            auth.signInWithEmailAndPassword(username, password).addOnCompleteListener{
+                task->
+                if(task.isSuccessful)
+                {
+                    //sign in success
+                    val user = auth.currentUser
+                    if(user!=null)
+                    {
+//                        Toast.makeText()
+                    }
+                }
+                else
+                {
+                    //sign in fail
+                    val exception = task.exception
+                    if (exception is FirebaseAuthException) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Login failed: ${exception.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Login failed: ${exception?.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+
+
+        }
 
         loginViewModel.loginFormState.observe(viewLifecycleOwner,
             Observer { loginFormState ->
@@ -56,10 +99,10 @@ class AdminLoginPage : Fragment() {
                 }
                 loginButton.isEnabled = loginFormState.isDataValid
                 loginFormState.usernameError?.let {
-                    usernameEditText.error = getString(it)
+                    username.error = getString(it)
                 }
                 loginFormState.passwordError?.let {
-                    passwordEditText.error = getString(it)
+                    password.error = getString(it)
                 }
             })
 
@@ -86,18 +129,18 @@ class AdminLoginPage : Fragment() {
 
             override fun afterTextChanged(s: Editable) {
                 loginViewModel.loginDataChanged(
-                    usernameEditText.text.toString(),
-                    passwordEditText.text.toString()
+                    username.text.toString(),
+                    password.text.toString()
                 )
             }
         }
-        usernameEditText.addTextChangedListener(afterTextChangedListener)
-        passwordEditText.addTextChangedListener(afterTextChangedListener)
-        passwordEditText.setOnEditorActionListener { _, actionId, _ ->
+        username.addTextChangedListener(afterTextChangedListener)
+        password.addTextChangedListener(afterTextChangedListener)
+        password.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 loginViewModel.login(
-                    usernameEditText.text.toString(),
-                    passwordEditText.text.toString()
+                    username.text.toString(),
+                    password.text.toString()
                 )
             }
             false
@@ -106,8 +149,8 @@ class AdminLoginPage : Fragment() {
         loginButton.setOnClickListener {
             loadingProgressBar.visibility = View.VISIBLE
             loginViewModel.login(
-                usernameEditText.text.toString(),
-                passwordEditText.text.toString()
+                username.text.toString(),
+                password.text.toString()
             )
         }
     }
@@ -117,6 +160,13 @@ class AdminLoginPage : Fragment() {
         // TODO : initiate successful logged in experience
         val appContext = context?.applicationContext ?: return
         Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
+
+        //Navigation to Admin Profile Okei
+        val fragment = AdminProfile.newInstance(model.username, model.password)
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container_view, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {

@@ -10,8 +10,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.example.mobileappasm.databinding.FragmentAdminAddAdminBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -50,28 +49,63 @@ class AdminAddAdmin : Fragment() {
 
         val btnAddAdmin = binding.btnAddAdmin
         btnAddAdmin.setOnClickListener {
-            val name = binding.adminName.text.toString()
-            val email = binding.adminEmail.text.toString()
-            val username = binding.adminUsername.text.toString()
-            val password = binding.adminPassword.text.toString()
-            val contact = binding.adminContact.text.toString()
-            val gender = when(binding.adminGender.checkedRadioButtonId) {
-                R.id.maleBtn -> "Male"
-                R.id.femaleBtn -> "Female"
-                else -> ""
-            }
-            val age = binding.adminAge.text.toString()
+            database.child("admin").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val adminCount = snapshot.childrenCount.toInt() + 1
+                    val adminId = "admin" + "%03d".format(adminCount)
 
-            val admin = Admin(name, email, username, password, contact, gender, age)
+                    val name = binding.adminName.text.toString()
+                    val email = binding.adminEmail.text.toString()
+                    val username = binding.adminUsername.text.toString()
+                    val password = binding.adminPassword.text.toString()
+                    val contact = binding.adminContact.text.toString()
+                    val gender = when(binding.adminGender.checkedRadioButtonId) {
+                        R.id.maleBtn -> "Male"
+                        R.id.femaleBtn -> "Female"
+                        else -> ""
+                    }
+                    val age = binding.adminAge.text.toString()
 
-            database.child("admin").push().setValue(admin)
-                .addOnSuccessListener {
-                    Toast.makeText(requireContext(), "Added Successfully!", Toast.LENGTH_SHORT).show()
+                    // Check if email or username already exists
+                    var isEmailUsed = false
+                    var isUsernameUsed = false
+                    for (adminSnapshot in snapshot.children) {
+                        val admin = adminSnapshot.getValue(Admin::class.java)
+                        if (admin?.email == email) {
+                            isEmailUsed = true
+                        }
+                        if (admin?.username == username) {
+                            isUsernameUsed = true
+                        }
+                    }
+
+                    if (isEmailUsed) {
+                        Toast.makeText(requireContext(), "Email already in use", Toast.LENGTH_SHORT).show()
+                        return
+                    }
+                    if (isUsernameUsed) {
+                        Toast.makeText(requireContext(), "Username already in use", Toast.LENGTH_SHORT).show()
+                        return
+                    }
+
+                    val admin = Admin(name, email, username, password, contact, gender, age)
+
+                    val childUpdates = HashMap<String, Any>()
+                    childUpdates[adminId] = admin
+
+                    database.child("admin").updateChildren(childUpdates)
+                        .addOnSuccessListener {
+                            Toast.makeText(requireContext(), "Added Successfully!", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener{
+                            Toast.makeText(requireContext(),"Failed", Toast.LENGTH_SHORT).show()
+                            Log.e(TAG, "Failed", it)
+                        }
                 }
-                .addOnFailureListener{
+                override fun onCancelled(databaseError: DatabaseError) {
                     Toast.makeText(requireContext(),"Failed", Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, "Failed", it)
                 }
+            })
         }
     }
 

@@ -11,6 +11,12 @@
     android:paddingBottom="@dimen/fragment_vertical_margin"
     tools:context=".ui.login.AdminLoginPage">
 
+    <FrameLayout
+        android:id="@+id/fragment_container_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
     <EditText
         android:id="@+id/username"
         android:layout_width="0dp"
