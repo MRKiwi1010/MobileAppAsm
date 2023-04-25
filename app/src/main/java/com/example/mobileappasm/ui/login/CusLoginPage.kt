@@ -57,29 +57,6 @@ class CusLoginPage : Fragment() {
         forgotRedirectText.setOnClickListener{
             view.findNavController().navigate(R.id.cusForgetPass)
         }
-
-    }
-
-    private fun validateUsername(): Boolean {
-        val `val` = loginUsername!!.text.toString()
-        return if (`val`.isEmpty()) {
-            loginUsername!!.error = "Username cannot be empty"
-            false
-        } else {
-            loginUsername!!.error = null
-            true
-        }
-    }
-
-    private fun validatePassword(): Boolean {
-        val `val` = loginPassword!!.text.toString()
-        return if (`val`.isEmpty()) {
-            loginPassword!!.error = "Password cannot be empty"
-            false
-        } else {
-            loginPassword!!.error = null
-            true
-        }
     }
 
     private fun checkUser() {
@@ -112,6 +89,7 @@ class CusLoginPage : Fragment() {
                         intent.putExtra("username", usernameFromDB)
                         intent.putExtra("password", passwordFromDB)
                         startActivity(intent)
+                        view?.findNavController()?.navigate(R.id.cusMainPage)
                     } else {
                         loginPassword!!.error = "Invalid Credentials"
                         loginPassword!!.requestFocus()
@@ -124,5 +102,30 @@ class CusLoginPage : Fragment() {
 
             override fun onCancelled(error: DatabaseError) {}
         })
+    }
+
+
+
+
+    private fun validateUsername(): Boolean {
+        val `val` = loginUsername!!.text.toString()
+        return if (`val`.isEmpty()) {
+            loginUsername!!.error = "Username cannot be empty"
+            false
+        } else {
+            loginUsername!!.error = null
+            true
+        }
+    }
+
+    private fun validatePassword(): Boolean {
+        val `val` = loginPassword!!.text.toString()
+        return if (`val`.isEmpty()) {
+            loginPassword!!.error = "Password cannot be empty"
+            false
+        } else {
+            loginPassword!!.error = null
+            true
+        }
     }
 }
