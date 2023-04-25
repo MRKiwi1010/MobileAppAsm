@@ -11,4 +11,21 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
+
+    <string-array name="amount_group">
+        <item name="r10">RM10</item>
+        <item name="r20">RM20</item>
+        <item name="r30">RM30</item>
+        <item name="r40">RM40</item>
+        <item name="r50">RM50</item>
+        <item name="r80">RM80</item>
+        <item name="r100">RM100</item>
+        <item name="r150">RM150</item>
+        <item name="r200">RM200</item>
+        <item name="r300">RM300</item>
+        <item name="r400">RM400</item>
+        <item name="r500">RM500</item>
+        <item name="other">Donate Others</item>
+    </string-array>
 </resources>
