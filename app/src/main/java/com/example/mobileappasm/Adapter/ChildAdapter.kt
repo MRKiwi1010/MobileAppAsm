@@ -12,7 +12,7 @@ import com.example.mobileappasm.R
 
 class ChildAdapter (private val context: Context) : RecyclerView.Adapter<ChildAdapter.ChildViewHolder>() {
     private var child = emptyList<Child>()
-    private var listener: ChildAdapter.OnItemClickListener? = null
+    private var listener: OnItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChildViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_user, parent, false)
@@ -46,13 +46,13 @@ class ChildAdapter (private val context: Context) : RecyclerView.Adapter<ChildAd
     }
 
     inner class ChildViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val childNumberView: TextView = itemView.findViewById(R.id.childNumberTextView)
         private val childIdView: TextView = itemView.findViewById(R.id.childIdTextView)
         private val childNameView: TextView = itemView.findViewById(R.id.childNameTextView)
         private val childNationView: TextView = itemView.findViewById(R.id.childNationTextView)
         private val childAgeView: TextView = itemView.findViewById(R.id.childAgeTextView)
         private val durationLeftView: TextView = itemView.findViewById(R.id.durationLeftTextView)
         private val totalReceivedView: TextView = itemView.findViewById(R.id.totalReceivedTextView)
-
 
         init {
             itemView.setOnClickListener {
@@ -64,22 +64,12 @@ class ChildAdapter (private val context: Context) : RecyclerView.Adapter<ChildAd
         }
 
         fun bind(child: Child) {
-            childIdView.text = child.childId.toString()
+            childNumberView.text = (adapterPosition + 1).toString()
             childNameView.text = child.childName
             childNationView.text = child.childNation
             childAgeView.text = child.childAge.toString()
             durationLeftView.text = child.durationLeft.toString()
             totalReceivedView.text = child.totalReceived.toString()
-        }
-    }
-
-    class ChildDiffCallback : DiffUtil.ItemCallback<Child>() {
-        override fun areItemsTheSame(oldItem: Child, newItem: Child): Boolean {
-            return oldItem.childId == newItem.childId
-        }
-
-        override fun areContentsTheSame(oldItem: Child, newItem: Child): Boolean {
-            return oldItem == newItem
         }
     }
 }
