@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/adminLoginPage">
+    app:startDestination="@id/adminAddChild">
 
     <fragment
         android:id="@+id/AAHomePage"
@@ -122,13 +122,27 @@
         android:name="com.example.mobileappasm.AdminCustomerList"
         android:label="AdminCustomerList" />
     <fragment
+        android:id="@+id/adminChildList"
+        android:name="com.example.mobileappasm.AdminChildList"
+        android:label="AdminChildList" />
+    <fragment
         android:id="@+id/adminAddAdmin"
         android:name="com.example.mobileappasm.AdminAddAdmin"
         android:label="fragment_admin_add_admin"
         tools:layout="@layout/fragment_admin_add_admin" />
     <fragment
+        android:id="@+id/adminAddChild"
+        android:name="com.example.mobileappasm.AdminAddAdmin"
+        android:label="fragment_admin_add_child"
+        tools:layout="@layout/fragment_admin_add_child" />
+    <fragment
         android:id="@+id/adminProfile"
         android:name="com.example.mobileappasm.AdminProfile"
         android:label="fragment_admin_profile"
         tools:layout="@layout/fragment_admin_profile" />
+    <fragment
+        android:id="@+id/adminAddChild"
+        android:name="com.example.mobileappasm.AdminAddChild"
+        android:label="fragment_admin_add_child"
+        tools:layout="@layout/fragment_admin_add_child" />
 </navigation>

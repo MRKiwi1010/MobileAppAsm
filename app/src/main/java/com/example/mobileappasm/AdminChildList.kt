@@ -39,7 +39,7 @@ class AdminChildList : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAdminChildListBinding.inflate(inflater, container, false)
-        //recyclerView = binding.childRecyclerView
+        recyclerView = binding.childRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
         childAdapter = ChildAdapter(requireContext())
         recyclerView.adapter = childAdapter
