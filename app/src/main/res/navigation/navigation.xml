@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/adminAddChild">
+    app:startDestination="@id/adminLoginPage">
 
     <fragment
         android:id="@+id/AAHomePage"
@@ -25,6 +25,12 @@
         <action
             android:id="@+id/action_adminLoginPage_to_adminProfile"
             app:destination="@id/adminProfile" />
+        <argument
+            android:name="username"
+            app:argType="string" />
+        <argument
+            android:name="password"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/cusLoginPage"

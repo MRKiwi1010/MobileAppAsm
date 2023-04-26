@@ -12,6 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
 import com.example.mobileappasm.AdminProfile
 import com.example.mobileappasm.databinding.FragmentAdminLoginPageBinding
 
@@ -162,11 +164,18 @@ class AdminLoginPage : Fragment() {
         Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
 
         //Navigation to Admin Profile Okei
-        val fragment = AdminProfile.newInstance(model.username, model.password)
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container_view, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
+        navigateToAdminProfile(model.username, model.password)
+    }
+
+    private fun navigateToAdminProfile(username: String, password: String) {
+        val bundle = bundleOf(
+            "username" to username,
+            "password" to password
+        )
+        findNavController().navigate(
+            R.id.action_adminLoginPage_to_adminProfile,
+            bundle
+        )
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
