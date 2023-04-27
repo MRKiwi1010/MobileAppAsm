@@ -74,9 +74,13 @@ class AdminAddAdmin : Fragment() {
 
         val btnAddAdmin = binding.btnAddAdmin
         btnAddAdmin.setOnClickListener {
-            database.child("admin").addListenerForSingleValueEvent(object : ValueEventListener {
+            database.child("admin").orderByKey().limitToFirst(1).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val adminCount = snapshot.childrenCount.toInt() + 1
+                    var adminCount = 1
+                    for (adminSnapshot in snapshot.children) {
+                        val adminId = adminSnapshot.key.toString()
+                        adminCount = adminId.substring(5).toInt() + 1
+                    }
                     val adminId = "admin" + "%03d".format(adminCount)
 
                     val name = binding.adminName.text.toString()
@@ -90,7 +94,7 @@ class AdminAddAdmin : Fragment() {
                         else -> ""
                     }
                     val age = binding.adminAge.text.toString()
-                    val position = "Admin"
+                    val position = "Staff"
 
                     // Check if email or username already exists
                     var isEmailUsed = false
@@ -114,7 +118,7 @@ class AdminAddAdmin : Fragment() {
                         return
                     }
 
-                    val admin = Admin(name, email, username, password, contact, gender, age, position)
+                    val admin = Admin(selectedImageUri.toString(), name, email, username, password, contact, gender, age, position)
 
                     //upload image
                     if (selectedImageUri != null) {
