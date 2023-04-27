@@ -1,16 +1,27 @@
 package com.example.mobileappasm
 
+import android.app.Activity
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import com.example.mobileappasm.databinding.FragmentAdminAddAdminBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -22,6 +33,13 @@ class AdminAddAdmin : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
     private lateinit var binding: FragmentAdminAddAdminBinding
+    private var selectedImageUri: Uri? = null
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            selectedImageUri = result.data?.data
+            binding.adminImageView.setImageURI(selectedImageUri)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +64,13 @@ class AdminAddAdmin : Fragment() {
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
+        val btnSelectImage = view.findViewById<Button>(R.id.btnSelectImage)
+        val imageView = view.findViewById<ImageView>(R.id.adminImageView)
+
+        btnSelectImage.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            pickImageLauncher.launch(intent)
+        }
 
         val btnAddAdmin = binding.btnAddAdmin
         btnAddAdmin.setOnClickListener {
@@ -65,6 +90,7 @@ class AdminAddAdmin : Fragment() {
                         else -> ""
                     }
                     val age = binding.adminAge.text.toString()
+                    val position = "Admin"
 
                     // Check if email or username already exists
                     var isEmailUsed = false
@@ -88,19 +114,40 @@ class AdminAddAdmin : Fragment() {
                         return
                     }
 
-                    val admin = Admin(name, email, username, password, contact, gender, age)
+                    val admin = Admin(name, email, username, password, contact, gender, age, position)
 
-                    val childUpdates = HashMap<String, Any>()
-                    childUpdates[adminId] = admin
+                    //upload image
+                    if (selectedImageUri != null) {
+                        val storageRef = FirebaseStorage.getInstance().reference
+                        val imageRef = storageRef.child("admin/$adminId.jpg")
 
-                    database.child("admin").updateChildren(childUpdates)
-                        .addOnSuccessListener {
-                            Toast.makeText(requireContext(), "Added Successfully!", Toast.LENGTH_SHORT).show()
+                        val uploadTask = imageRef.putFile(selectedImageUri!!)
+                        uploadTask.continueWithTask { task ->
+                            if (!task.isSuccessful) {
+                                task.exception?.let { throw it }
+                            }
+                            imageRef.downloadUrl
+                        }.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val downloadUri = task.result.toString()
+
+                                admin.imageUri = downloadUri // Save the download URL with the admin data
+                                saveAdminData(admin, adminId)
+
+                                val childUpdates = HashMap<String, Any>()
+                                childUpdates[adminId] = admin
+
+                                database.child("admin").updateChildren(childUpdates)
+                                    .addOnSuccessListener {
+                                        Toast.makeText(requireContext(), "Added Successfully!", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .addOnFailureListener{
+                                        Toast.makeText(requireContext(),"Failed", Toast.LENGTH_SHORT).show()
+                                        Log.e(TAG, "Failed", it)
+                                    }
+                            }
                         }
-                        .addOnFailureListener{
-                            Toast.makeText(requireContext(),"Failed", Toast.LENGTH_SHORT).show()
-                            Log.e(TAG, "Failed", it)
-                        }
+                    }
                 }
                 override fun onCancelled(databaseError: DatabaseError) {
                     Toast.makeText(requireContext(),"Failed", Toast.LENGTH_SHORT).show()
@@ -109,8 +156,12 @@ class AdminAddAdmin : Fragment() {
         }
     }
 
+    fun saveAdminData(admin: Admin, adminId: String) {
+        // Your code to save the admin data
+    }
+
     companion object {
-        private const val TAG = "AdminAddNewAdminActivity"
+        private const val TAG = "AdminAddAdmin"
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             AdminAddAdmin().apply {
