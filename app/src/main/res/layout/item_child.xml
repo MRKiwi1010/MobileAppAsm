@@ -15,7 +15,7 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/childIdTextView"
+            android:id="@+id/childNumberTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
@@ -24,12 +24,20 @@
             android:layout_alignParentStart="true"/>
 
         <TextView
-            android:id="@+id/childNameTextView"
+            android:id="@+id/childIdTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:layout_toEndOf="@id/childNumberTextView"/>
+
+        <TextView
+            android:id="@+id/childNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
             android:layout_toEndOf="@id/childIdTextView"/>
 
         <TextView

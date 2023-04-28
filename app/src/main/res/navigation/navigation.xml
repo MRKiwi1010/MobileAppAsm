@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/cusProfile">
+    app:startDestination="@id/adminLoginPage">
 
     <fragment
         android:id="@+id/AAHomePage"
@@ -25,6 +25,12 @@
         <action
             android:id="@+id/action_adminLoginPage_to_adminProfile"
             app:destination="@id/adminProfile" />
+        <argument
+            android:name="username"
+            app:argType="string" />
+        <argument
+            android:name="password"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/cusLoginPage"
@@ -106,11 +112,7 @@
         android:id="@+id/cusDonatePersonalDetails"
         android:name="com.example.mobileappasm.CusDonatePersonalDetails"
         android:label="fragment_cus_donate_personal_details"
-        tools:layout="@layout/fragment_cus_donate_personal_details" >
-        <action
-            android:id="@+id/action_cusDonatePersonalDetails_to_cusViewChild"
-            app:destination="@id/cusViewChild" />
-    </fragment>
+        tools:layout="@layout/fragment_cus_donate_personal_details" />
     <fragment
         android:id="@+id/cusDonationHistory"
         android:name="com.example.mobileappasm.CusDonationHistory"
@@ -126,18 +128,27 @@
         android:name="com.example.mobileappasm.AdminCustomerList"
         android:label="AdminCustomerList" />
     <fragment
+        android:id="@+id/adminChildList"
+        android:name="com.example.mobileappasm.AdminChildList"
+        android:label="AdminChildList" />
+    <fragment
         android:id="@+id/adminAddAdmin"
         android:name="com.example.mobileappasm.AdminAddAdmin"
         android:label="fragment_admin_add_admin"
         tools:layout="@layout/fragment_admin_add_admin" />
+    <fragment
+        android:id="@+id/adminAddChild"
+        android:name="com.example.mobileappasm.AdminAddAdmin"
+        android:label="fragment_admin_add_child"
+        tools:layout="@layout/fragment_admin_add_child" />
     <fragment
         android:id="@+id/adminProfile"
         android:name="com.example.mobileappasm.AdminProfile"
         android:label="fragment_admin_profile"
         tools:layout="@layout/fragment_admin_profile" />
     <fragment
-        android:id="@+id/cusPayment"
-        android:name="com.example.mobileappasm.CusPayment"
-        android:label="fragment_cus_payment"
-        tools:layout="@layout/fragment_cus_payment" />
+        android:id="@+id/adminAddChild"
+        android:name="com.example.mobileappasm.AdminAddChild"
+        android:label="fragment_admin_add_child"
+        tools:layout="@layout/fragment_admin_add_child" />
 </navigation>
