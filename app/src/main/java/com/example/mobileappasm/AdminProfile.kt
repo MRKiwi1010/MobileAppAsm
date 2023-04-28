@@ -1,6 +1,5 @@
 package com.example.mobileappasm
 
-import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.text.style.TtsSpan.ARG_PASSWORD
 import android.text.style.TtsSpan.ARG_USERNAME
@@ -15,7 +14,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 //import com.example.mobileappasm.ui.login.AdminLoginPage.Companion.USERNAME_KEY
-import com.example.mobileappasm.ui.login.AdminViewModel
+import com.example.mobileappasm.ui.login.adminViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
@@ -27,7 +26,7 @@ class AdminProfile : Fragment() {
     private var param2: String? = null
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
-    private lateinit var adminViewModel: AdminViewModel
+    private lateinit var adminViewModel: adminViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,9 +52,10 @@ class AdminProfile : Fragment() {
             requireActivity().supportFragmentManager.beginTransaction().remove(loginFragment).commit()
         }
 
-        val viewModel = ViewModelProvider(requireActivity()).get(AdminViewModel::class.java)
-        adminViewModel = AdminViewModel()
-        database.orderByChild("username").equalTo(adminViewModel.username).addListenerForSingleValueEvent(object : ValueEventListener {
+        adminViewModel = adminViewModel()
+        val viewModel = ViewModelProvider(requireActivity()).get(adminViewModel::class.java)
+
+        database.orderByChild("username").equalTo(viewModel.username).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 Log.d("TAG", "snapshot: $snapshot")
                 if (snapshot.exists()) {
