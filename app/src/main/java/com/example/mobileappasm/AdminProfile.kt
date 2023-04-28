@@ -50,14 +50,8 @@ class AdminProfile : Fragment() {
             requireActivity().supportFragmentManager.beginTransaction().remove(loginFragment).commit()
         }
 
-//        val username = arguments?.getString("username")
         val pref = context?.getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE)
         val username = pref?.getString("username", "")
-
-//        val sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-//        val username = sharedPreferences.getString("username", "Guest")
-
-
 
         database.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
