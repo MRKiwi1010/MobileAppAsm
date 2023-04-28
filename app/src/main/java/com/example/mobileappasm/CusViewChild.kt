@@ -38,7 +38,6 @@ class CusViewChild : Fragment() {
         textView142 = view.findViewById(R.id.textView142)
         picTxt = view.findViewById(R.id.picTxt)
 
-
         val viewModel = ViewModelProvider(requireActivity()).get(cusViewModel::class.java)
         val childname = viewModel.getchildname()
 
@@ -64,12 +63,8 @@ class CusViewChild : Fragment() {
                     descriptionTxt.text = child_Des
                     priceTxt13.text = "RM"+totalReceived
                     targetTxt.text = "RM"+target
-                    //the childimg is imageview
-                    val storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(childUrl)
-//
-                    Glide.with(requireContext())
-                        .load(storageRef)
-                        .into(picTxt)
+
+                    Glide.with(requireContext()).load(childUrl).into(picTxt)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
