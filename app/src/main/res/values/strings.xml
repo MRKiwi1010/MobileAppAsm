@@ -30,7 +30,7 @@
         <item name="other">Donate Others</item>
     </string-array>
 
-<!--    Admin-->
+    <!--    Admin-->
     <string name="name_label">Name:</string>
     <string name="email_label">Email:</string>
     <string name="contact_label">Contact Number:</string>

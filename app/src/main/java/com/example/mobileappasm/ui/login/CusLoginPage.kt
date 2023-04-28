@@ -62,6 +62,8 @@ class CusLoginPage : Fragment() {
                             )
                             if (passwordFromDB == userPassword) {
                                 loginUsername!!.error = null
+
+
                                 val nameFromDB = snapshot.child(userUsername).child("name").getValue(
                                     String::class.java
                                 )
