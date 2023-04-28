@@ -3,12 +3,11 @@ package com.example.mobileappasm.Domain
 import java.io.Serializable
 
 class ItemsDomain(
-    val title: String,
-    val address: String,
-    val description: String,
-    val bed: Int,
-    val bath: Int,
-    val price: Int,
-    val pic: String,
-    val isWifi: Boolean
+    val child_name: String,
+    val childNation: String,
+    val child_Des: String,
+    val totalReceive: Int,
+    val target:Int,
+    val child_pic: String,  // new property to store the URL of the child's image
+    val child_age: Int
 ) : Serializable

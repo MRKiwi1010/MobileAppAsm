@@ -53,6 +53,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <ImageView
+                android:id="@+id/imageViewff"
+                android:layout_width="251dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/eat" />
+
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
@@ -71,72 +82,11 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="32dp"
                 android:background="@drawable/edittext_background"
-                android:entries="@array/amount_group"
                 tools:layout_editor_absoluteX="1dp"
                 android:spinnerMode="dropdown"
                 tools:layout_editor_absoluteY="510dp" />
 
 
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="32dp"
-                android:text="Education"
-                android:textColor="#000000"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/spinner22"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/edittext_background"
-                android:entries="@array/amount_group"
-                tools:layout_editor_absoluteX="1dp"
-                android:spinnerMode="dropdown"
-                tools:layout_editor_absoluteY="510dp" />
-
-            <TextView
-                android:id="@+id/textView66"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="32dp"
-                android:text="Clothes"
-                android:textColor="#000000"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/spinner3"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/edittext_background"
-                android:entries="@array/amount_group"
-                tools:layout_editor_absoluteX="1dp"
-                tools:layout_editor_absoluteY="510dp"
-                android:spinnerMode="dropdown"
-                android:textColor="#FFFFFF"
-                />
-
-            <ImageView
-                android:id="@+id/imageViewff"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/eat" />
 
             <RadioButton
                 android:id="@+id/radioButton"
@@ -147,28 +97,25 @@
                 android:text="Once the donation is made I understand that I will not get my money back, these amounts are paid by me voluntarily"
                 tools:layout_editor_absoluteX="31dp"
                 tools:layout_editor_absoluteY="579dp" />
+
             <Button
-                android:id="@+id/reset_button"
+                android:id="@+id/donate_button"
                 style="@android:style/Widget.Button"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
+                android:layout_gravity="center"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/button_background"
                 android:text="DONATE"
                 android:textColor="#ffffff"
                 android:textSize="25sp"
                 android:textStyle="bold"
-                tools:layout_editor_absoluteX="43dp"
-                tools:layout_editor_absoluteY="668dp" />
+                tools:layout_editor_absoluteX="31dp"
+                tools:layout_editor_absoluteY="579dp" />
 
 
         </LinearLayout>
 
     </ScrollView>
-
-
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

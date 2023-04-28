@@ -12,12 +12,19 @@
         android:scaleType="centerCrop"
         android:id="@+id/grid_image"/>
 
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/item_name"
         android:text="Flower"
-        android:textSize="26sp"
-        android:layout_marginTop="6dp"/>
+        android:textSize="20sp"
+        android:layout_marginTop="0dp"/>
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="Donate" />
 
 </LinearLayout>

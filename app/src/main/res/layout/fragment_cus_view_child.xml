@@ -20,22 +20,24 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/pic"
+                    android:id="@+id/picTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/pic_detail" />
+                    app:srcCompat="@drawable/pic1"
+                    />
 
                 <View
                     android:id="@+id/view"
                     android:layout_width="wrap_content"
                     android:layout_height="65dp"
                     android:background="#70000000"
-                    app:layout_constraintBottom_toBottomOf="@+id/pic"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <ImageView
@@ -49,150 +51,58 @@
                     app:srcCompat="@drawable/marker_detail" />
 
                 <TextView
-                    android:id="@+id/titleTxt"
+                    android:id="@+id/childName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="House with a great view"
+                    android:text="Sohai Andy"
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:textSize="21sp"
+                    android:textAlignment="center"
                     app:layout_constraintStart_toStartOf="@+id/imageView8"
                     app:layout_constraintTop_toTopOf="@+id/view" />
 
                 <TextView
-                    android:id="@+id/addressTxt"
+                    android:id="@+id/childNation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text=" San Francisco, CA 94110"
+                    android:text="Africa"
                     android:textSize="17sp"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView8"
                     app:layout_constraintStart_toEndOf="@+id/imageView8"
                     app:layout_constraintTop_toTopOf="@+id/imageView8" />
+
+                <TextView
+                    android:id="@+id/childAge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="188dp"
+                    android:text="12 Years Old"
+                    android:textColor="@color/white"
+                    android:textSize="17sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/childName"
+                    app:layout_constraintStart_toEndOf="@+id/childNation"
+                    app:layout_constraintTop_toTopOf="@+id/imageView8"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <TextView
+                    android:id="@+id/textView142"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="265+ Donated"
+                    android:textColor="@color/white"
+                    android:textSize="17sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/pic"
+                    app:layout_constraintEnd_toEndOf="@+id/view"
+                    app:layout_constraintHorizontal_bias="0.903"
+                    app:layout_constraintStart_toEndOf="@+id/childName"
+                    app:layout_constraintTop_toBottomOf="@+id/childAge" />
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/priceTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="$000000"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="24dp"
-                android:textStyle="bold"
-                android:textColor="#000000"
-                android:textSize="20sp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:elevation="3dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="0.3333"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/imageView91"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/bedTxt"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/bed" />
-
-                    <TextView
-                        android:id="@+id/bedTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:text="bed"
-                        android:textSize="16sp"
-                        android:textColor="#575454"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:id="@+id/view22"
-                    android:layout_width="1dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_height="wrap_content"
-                    android:background="#C5BEBE" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="0.3333"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/imageView93"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/bath" />
-
-                    <TextView
-                        android:id="@+id/bathTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:text="bath"
-                        android:textSize="16sp"
-                        android:textColor="#575454"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:id="@+id/view24"
-                    android:layout_width="1dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_height="wrap_content"
-                    android:background="#C5BEBE" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="0.3333"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/imageView95"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/settings" />
-
-                    <TextView
-                        android:id="@+id/wifiTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:text="Wifi"
-                        android:textSize="16sp"
-                        android:textColor="#575454"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView12"
@@ -204,6 +114,8 @@
                 android:textColor="#000000"
                 android:layout_marginTop="16dp"
                 android:layout_marginStart="32dp"/>
+
+
 
             <TextView
                 android:id="@+id/descriptionTxt"
@@ -221,6 +133,67 @@ architectural features and high-end finishes.
                 android:textColor="#000000"
                 android:textSize="16sp"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+            <TextView
+                android:id="@+id/totalReceived"
+                android:layout_width="147dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="24dp"
+                android:text="Target"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textAlignment="center" />
+
+
+            <TextView
+                android:id="@+id/priceTxt1"
+                android:layout_width="147dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="24dp"
+                android:text="Raised"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <TextView
+                    android:id="@+id/priceTxt23"
+                    android:layout_width="147dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:text="RM 123"
+                    android:textAlignment="center"
+                    android:textColor="#FF0000"
+                    android:textStyle="bold"
+                    android:textSize="20sp" />
+
+
+                <TextView
+                    android:id="@+id/priceTxt13"
+                    android:layout_width="147dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:text="RM 345"
+
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button"
                 style="@android:style/Widget.Button"
@@ -232,6 +205,9 @@ architectural features and high-end finishes.
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Buy Now" />
+
+
+
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

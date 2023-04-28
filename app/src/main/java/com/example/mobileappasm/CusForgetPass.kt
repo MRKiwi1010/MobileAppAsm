@@ -1,6 +1,5 @@
 package com.example.mobileappasm
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,11 +11,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import com.example.mobileappasm.R
-import com.example.mobileappasm.ui.login.CusLoginPage
 import com.google.firebase.database.*
 
 class CusForgetPass : Fragment() {
@@ -39,7 +35,7 @@ class CusForgetPass : Fragment() {
 
         resetEmail = view.findViewById(R.id.reset_email)
         resetPassword = view.findViewById(R.id.reset_password)
-        reset_button = view.findViewById(R.id.reset_button)
+        reset_button = view.findViewById(R.id.donate_button)
         loginRedirectText = view.findViewById(R.id.loginRedirectText)
         reset_button.setOnClickListener {
             if (!validateUseremail() or !validatePassword()) {

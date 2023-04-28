@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/adminLoginPage">
+    app:startDestination="@id/cusViewChild">
 
     <fragment
         android:id="@+id/AAHomePage"
@@ -63,20 +63,14 @@
             android:id="@+id/action_cusMainPage_to_cusAboutUs"
             app:destination="@id/cusAboutUs" />
         <action
-            android:id="@+id/action_cusMainPage_to_cusViewChild"
-            app:destination="@id/cusViewChild" />
-        <action
-            android:id="@+id/action_cusMainPage_to_cusDonateNow"
-            app:destination="@id/cusDonateNow" />
-        <action
             android:id="@+id/action_cusMainPage_to_cusProfile"
             app:destination="@id/cusProfile" />
         <action
             android:id="@+id/action_cusMainPage_to_cusTotalDonation"
             app:destination="@id/cusTotalDonation" />
         <action
-            android:id="@+id/action_cusMainPage_to_cusDonateNow2"
-            app:destination="@id/cusDonateNow" />
+            android:id="@+id/action_cusMainPage_to_cusDonatePersonalDetails"
+            app:destination="@id/cusDonatePersonalDetails" />
     </fragment>
     <fragment
         android:id="@+id/cusAboutUs"
@@ -87,7 +81,11 @@
         android:id="@+id/cusViewChild"
         android:name="com.example.mobileappasm.CusViewChild"
         android:label="fragment_cus_view_child"
-        tools:layout="@layout/fragment_cus_view_child" />
+        tools:layout="@layout/fragment_cus_view_child" >
+        <action
+            android:id="@+id/action_cusViewChild_to_cusDonateNow"
+            app:destination="@id/cusDonateNow" />
+    </fragment>
     <fragment
         android:id="@+id/cusDonateNow"
         android:name="com.example.mobileappasm.CusDonateNow"
@@ -101,15 +99,16 @@
         <action
             android:id="@+id/action_cusProfile_to_cusDonationHistory"
             app:destination="@id/cusDonationHistory" />
-        <action
-            android:id="@+id/action_cusProfile_to_cusDonatePersonalDetails"
-            app:destination="@id/cusDonatePersonalDetails" />
     </fragment>
     <fragment
         android:id="@+id/cusDonatePersonalDetails"
         android:name="com.example.mobileappasm.CusDonatePersonalDetails"
         android:label="fragment_cus_donate_personal_details"
-        tools:layout="@layout/fragment_cus_donate_personal_details" />
+        tools:layout="@layout/fragment_cus_donate_personal_details" >
+        <action
+            android:id="@+id/action_cusDonatePersonalDetails_to_cusViewChild"
+            app:destination="@id/cusViewChild" />
+    </fragment>
     <fragment
         android:id="@+id/cusDonationHistory"
         android:name="com.example.mobileappasm.CusDonationHistory"

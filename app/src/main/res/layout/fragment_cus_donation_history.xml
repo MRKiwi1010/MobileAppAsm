@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"/>
 
             <TextView
-                android:id="@+id/priceTxt"
+                android:id="@+id/totalReceived"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Donation History"
