@@ -30,6 +30,7 @@ const val USERNAME_KEY = "username"
 class AdminLoginPage : Fragment() {
 
     private lateinit var loginViewModel: LoginViewModel
+    private lateinit var adminViewModel: AdminViewModel
     private var _binding: FragmentAdminLoginPageBinding? = null
     private lateinit var auth: FirebaseAuth
 
@@ -114,33 +115,18 @@ class AdminLoginPage : Fragment() {
                 loginResult.success?.let {
                     updateUiWithUser(it)
 
-                    val sharedPref: SharedPreferences? = activity?.getSharedPreferences(
-                        getString(R.string.preference_file_key), Context.MODE_PRIVATE
-                    )
-                    with(sharedPref?.edit()) {
-                        this?.putString(USERNAME_KEY, it.displayName)
-                        this?.apply()
-                    }
-                    val bundle = bundleOf("username" to it.displayName)
-                    findNavController().navigate(R.id.action_adminLoginPage_to_adminProfile, bundle)
+//                    val sharedPref: SharedPreferences? = activity?.getSharedPreferences(
+//                        getString(R.string.preference_file_key), Context.MODE_PRIVATE
+//                    )
+//                    with(sharedPref?.edit()) {
+//                        this?.putString(USERNAME_KEY, it.displayName)
+//                        this?.apply()
+//                    }
+//                    val bundle = bundleOf("username" to it.displayName)
+//                    findNavController().navigate(R.id.action_adminLoginPage_to_adminProfile, bundle)
+                    findNavController().navigate(R.id.action_adminLoginPage_to_adminProfile)
                 }
             })
-
-//        username.doAfterTextChanged {
-//            loginViewModel.loginDataChanged(
-//                username.text.toString(),
-//                password.text.toString()
-//            )
-//        }
-//
-//        password.apply{
-//            doAfterTextChanged {
-//                loginViewModel.loginDataChanged(
-//                    username.text.toString(),
-//                    password.text.toString()
-//                )
-//            }
-//        }
 
         val afterTextChangedListener = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -179,31 +165,31 @@ class AdminLoginPage : Fragment() {
         }
     }
 
-//    private fun updateUiWithUser(model: LoggedInUserView) {
-//        val welcome = getString(R.string.welcome) + model.username
-//        val appContext = context?.applicationContext ?: return
-//
-//        // create session by storing the username in SharedPreferences
+    private fun updateUiWithUser(model: LoggedInUserView) {
+        val welcome = getString(R.string.welcome) + model.username
+        val appContext = context?.applicationContext ?: return
+
+        // create session by storing the username in SharedPreferences
 //        val pref = getSharedPreferences()
 //        val editor = pref.edit()
 //        editor.putString(USERNAME_KEY, model.username)
 //        editor.apply()
-//
-//        Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
-//
-//        //Navigation to Admin Profile
-//        navigateToAdminProfile()
-//    }
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
-        Toast.makeText(
-            context,
-            "$welcome $displayName",
-            Toast.LENGTH_LONG
-        ).show()
+        Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
+
+        //Navigation to Admin Profile
+        navigateToAdminProfile()
     }
+
+//    private fun updateUiWithUser(model: LoggedInUserView) {
+//        val welcome = getString(R.string.welcome)
+//        val displayName = model.displayName
+//        Toast.makeText(
+//            context,
+//            "$welcome $displayName",
+//            Toast.LENGTH_LONG
+//        ).show()
+//    }
 
 
     private fun navigateToAdminProfile() {
