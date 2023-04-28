@@ -45,6 +45,7 @@ class CusViewChild : Fragment() {
             val childKey = childname // replace with your actual child key
             val childReference = databaseReference.child(childKey)
 
+
             childReference.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     // Get child information from Firebase Realtime Database

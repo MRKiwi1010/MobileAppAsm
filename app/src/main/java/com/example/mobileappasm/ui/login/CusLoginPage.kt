@@ -50,8 +50,7 @@ class CusLoginPage : Fragment() {
 
 
                     //herehrehurhewurhwquebgurwereqg
-                val viewModel = ViewModelProvider(requireActivity()).get(
-                    cusViewModel::class.java)
+                val viewModel = ViewModelProvider(requireActivity()).get(cusViewModel::class.java)
 
 
                 checkUserDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
