@@ -176,7 +176,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="8dp"
-                                    android:text="Settings"
+                                    android:text="Location"
                                     android:textAlignment="center"
                                     android:textColor="#000000"
                                     android:textSize="13sp"
@@ -215,7 +215,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="8dp"
-                                    android:text="Notification"
+                                    android:text="History"
                                     android:textAlignment="center"
                                     android:textColor="#000000"
                                     android:textSize="13sp"
@@ -273,7 +273,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Mobile:"
+                                android:text="Email:"
                                 android:textColor="#182693"
                                 android:textSize="18sp" />
 
@@ -309,7 +309,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Tell:"
+                                android:text="Name:"
                                 android:textColor="#182693"
                                 android:textSize="18sp" />
 
@@ -345,7 +345,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Address:"
+                                android:text="Username:"
                                 android:textColor="#182693"
                                 android:textSize="18sp" />
 
@@ -376,24 +376,24 @@
                             android:layout_margin="10dp"
                             android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/textView49"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="PostalCode:"
-                                android:textColor="#182693"
-                                android:textSize="18sp" />
+<!--                            <TextView-->
+<!--                                android:id="@+id/textView49"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:text="PostalCode:"-->
+<!--                                android:textColor="#182693"-->
+<!--                                android:textSize="18sp" />-->
 
-                            <TextView
-                                android:id="@+id/textView55"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="9871234567"
-                                android:textAlignment="viewEnd"
-                                android:textColor="#5B5B5B"
-                                android:textSize="16sp" />
+<!--                            <TextView-->
+<!--                                android:id="@+id/textView55"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_weight="1"-->
+<!--                                android:text="9871234567"-->
+<!--                                android:textAlignment="viewEnd"-->
+<!--                                android:textColor="#5B5B5B"-->
+<!--                                android:textSize="16sp" />-->
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
