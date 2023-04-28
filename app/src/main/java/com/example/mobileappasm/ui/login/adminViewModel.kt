@@ -4,8 +4,4 @@ import androidx.lifecycle.ViewModel
 
 class AdminViewModel : ViewModel() {
     var username: String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
 }

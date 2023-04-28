@@ -12,8 +12,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.example.mobileappasm.ui.login.AdminLoginPage.Companion.USERNAME_KEY
+//import com.example.mobileappasm.ui.login.AdminLoginPage.Companion.USERNAME_KEY
+import com.example.mobileappasm.ui.login.AdminViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
@@ -25,6 +27,7 @@ class AdminProfile : Fragment() {
     private var param2: String? = null
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
+    private lateinit var adminViewModel: AdminViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,10 +53,9 @@ class AdminProfile : Fragment() {
             requireActivity().supportFragmentManager.beginTransaction().remove(loginFragment).commit()
         }
 
-        val pref = context?.getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE)
-        val username = pref?.getString("username", "")
-
-        database.orderByChild("username").equalTo(username).addListenerForSingleValueEvent(object : ValueEventListener {
+        val viewModel = ViewModelProvider(requireActivity()).get(AdminViewModel::class.java)
+        adminViewModel = AdminViewModel()
+        database.orderByChild("username").equalTo(adminViewModel.username).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 Log.d("TAG", "snapshot: $snapshot")
                 if (snapshot.exists()) {
