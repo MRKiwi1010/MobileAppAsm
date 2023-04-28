@@ -4,83 +4,96 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import com.example.mobileappasm.R
-import com.example.mobileappasm.databinding.ActivityMainBinding
+import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var userNavController: NavController
-    private lateinit var adminNavController: NavController
-    private lateinit var userAppBarConfiguration: AppBarConfiguration
-    private lateinit var adminAppBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
+    private var drawerLayout: DrawerLayout? = null
+    private lateinit var adminNavView: NavigationView
+    private lateinit var userNavView: NavigationView
+    private var adminNavController: NavController? = null
+    private var userNavController: NavController? = null
+    private var adminAppBarConfig: AppBarConfiguration? = null
+    private var userAppBarConfig: AppBarConfiguration? = null
+    private var isAdmin = false // flag to indicate whether the user is an admin or not
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        drawerLayout = findViewById(R.id.drawerLayout)
 
-        @Suppress("UNUSED_VARIABLE")
-        binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
 
-        drawerLayout = binding.drawerLayout
+        // Admin navigation drawer
+        adminNavView = findViewById(R.id.nav_view_admin)
+        adminNavController = Navigation.findNavController(this, R.id.myNavHostFragment)
+        adminAppBarConfig = AppBarConfiguration.Builder(adminNavController!!.graph)
+            .setDrawerLayout(drawerLayout)
+            .build()
+        adminNavView?.let {
+            NavigationUI.setupWithNavController(it, adminNavController!!)
+        }
+        NavigationUI.setupActionBarWithNavController(
+            this, adminNavController!!,
+            adminAppBarConfig!!
+        )
 
-        // Set up user nav controller and app bar configuration
-        val userNavHostFragment = supportFragmentManager.findFragmentById(R.id.myNavHostFragment) as NavHostFragment
-        userNavController = userNavHostFragment.navController
-        userAppBarConfiguration = AppBarConfiguration(setOf(R.id.cusLoginPage, R.id.cusMainPage), drawerLayout)
+        // User navigation drawer
+        userNavView = findViewById(R.id.nav_view_user)
+        userNavController = Navigation.findNavController(this, R.id.myNavHostFragment)
+        userAppBarConfig = AppBarConfiguration.Builder(userNavController!!.graph)
+            .setDrawerLayout(drawerLayout)
+            .build()
+        userNavView?.let {
+            NavigationUI.setupWithNavController(it, userNavController!!)
+        }
+        NavigationUI.setupActionBarWithNavController(this, userNavController!!, userAppBarConfig!!)
 
-        // Set up admin nav controller and app bar configuration
-        val adminNavHostFragment = supportFragmentManager.findFragmentById(R.id.myNavHostFragment) as NavHostFragment
-        adminNavController = adminNavHostFragment.navController
-        adminAppBarConfiguration = AppBarConfiguration(setOf(R.id.adminLoginPage, R.id.adminProfile), drawerLayout)
+        // Hide both navigation drawers initially
+        adminNavView.setVisibility(View.GONE)
+        userNavView.setVisibility(View.GONE)
 
+        /// Retrieve the isAdmin flag from shared preferences or database
         val sharedPref = getSharedPreferences("my_pref", Context.MODE_PRIVATE)
-        val isAdmin = sharedPref.getBoolean("is_admin", false)
-        val isUser = sharedPref.getBoolean("is_user", false)
+        isAdmin = sharedPref.getBoolean("is_admin", false)
 
-        // Set up the nav controller and app bar configuration based on user role
         if (isAdmin) {
-            // Set up admin navigation drawer
-            binding.navViewUser.visibility = View.GONE
-            binding.navViewAdmin.visibility = View.VISIBLE
-            NavigationUI.setupWithNavController(binding.navViewAdmin, adminNavController)
-            NavigationUI.setupActionBarWithNavController(this, adminNavController, adminAppBarConfiguration)
-        } else if (isUser){
-            // Set up user navigation drawer
-            binding.navViewAdmin.visibility = View.GONE
-            binding.navViewUser.visibility = View.VISIBLE
-            NavigationUI.setupWithNavController(binding.navViewUser, userNavController)
-            NavigationUI.setupActionBarWithNavController(this, userNavController, userAppBarConfiguration)
+            adminNavView.setVisibility(View.GONE)
+            NavigationUI.setupActionBarWithNavController(
+                this,
+                adminNavController!!, adminAppBarConfig!!
+            )
+        } else {
+            userNavView.setVisibility(View.VISIBLE)
+            NavigationUI.setupActionBarWithNavController(
+                this, userNavController!!,
+                userAppBarConfig!!
+            )
         }
     }
 
-//    private fun isUserLoggedInAsAdmin(): Boolean {
-//        // Implement your own logic to determine if user is logged in as admin
-//        val sharedPref = getSharedPreferences("my_pref", Context.MODE_PRIVATE)
-//        val isAdmin = sharedPref.getBoolean("is_admin", false)
-//
-//        if (isAdmin) {
-//            // Admin login
-//            return true
-//        }
-//        return false
-//    }
-
+    // Handle navigation drawer open/close events
     override fun onSupportNavigateUp(): Boolean {
-        val sharedPref = getSharedPreferences("my_pref", Context.MODE_PRIVATE)
-        val isAdmin = sharedPref.getBoolean("is_admin", false)
-
-        // Handle up navigation based on user role
-        return if (isAdmin) {
-            NavigationUI.navigateUp(adminNavController, adminAppBarConfiguration)
+        val navController: NavController?
+        val appBarConfig: AppBarConfiguration?
+        if (isAdmin) {
+            navController = adminNavController
+            appBarConfig = adminAppBarConfig
         } else {
-            NavigationUI.navigateUp(userNavController, userAppBarConfiguration)
-        } || super.onSupportNavigateUp()
+            navController = userNavController
+            appBarConfig = userAppBarConfig
+        }
+        return (NavigationUI.navigateUp(navController!!, appBarConfig!!)
+                || super.onSupportNavigateUp())
     }
+
+    // Example method to retrieve the user role from a shared preference or database
+    private val userRole: Boolean
+        private get() =// TODO: Implement this method
+            true // Assume the user is an admin for demonstration purposes
+
 }
