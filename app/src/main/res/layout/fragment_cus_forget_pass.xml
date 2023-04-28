@@ -96,7 +96,7 @@
 
 
         <Button
-            android:id="@+id/reset_button"
+            android:id="@+id/donate_button"
             style="@android:style/Widget.Button"
             android:layout_width="match_parent"
             android:layout_height="50dp"

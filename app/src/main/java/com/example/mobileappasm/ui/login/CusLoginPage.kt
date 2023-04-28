@@ -9,7 +9,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.example.mobileappasm.data.model.cusViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -45,6 +47,13 @@ class CusLoginPage : Fragment() {
                 val userPassword = loginPassword!!.text.toString().trim { it <= ' ' }
                 val reference = FirebaseDatabase.getInstance().getReference("users")
                 val checkUserDatabase: Query = reference.orderByChild("username").equalTo(userUsername)
+
+
+                    //herehrehurhewurhwquebgurwereqg
+                val viewModel = ViewModelProvider(requireActivity()).get(
+                    cusViewModel::class.java)
+
+
                 checkUserDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         if (snapshot.exists()) {
@@ -60,12 +69,19 @@ class CusLoginPage : Fragment() {
                                 val emailFromDB = snapshot.child(userUsername).child("email").getValue(
                                     String::class.java
                                 )
-                                val usernameFromDB =
-                                    snapshot.child(userUsername).child("username").getValue(
+                                val usernameFromDB = snapshot.child(userUsername).child("username").getValue(
                                         String::class.java
                                     )
 
+
+                                    //is herereereuhruwehjfqibgiewnq
+                                if (usernameFromDB != null) {
+                                    viewModel.setCustomerUsername(usernameFromDB)
+                                }
                                 view.findNavController().navigate(R.id.cusMainPage)
+
+                                //pass in the customer username to the cusViewModel
+
                             } else {
                                 loginPassword!!.error = "Invalid Credentials"
                                 loginPassword!!.requestFocus()

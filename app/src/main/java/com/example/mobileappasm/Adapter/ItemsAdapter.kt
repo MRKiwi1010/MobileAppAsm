@@ -4,13 +4,22 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.mobileappasm.CusProfile
+import com.example.mobileappasm.CusViewChild
 import com.example.mobileappasm.Domain.ItemsDomain
 import com.example.mobileappasm.R
+import com.example.mobileappasm.data.model.cusViewModel
+import kotlinx.coroutines.NonCancellable.start
 
 class ItemsAdapter(private val itemsList: List<ItemsDomain>) :
     RecyclerView.Adapter<ItemsAdapter.ViewHolder>() {
@@ -25,6 +34,7 @@ class ItemsAdapter(private val itemsList: List<ItemsDomain>) :
 //        val itemDescription: TextView = itemView.findViewById(R.id.item_description)
 //        val itemTarget: TextView = itemView.findViewById(R.id.item_target)
         val itemReceived: TextView = itemView.findViewById(R.id.totalReceived)
+        val button3:TextView = itemView.findViewById(R.id.button3)
 //        val itemAge: TextView = itemView.findViewById(R.id.item_age)
     }
 
@@ -45,10 +55,22 @@ class ItemsAdapter(private val itemsList: List<ItemsDomain>) :
 
         holder.itemName.text = currentItem.child_name
         holder.itemNation.text = currentItem.childNation
-//        holder.itemDescription.text = currentItem.child_Des
-//        holder.itemAge.text = currentItem.child_age.toString()
-//        holder.itemTarget.text = currentItem.target.toString()
         holder.itemReceived.text = currentItem.totalReceive.toString()
+
+        // Get the cusViewModel instance using ViewModelProvider
+        holder.button3.setOnClickListener {
+            val childname = currentItem.child_name
+
+            val viewModel = ViewModelProvider(context as FragmentActivity).get(cusViewModel::class.java)
+            viewModel.setchildname(childname)
+
+            val fragment =  CusProfile()//suppose to navigate to the CusViewChild()
+            val transaction = (context as FragmentActivity).supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.myNavHostFragment, fragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+//            view.findNavController().navigate(R.id.cusMainPage)
+        }
     }
 
     override fun getItemCount(): Int {

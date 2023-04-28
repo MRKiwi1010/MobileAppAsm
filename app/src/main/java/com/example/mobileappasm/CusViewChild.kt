@@ -6,8 +6,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.mobileappasm.Domain.ItemsDomain
+import com.example.mobileappasm.data.model.cusViewModel
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 
@@ -36,8 +38,12 @@ class CusViewChild : Fragment() {
         textView142 = view.findViewById(R.id.textView142)
         picTxt = view.findViewById(R.id.picTxt)
 
+
+        val viewModel = ViewModelProvider(requireActivity()).get(cusViewModel::class.java)
+        val childname = viewModel.getchildname()
+
             val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("child")
-            val childKey = "child003" // replace with your actual child key
+            val childKey = childname // replace with your actual child key
             val childReference = databaseReference.child(childKey)
 
             childReference.addValueEventListener(object : ValueEventListener {
