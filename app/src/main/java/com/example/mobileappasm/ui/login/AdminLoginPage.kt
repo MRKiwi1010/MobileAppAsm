@@ -1,190 +1,109 @@
 package com.example.mobileappasm.ui.login
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.annotation.StringRes
-import androidx.fragment.app.Fragment
+import com.example.mobileappasm.R
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import android.widget.Toast
-import androidx.core.os.bundleOf
-import androidx.navigation.fragment.findNavController
-import com.example.mobileappasm.AdminProfile
-import com.example.mobileappasm.databinding.FragmentAdminLoginPageBinding
-
-import com.example.mobileappasm.R
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import com.example.mobileappasm.ui.login.AdminViewModel
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.Query
+import com.google.firebase.database.ValueEventListener
 
 class AdminLoginPage : Fragment() {
 
-    private lateinit var loginViewModel: LoginViewModel
-    private var _binding: FragmentAdminLoginPageBinding? = null
-    private lateinit var auth: FirebaseAuth
-
-    private val binding get() = _binding!!
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        auth = FirebaseAuth.getInstance()
-    }
+    private lateinit var loginUsername: EditText
+    private lateinit var loginPassword: EditText
+    private lateinit var loginButton: Button
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        _binding = FragmentAdminLoginPageBinding.inflate(inflater, container, false)
-        return binding.root
-
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
-            .get(LoginViewModel::class.java)
-
-        val username = binding.username
-        val password = binding.password
-        val loginButton = binding.login
-        val loadingProgressBar = binding.loading
-
-        binding.login.setOnClickListener{
-            val username = username.text.toString()
-            val password = password.text.toString()
-
-            auth.signInWithEmailAndPassword(username, password).addOnCompleteListener{
-                task->
-                if(task.isSuccessful)
-                {
-                    //sign in success
-                    val user = auth.currentUser
-                    if(user!=null)
-                    {
-//                        Toast.makeText()
-                    }
-                }
-                else
-                {
-                    //sign in fail
-                    val exception = task.exception
-                    if (exception is FirebaseAuthException) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Login failed: ${exception.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "Login failed: ${exception?.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
-
-
-        }
-
-        loginViewModel.loginFormState.observe(viewLifecycleOwner,
-            Observer { loginFormState ->
-                if (loginFormState == null) {
-                    return@Observer
-                }
-                loginButton.isEnabled = loginFormState.isDataValid
-                loginFormState.usernameError?.let {
-                    username.error = getString(it)
-                }
-                loginFormState.passwordError?.let {
-                    password.error = getString(it)
-                }
-            })
-
-        loginViewModel.loginResult.observe(viewLifecycleOwner,
-            Observer { loginResult ->
-                loginResult ?: return@Observer
-                loadingProgressBar.visibility = View.GONE
-                loginResult.error?.let {
-                    showLoginFailed(it)
-                }
-                loginResult.success?.let {
-                    updateUiWithUser(it)
-                }
-            })
-
-        val afterTextChangedListener = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                // ignore
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                // ignore
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                loginViewModel.loginDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
-                )
-            }
-        }
-        username.addTextChangedListener(afterTextChangedListener)
-        password.addTextChangedListener(afterTextChangedListener)
-        password.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loginViewModel.login(
-                    username.text.toString(),
-                    password.text.toString()
-                )
-            }
-            false
-        }
+        val view = inflater.inflate(R.layout.fragment_admin_login_page, container, false)
+        loginUsername = view.findViewById(R.id.username)
+        loginPassword = view.findViewById(R.id.password)
+        loginButton = view.findViewById(R.id.login)
 
         loginButton.setOnClickListener {
-            loadingProgressBar.visibility = View.VISIBLE
-            loginViewModel.login(
-                username.text.toString(),
-                password.text.toString()
-            )
+            if (!validateUsername() or !validatePassword()) {
+
+            } else {
+                val userUsername = loginUsername.text.toString().trim() { it <= ' ' }
+                val userPassword = loginPassword.text.toString().trim() { it <= ' ' }
+                val reference = FirebaseDatabase.getInstance().getReference("admin")
+                val checkUserDatabase: Query = reference.orderByChild("username").equalTo(userUsername)
+
+                val viewModel = ViewModelProvider(requireActivity()).get(AdminViewModel::class.java)
+
+                checkUserDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if (snapshot.exists()) {
+                            loginUsername!!.error = null
+                            val passwordFromDB = snapshot.child(userUsername).child("password").getValue(String::class.java)
+                            if (passwordFromDB.toString() == userPassword) {
+                                loginUsername.error = null
+
+                                val usernameFromDB = snapshot.child(userUsername).child("username").getValue(
+                                    String::class.java
+                                )
+
+                                if (usernameFromDB != null) {
+                                    viewModel.username = usernameFromDB
+                                }
+
+                                view.findNavController().navigate(R.id.adminProfile)
+
+                            }
+                            else {
+                                loginPassword.error = "Invalid Credentials"
+                                loginPassword.requestFocus()
+                            }
+                        }
+                        else {
+                            loginUsername.error = "User does not exist"
+                            loginUsername.requestFocus()
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {}
+                })
+            }
+        }
+
+        return view
+    }
+
+    private fun validateUsername(): Boolean {
+        val `val` = loginUsername.text.toString()
+        return if (`val`.isEmpty()) {
+            loginUsername.error = "Username cannot be empty"
+            false
+        } else {
+            loginUsername.error = null
+            true
         }
     }
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome) + model.displayName
-        // TODO : initiate successful logged in experience
-        val appContext = context?.applicationContext ?: return
-        Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
-
-        //Navigation to Admin Profile Okei
-        navigateToAdminProfile(model.username, model.password)
-    }
-
-    private fun navigateToAdminProfile(username: String, password: String) {
-        val bundle = bundleOf(
-            "username" to username,
-            "password" to password
-        )
-        findNavController().navigate(
-            R.id.action_adminLoginPage_to_adminProfile,
-            bundle
-        )
-    }
-
-    private fun showLoginFailed(@StringRes errorString: Int) {
-        val appContext = context?.applicationContext ?: return
-        Toast.makeText(appContext, errorString, Toast.LENGTH_LONG).show()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun validatePassword(): Boolean {
+        val `val` = loginPassword.text.toString()
+        return if (`val`.isEmpty()) {
+            loginPassword.error = "Password cannot be empty"
+            false
+        } else {
+            loginPassword.error = null
+            true
+        }
     }
 }
+
+
