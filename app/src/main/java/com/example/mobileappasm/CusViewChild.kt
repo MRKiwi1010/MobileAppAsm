@@ -3,13 +3,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.example.mobileappasm.Domain.ItemsDomain
 import com.example.mobileappasm.data.model.cusViewModel
@@ -25,7 +22,6 @@ class CusViewChild : Fragment() {
     private lateinit var priceTxt13: TextView
     private lateinit var textView142: TextView
     private lateinit var picTxt: ImageView
-    private lateinit var button: Button
     private var item: ItemsDomain? = null
 
     override fun onCreateView(
@@ -41,34 +37,24 @@ class CusViewChild : Fragment() {
         priceTxt13 = view.findViewById(R.id.priceTxt13)
         textView142 = view.findViewById(R.id.textView142)
         picTxt = view.findViewById(R.id.picTxt)
-        button = view.findViewById(R.id.button)
-
-            button.setOnClickListener {
-                view.findNavController().navigate(R.id.cusDonateNow)
-            }
 
         val viewModel = ViewModelProvider(requireActivity()).get(cusViewModel::class.java)
-        val customerUsername = viewModel.getchildname()
-        val childKey = viewModel.getChildKey()
-        val username = customerUsername // replace with your actual users key
-        childNameTxt.text = customerUsername
+        val childname = viewModel.getchildname()
 
+            val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("child")
+            val childKey = childname // replace with your actual child key
+            val childReference = databaseReference.child(childKey)
 
-        val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("child")
-        val query: Query = databaseReference.orderByChild("childName").equalTo(username)
-
-        query.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Iterate over the child nodes returned by the query
-                for (childSnapshot in dataSnapshot.children) {
-                    // Get the child information from the snapshot
-                    val childAge = childSnapshot.child("childAge").value.toString()
-                    val childName = childSnapshot.child("childName").value.toString()
-                    val childNation = childSnapshot.child("childNation").value.toString()
-                    val child_Des = childSnapshot.child("child_Des").value.toString()
-                    val target = childSnapshot.child("target").value.toString()
-                    val totalReceived = childSnapshot.child("totalReceived").value.toString()
-                    val childUrl = childSnapshot.child("childUrl").value.toString()
+            childReference.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    // Get child information from Firebase Realtime Database
+                    val childAge = dataSnapshot.child("childAge").value.toString()
+                    val childName = dataSnapshot.child("childName").value.toString()
+                    val childNation = dataSnapshot.child("childNation").value.toString()
+                    val child_Des = dataSnapshot.child("child_Des").value.toString()
+                    val target = dataSnapshot.child("target").value.toString()
+                    val totalReceived = dataSnapshot.child("totalReceived").value.toString()
+                    val childUrl = dataSnapshot.child("childUrl").value.toString()
 
                     // Set the retrieved information to the respective TextViews
                     childAgeTxt.text =  childAge + " Years Old"
@@ -80,12 +66,11 @@ class CusViewChild : Fragment() {
 
                     Glide.with(requireContext()).load(childUrl).into(picTxt)
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                // Handle the error
-            }
-        })
+                override fun onCancelled(error: DatabaseError) {
+                    // Handle the error
+                }
+            })
 
         return view
     }

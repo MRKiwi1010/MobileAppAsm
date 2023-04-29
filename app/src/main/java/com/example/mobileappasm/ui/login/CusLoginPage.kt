@@ -50,7 +50,8 @@ class CusLoginPage : Fragment() {
 
 
                     //herehrehurhewurhwquebgurwereqg
-                val viewModel = ViewModelProvider(requireActivity()).get(cusViewModel::class.java)
+                val viewModel = ViewModelProvider(requireActivity()).get(
+                    cusViewModel::class.java)
 
 
                 checkUserDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -62,8 +63,6 @@ class CusLoginPage : Fragment() {
                             )
                             if (passwordFromDB == userPassword) {
                                 loginUsername!!.error = null
-
-
                                 val nameFromDB = snapshot.child(userUsername).child("name").getValue(
                                     String::class.java
                                 )

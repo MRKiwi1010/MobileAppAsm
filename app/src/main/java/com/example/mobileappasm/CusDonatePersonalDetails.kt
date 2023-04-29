@@ -8,9 +8,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.example.mobileappasm.data.model.cusViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -44,28 +42,14 @@ class CusDonatePersonalDetails : Fragment() {
 
                 gridView.setOnItemClickListener { _, _, position, _ ->
                     // Handle click event for each item in the grid view
-                    val childName = childNames[position]
-                    val childKey = dataSnapshot.children.elementAt(position).key
-
-                    // Navigate to the CusViewChild fragment and pass the selected childName and childKey
-                    val viewModel = ViewModelProvider(context as FragmentActivity).get(cusViewModel::class.java)
-                    viewModel.setchildname(childName)
-                    if (childKey != null) {
-                        viewModel.setChildKey(childKey)
-                    }
-
-                    val fragment = CusViewChild()
-                    val transaction = (context).supportFragmentManager.beginTransaction()
-                    val containerId = R.id.myNavHostFragment
-
-                    val container = (context).findViewById<ViewGroup>(containerId)
-                    container.removeAllViews()
-
-                    transaction.replace(containerId, fragment)
-                    transaction.addToBackStack(null)
-                    transaction.commit()
+                    val selectedChild = childNames[position]
+// Navigate to the CusViewChild fragment and pass the selected childName
+                    val bundle = Bundle()
+                    bundle.putString("childName", selectedChild)
+                    val fragment = CusMainPage()
+                    fragment.arguments = bundle
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.cusMainPage, fragment)?.addToBackStack(null)?.commit()
                 }
-
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -114,25 +98,12 @@ class CusDonatePersonalDetails : Fragment() {
             }
 
             viewHolder.button.setOnClickListener {
-                val childname = childNames[position]
-                val viewModel = ViewModelProvider(context as FragmentActivity).get(cusViewModel::class.java)
-                viewModel.setchildname(childname)
-
-//            val viewModel = ViewModelProvider(requireActivity()).get(cusViewModel::class.java)
-                val fragment = CusViewChild()
-                val transaction = (context as FragmentActivity).supportFragmentManager.beginTransaction()
-
-// Get the ID of the fragment container
-                val containerId = R.id.myNavHostFragment
-
-// Remove all views from the parent ViewGroup of the fragment container
-                val container = (context as FragmentActivity).findViewById<ViewGroup>(containerId)
-                container.removeAllViews()
-
-// Replace the current fragment with the new one
-                transaction.replace(containerId, fragment)
-                transaction.addToBackStack(null)
-                transaction.commit()
+                val selectedChild = childNames[position]
+                val bundle = Bundle()
+                bundle.putString("childName", selectedChild)
+                val fragment = CusMainPage()
+                fragment.arguments = bundle
+                activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.cusMainPage,fragment)?.addToBackStack(null)?.commit()
             }
 
             return convertView!!

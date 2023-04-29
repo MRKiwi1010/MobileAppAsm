@@ -111,34 +111,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"/>
 
-            <TextView
-                android:id="@+id/company_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/company_label"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:id="@+id/company"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:id="@+id/address_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/address_label"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:id="@+id/address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"/>
-
         </LinearLayout>
 
     </ScrollView>
