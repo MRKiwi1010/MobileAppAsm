@@ -50,8 +50,11 @@
                 android:textColor="#ffffff"
                 android:textSize="30sp"
                 android:textStyle="bold"
+
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+
 
             <ImageView
                 android:id="@+id/imageViewff"
@@ -74,8 +77,13 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/spinner"
+
+
+            <EditText
+                android:id="@+id/editAmount"
+                android:ems="10"
+                android:hint="Donation Amount (RM)"
+                android:textAlignment="center"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="32dp"
@@ -83,10 +91,8 @@
                 android:layout_marginEnd="32dp"
                 android:background="@drawable/edittext_background"
                 tools:layout_editor_absoluteX="1dp"
-                android:spinnerMode="dropdown"
-                tools:layout_editor_absoluteY="510dp" />
-
-
+                android:inputType="number"
+                tools:layout_editor_absoluteY="510dp"/>
 
             <RadioButton
                 android:id="@+id/radioButton"
@@ -99,7 +105,7 @@
                 tools:layout_editor_absoluteY="579dp" />
 
             <Button
-                android:id="@+id/donate_button"
+                android:id="@+id/btnPayment"
                 style="@android:style/Widget.Button"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
@@ -113,6 +119,10 @@
                 android:textStyle="bold"
                 tools:layout_editor_absoluteX="31dp"
                 tools:layout_editor_absoluteY="579dp" />
+
+
+
+
 
 
         </LinearLayout>
