@@ -6,6 +6,15 @@ class cusViewModel : ViewModel() {
 
     private var customerUsername: String = ""
     private var childname: String = ""
+    private var _childKey: String = ""
+
+    fun setChildKey(childKey: String) {
+        _childKey = childKey
+    }
+
+    fun getChildKey(): String {
+        return _childKey
+    }
 
     fun setCustomerUsername(username: String) {
         customerUsername = username

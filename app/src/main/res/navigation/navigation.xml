@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/adminLoginPage">
+    app:startDestination="@id/cusLoginPage">
 
     <fragment
         android:id="@+id/AAHomePage"
@@ -99,6 +99,9 @@
         <action
             android:id="@+id/action_cusProfile_to_cusDonationHistory"
             app:destination="@id/cusDonationHistory" />
+        <action
+            android:id="@+id/action_cusProfile_to_cuseditProfile"
+            app:destination="@id/cuseditProfile" />
     </fragment>
     <fragment
         android:id="@+id/cusDonatePersonalDetails"
@@ -143,4 +146,9 @@
         android:name="com.example.mobileappasm.AdminAddChild"
         android:label="fragment_admin_add_child"
         tools:layout="@layout/fragment_admin_add_child" />
+    <fragment
+        android:id="@+id/cuseditProfile"
+        android:name="com.example.mobileappasm.CuseditProfile"
+        android:label="fragment_cus_edit_profile"
+        tools:layout="@layout/fragment_cus_edit_profile" />
 </navigation>
