@@ -3,6 +3,7 @@ package com.example.mobileappasm.ui.login
 import android.content.Context
 import com.example.mobileappasm.R
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.example.mobileappasm.ui.login.adminViewModel
 import com.example.mobileappasm.Admin
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -36,6 +38,8 @@ class AdminLoginPage : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_admin_login_page, container, false)
+        val sharedPref = requireContext().getSharedPreferences("my_pref", Context.MODE_PRIVATE)
+        sharedPref.edit().putBoolean("is_user", false).apply()
         loginUsername = view.findViewById(R.id.username)
         loginPassword = view.findViewById(R.id.password)
         loginButton = view.findViewById(R.id.login)
@@ -48,6 +52,7 @@ class AdminLoginPage : Fragment() {
                 val userPassword = loginPassword.text.toString().trim() { it <= ' ' }
 
                 val checkUserDatabase: Query = database.orderByChild("username").equalTo(userUsername)
+
 
                 adminViewModel = adminViewModel()
                 val viewModel = ViewModelProvider(requireActivity())[adminViewModel::class.java]
@@ -68,13 +73,13 @@ class AdminLoginPage : Fragment() {
 
                                             if (usernameFromDB != null) {
                                                 viewModel.username = admin.username
-                                                val sharedPref = requireContext().getSharedPreferences("my_pref", Context.MODE_PRIVATE)
-                                                sharedPref.edit().putBoolean("is_admin", true).apply() // replace true with false for user login
+
                                             }
 
                                             viewModel.username = admin.username
                                             val sharedPref = requireContext().getSharedPreferences("my_pref", Context.MODE_PRIVATE)
                                             sharedPref.edit().putBoolean("is_admin", true).apply() // replace true with false for user login
+                                            Log.d("TAG", "Fuck My Life!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
                                             view.findNavController().navigate(R.id.adminProfile)
 

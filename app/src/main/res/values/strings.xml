@@ -40,5 +40,4 @@
     <string name="company_label">Company:</string>
     <string name="address_label">Address:</string>
     <string name="edit_button_label">Edit Profile</string>
-    <string name="preference_file_key">my_prefs</string>
 </resources>

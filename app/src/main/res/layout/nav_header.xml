@@ -3,15 +3,4 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="202dp"
-        android:layout_height="120dp"
-        app:srcCompat="@drawable/cso"
-        tools:layout_editor_absoluteX="104dp"
-        tools:layout_editor_absoluteY="1dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    android:layout_height="match_parent"/>
