@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/cusLoginPage">
+    app:startDestination="@id/cusPaymentGateway">
 
     <fragment
         android:id="@+id/AAHomePage"
@@ -90,7 +90,11 @@
         android:id="@+id/cusDonateNow"
         android:name="com.example.mobileappasm.CusDonateNow"
         android:label="fragment_cus_donate_now"
-        tools:layout="@layout/fragment_cus_donate_now" />
+        tools:layout="@layout/fragment_cus_donate_now" >
+        <action
+            android:id="@+id/action_cusDonateNow_to_cusPaymentGateway"
+            app:destination="@id/cusPaymentGateway" />
+    </fragment>
     <fragment
         android:id="@+id/cusProfile"
         android:name="com.example.mobileappasm.CusProfile"
@@ -151,4 +155,9 @@
         android:name="com.example.mobileappasm.CuseditProfile"
         android:label="fragment_cus_edit_profile"
         tools:layout="@layout/fragment_cus_edit_profile" />
+    <fragment
+        android:id="@+id/cusPaymentGateway"
+        android:name="com.example.mobileappasm.cusPaymentGateway"
+        android:label="fragment_cus_payment_gateway"
+        tools:layout="@layout/fragment_cus_payment_gateway" />
 </navigation>

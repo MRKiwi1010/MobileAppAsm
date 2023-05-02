@@ -14,20 +14,20 @@
     <string name="login_failed">"Login failed"</string>
 
 
-    <string-array name="amount_group">
-        <item name="r10">RM10</item>
-        <item name="r20">RM20</item>
-        <item name="r30">RM30</item>
-        <item name="r40">RM40</item>
-        <item name="r50">RM50</item>
-        <item name="r80">RM80</item>
-        <item name="r100">RM100</item>
-        <item name="r150">RM150</item>
-        <item name="r200">RM200</item>
-        <item name="r300">RM300</item>
-        <item name="r400">RM400</item>
-        <item name="r500">RM500</item>
-        <item name="other">Donate Others</item>
+    <string-array name="bankType">
+        <item name="rhb">RHB</item>
+        <item name="mb">Maybank</item>
+        <item name="hsbc">HSBC</item>
+        <item name="sc">Standared Chartered</item>
+        <item name="cimb">CIMB</item>
+        <item name="pb">Public Bank</item>
+        <item name="ab">Am Bank</item>
+        <item name="ocbc">OCBC</item>
+        <item name="uob">United Overseas Bank</item>
+        <item name="ct">Citibank</item>
+        <item name="af">Affin Bank</item>
+        <item name="bi">Bank Islam</item>
+        <item name="hlb">Hong Leong Bank</item>
     </string-array>
 
     <!--    Admin-->
