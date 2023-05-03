@@ -1,11 +1,13 @@
 package com.example.mobileappasm
 
 data class Child(
+    var imageUri: String? = null,
     val childName: String = "",
     val childNation: String = "",
     val childAge: Int,
+    val childDesc: String = "",
+    val target: Double,
     val totalReceived: Double,
-    val durationLeft: Int
 ) {
-    constructor() : this( "", "", 0, 0.0, 0)
+    constructor() : this("","","",0, "",0.0,0.0)
 }
