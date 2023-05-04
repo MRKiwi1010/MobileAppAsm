@@ -225,8 +225,4 @@
         android:id="@+id/adminEditAdmin"
         android:name="com.example.mobileappasm.AdminEditAdmin"
         android:label="AdminEditAdmin" />
-    <fragment
-        android:id="@+id/adminEditChild2"
-        android:name="com.example.mobileappasm.AdminEditChild"
-        android:label="AdminEditChild" />
 </navigation>

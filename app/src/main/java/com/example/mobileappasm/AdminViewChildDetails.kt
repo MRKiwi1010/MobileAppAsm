@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.example.mobileappasm.databinding.FragmentAdminViewChildDetailsBinding
 import com.google.firebase.database.*
@@ -47,6 +48,9 @@ class AdminViewChildDetails : Fragment() {
         binding.btnSaveChanges.setOnClickListener {
             saveChanges()
         }
+        binding.btnDelete.setOnClickListener {
+            deleteChildRecord()
+        }
     }
 
     private fun fetchCustomerData() {
@@ -60,7 +64,7 @@ class AdminViewChildDetails : Fragment() {
                     binding.childAge.setText(child.childAge.toString())
                     binding.childDesc.setText(child.child_Des)
                     binding.childTarget.setText(child.target.toString())
-                    Glide.with(requireContext()).load(child.childUrl).into(binding.cusImageView)
+                    Glide.with(requireContext()).load(child.childUrl).into(binding.childImageView)
                     val spinner: Spinner = binding.spinnerChildNation
                     val adapter = spinner.adapter as ArrayAdapter<String>
                     val position = adapter.getPosition(child.childNation)
@@ -95,13 +99,13 @@ class AdminViewChildDetails : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == IMAGE_PICK_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             selectedImageUri = data.data
-            Glide.with(requireContext()).load(selectedImageUri).into(binding.cusImageView)
+            Glide.with(requireContext()).load(selectedImageUri).into(binding.childImageView)
         }
     }
 
     private fun saveChanges() {
-        val databaseReference = firebaseDatabase.getReference("users")
-        val query = databaseReference.orderByChild("username").equalTo(childName)
+        val databaseReference = firebaseDatabase.getReference("child")
+        val query = databaseReference.orderByChild("childName").equalTo(childName)
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -112,7 +116,7 @@ class AdminViewChildDetails : Fragment() {
                     dataSnapshot.children.first().ref.child("child_Des")
                         .setValue(binding.childDesc.text.toString())
                     dataSnapshot.children.first().ref.child("target")
-                        .setValue(binding.childTarget.text.toString().toInt())
+                        .setValue(binding.childTarget.text.toString().toDouble())
                     dataSnapshot.children.first().ref.child("childNation")
                         .setValue(binding.spinnerChildNation.selectedItem.toString())
                     uploadImageToFirebaseStorage()
@@ -124,6 +128,28 @@ class AdminViewChildDetails : Fragment() {
             }
         })
     }
+
+    private fun deleteChildRecord() {
+        val databaseReference = firebaseDatabase.getReference("child")
+        val query = databaseReference.orderByChild("childName").equalTo(childName)
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    dataSnapshot.children.first().ref.removeValue()
+                    // Delete the image file from Firebase Storage
+                    FirebaseStorage.getInstance().getReference("images/${childName}.jpg").delete()
+                    Toast.makeText(context, "Child record deleted successfully", Toast.LENGTH_SHORT).show()
+                    // Navigate back to the AdminChildList fragment
+                    requireActivity().supportFragmentManager.popBackStack()
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Toast.makeText(context, databaseError.message, Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
 
     private fun uploadImageToFirebaseStorage() {
         if (selectedImageUri == null) {
@@ -141,12 +167,12 @@ class AdminViewChildDetails : Fragment() {
             .addOnSuccessListener {
                 // If the image upload is successful, get the download URL and save it to the database
                 storageReference.downloadUrl.addOnSuccessListener { uri ->
-                    val databaseReference = firebaseDatabase.getReference("users")
-                    val query = databaseReference.orderByChild("username").equalTo(childName)
+                    val databaseReference = firebaseDatabase.getReference("child")
+                    val query = databaseReference.orderByChild("childName").equalTo(childName)
                     query.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
                             if (dataSnapshot.exists()) {
-                                dataSnapshot.children.first().ref.child("imageUrl")
+                                dataSnapshot.children.first().ref.child("childUrl")
                                     .setValue(uri.toString())
                                 saveChangesToDatabase()
                             }
@@ -171,7 +197,9 @@ class AdminViewChildDetails : Fragment() {
     private fun saveChangesToDatabase() {
         // Display a success message and exit the fragment
         Toast.makeText(context, "Changes saved successfully!", Toast.LENGTH_SHORT).show()
-        requireActivity().supportFragmentManager.popBackStack()
+        view?.findNavController()?.navigate(R.id.adminChildList)
+//        requireActivity().supportFragmentManager.popBackStack()
+
     }
 
     companion object {
