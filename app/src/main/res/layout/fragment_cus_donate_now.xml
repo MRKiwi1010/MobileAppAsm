@@ -65,14 +65,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/eat" />
+                app:srcCompat="@drawable/donatenowpic" />
 
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:text="Food Campaign"
+                android:text="Child Support Campaign"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -91,10 +91,10 @@
                 android:layout_marginEnd="32dp"
                 android:background="@drawable/edittext_background"
                 tools:layout_editor_absoluteX="1dp"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 tools:layout_editor_absoluteY="510dp"/>
 
-            <RadioButton
+            <CheckBox
                 android:id="@+id/radioButton"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
