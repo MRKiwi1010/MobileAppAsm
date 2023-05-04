@@ -20,12 +20,16 @@ class AAHomePage : Fragment() {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_a_a_home_page, container, false)
 
-//        buttonget = view.findViewById(R.id.buttonget)
-//
-//        buttonget.setOnClickListener {s
-//            view.findNavController().navigate(R.id.cusLoginPage)
-//
-//        }
+        buttonget = view.findViewById(R.id.playBtn)
+
+        buttonget.setOnClickListener {
+            view.findNavController().navigate(R.id.cusLoginPage)
+
+        }
+
+        view.findViewById<Button>(R.id.playplayBtn).setOnClickListener{
+            view.findNavController().navigate(R.id.adminLoginPage)
+        }
 
 
         return view
