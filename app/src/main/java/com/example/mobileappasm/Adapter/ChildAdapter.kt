@@ -50,8 +50,10 @@ class ChildAdapter (private val context: Context) : RecyclerView.Adapter<ChildAd
         private val childIdView: TextView = itemView.findViewById(R.id.childIdTextView)
         private val childNameView: TextView = itemView.findViewById(R.id.childNameTextView)
         private val childNationView: TextView = itemView.findViewById(R.id.childNationTextView)
+        private val childDescView: TextView = itemView.findViewById(R.id.childDescTextView)
         private val childAgeView: TextView = itemView.findViewById(R.id.childAgeTextView)
-        private val durationLeftView: TextView = itemView.findViewById(R.id.durationLeftTextView)
+        //private val durationLeftView: TextView = itemView.findViewById(R.id.durationLeftTextView)
+        private val childTargetView: TextView = itemView.findViewById(R.id.childTargetTextView)
         private val totalReceivedView: TextView = itemView.findViewById(R.id.totalReceivedTextView)
 
         init {
@@ -67,8 +69,10 @@ class ChildAdapter (private val context: Context) : RecyclerView.Adapter<ChildAd
             childNumberView.text = (adapterPosition + 1).toString()
             childNameView.text = child.childName
             childNationView.text = child.childNation
+            childDescView.text = child.childDesc
             childAgeView.text = child.childAge.toString()
-            durationLeftView.text = child.durationLeft.toString()
+            childTargetView.text = child.target.toString()
+            //durationLeftView.text = child.durationLeft.toString()
             totalReceivedView.text = child.totalReceived.toString()
         }
     }

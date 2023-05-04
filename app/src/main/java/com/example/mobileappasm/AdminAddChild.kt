@@ -1,18 +1,25 @@
 package com.example.mobileappasm
 
-import android.R
+import com.example.mobileappasm.R
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.mobileappasm.databinding.FragmentAdminAddChildBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -24,6 +31,13 @@ class AdminAddChild : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
     private lateinit var binding: FragmentAdminAddChildBinding
+    private var selectedImageUri: Uri? = null
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            selectedImageUri = result.data?.data
+            binding.childImageView.setImageURI(selectedImageUri)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,52 +60,96 @@ class AdminAddChild : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val asiaCountries = arrayOf("China", "India", "Japan", "Indonesia", "Vietnam", "Philippines", "Thailand", "Pakistan", "Bangladesh", "South Korea")
-        val adapter = ArrayAdapter<String>(requireContext(), R.layout.simple_spinner_item, asiaCountries)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.childNationSpinner.adapter = adapter
+        auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance().reference
+//        val btnSelectImage = binding.btnSelectImage
+        val btnSelectImage = view.findViewById<Button>(R.id.btnSelectImage)
+        val imageView = view.findViewById<ImageView>(R.id.childImageView)
 
+
+
+        btnSelectImage.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            pickImageLauncher.launch(intent)
+        }
+
+        val asiaCountries = arrayOf("China", "India", "Japan", "Indonesia", "Vietnam", "Philippines", "Thailand", "Pakistan", "Bangladesh", "South Korea")
+        val adapter = ArrayAdapter<String>(requireContext(), R.layout.child_drop_drop_item, asiaCountries)
+        adapter.setDropDownViewResource(R.layout.simple_child_drop_drop_item)
+        binding.childNationSpinner.adapter = adapter
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
 
         val btnAddChild = binding.btnAddChild
         btnAddChild.setOnClickListener {
-            database.child("child").addListenerForSingleValueEvent(object : ValueEventListener {
+            database.child("child").orderByKey().limitToFirst(1).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val childCount = snapshot.childrenCount.toInt() + 1
+                    var childCount = 1
+                    for (childSnapshot in snapshot.children) {
+                        val childId = childSnapshot.key.toString()
+                        childCount = childId.substring(5).toInt() + 1
+                    }
                     val childId = "child" + "%03d".format(childCount)
 
                     val name = binding.childName.text.toString()
                     val nation = binding.childNationSpinner.selectedItem as String
                     val age = binding.childAge.text.toString()
-                    val durationLeft = binding.childDurationLeft.text.toString()
+                    val desc = binding.childDesc.text.toString()
+                    val target = binding.childTarget.text.toString()
                     val totalReceived = 0;
-
                     val child = Child(
+                        selectedImageUri.toString(),
                         name,
                         nation,
                         age.toInt(),
-                        totalReceived.toDouble(),
-                        durationLeft.toInt()
-                        )
-                    val childUpdates = HashMap<String, Any>()
-                    childUpdates[childId] = child
+                        desc,
+                        target.toDouble(),
+                        totalReceived.toDouble()
+                    )
 
-                    database.child("child").updateChildren(childUpdates)
-                        .addOnSuccessListener {
-                            Toast.makeText(requireContext(), "Added Successfully!", Toast.LENGTH_SHORT).show()
+                    //upload image
+                    if (selectedImageUri != null) {
+                        val storageRef = FirebaseStorage.getInstance().reference
+                        val imageRef = storageRef.child("child/$childId.jpg")
+
+                        val uploadTask = imageRef.putFile(selectedImageUri!!)
+                        uploadTask.continueWithTask { task ->
+                            if (!task.isSuccessful) {
+                                task.exception?.let { throw it }
+                            }
+                            imageRef.downloadUrl
+                        }.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val downloadUri = task.result.toString()
+
+                                child.imageUri = downloadUri // Save the download URL with the child data
+                                saveChildData(child, childId)
+
+                                val childUpdates = HashMap<String, Any>()
+                                childUpdates[childId] = child
+
+                                database.child("child").updateChildren(childUpdates)
+                                    .addOnSuccessListener {
+                                        Toast.makeText(requireContext(), "Added Successfully!", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .addOnFailureListener{
+                                        Toast.makeText(requireContext(),"Failed", Toast.LENGTH_SHORT).show()
+                                        Log.e(TAG, "Failed", it)
+                                    }
+                            }
                         }
-                        .addOnFailureListener{
-                            Toast.makeText(requireContext(),"Failed", Toast.LENGTH_SHORT).show()
-                            Log.e(TAG, "Failed", it)
-                        }
+                    }
                 }
                 override fun onCancelled(databaseError: DatabaseError) {
                     Toast.makeText(requireContext(),"Failed", Toast.LENGTH_SHORT).show()
                 }
             })
         }
+    }
+
+    fun saveChildData(child: Child, childId: String) {
+        // Your code to save the child data
     }
 
     companion object {
