@@ -1,5 +1,6 @@
 package com.example.mobileappasm.data.model
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class cusViewModel : ViewModel() {

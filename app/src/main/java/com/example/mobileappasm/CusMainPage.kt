@@ -126,9 +126,9 @@ class CusMainPage : Fragment() {
                         val item = ItemsDomain(childName!!, childNation!!, "", totalReceived!!, target!!, childimg!!, 0)
                         itemsArraylist.add(item)
                     }
-                    else  if (target > totalReceived) {
-                        val item = ItemsDomain(childName!!, childNation!!, "", totalReceived!!, target!!, childimg!!, 0)
-                        itemsArraylist2.add(item)
+                    if (target > totalReceived) {
+                        val item2 = ItemsDomain(childName!!, childNation!!, "", totalReceived!!, target!!, childimg!!, 0)
+                        itemsArraylist2.add(item2)
                     }
                 }
 

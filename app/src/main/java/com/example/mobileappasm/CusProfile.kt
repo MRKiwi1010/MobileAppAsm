@@ -5,9 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
+import com.example.mobileappasm.data.model.cusViewModel
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 
@@ -19,6 +24,9 @@ class CusProfile : Fragment() {
     private lateinit var textView56: TextView
     private lateinit var textView58: TextView
     private lateinit var imageView: ImageView
+    private lateinit var textView52: TextView
+    private lateinit var button: Button
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,40 +42,48 @@ class CusProfile : Fragment() {
         textView56 = view.findViewById(R.id.textView56)
         textView58 = view.findViewById(R.id.textView58)
         imageView = view.findViewById(R.id.imageView)
+        textView52 = view.findViewById(R.id.textView52)
+        button = view.findViewById(R.id.button)
+        val paymentNavi = view.findViewById<LinearLayout>(R.id.paymentNavi)
+        val locationNavi = view.findViewById<LinearLayout>(R.id.locationNavi)
+        val historyNavi = view.findViewById<LinearLayout>(R.id.historyNavi)
 
+//        paymentNavi.setOnClickListener{view.findNavController().navigate(R.id.cus)}
+        textView52.setOnClickListener{ view.findNavController().navigate(R.id.cuseditProfile) }
+        button.setOnClickListener { view.findNavController().navigate(R.id.cuseditProfile) }
+        paymentNavi.setOnClickListener { view.findNavController().navigate(R.id.cusDonateNow) }
+        locationNavi.setOnClickListener { view.findNavController().navigate(R.id.cusAboutUs) }
+        historyNavi.setOnClickListener { view.findNavController().navigate(R.id.cusDonationHistory) }
+
+        val viewModel = ViewModelProvider(requireActivity()).get(cusViewModel::class.java)
+        val customerUsername = viewModel.getCustomerUsername()
+        val username = customerUsername // replace with your actual users key
 
         val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("users")
-        val username = "jason" // replace with your actual users key
-        val childReference = databaseReference.child(username)
+        val query: Query = databaseReference.orderByChild("username").equalTo(username)
 
-
-        childReference.addValueEventListener(object : ValueEventListener {
+        query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Get child information from Firebase Realtime Database
-                val useremail = dataSnapshot.child("email").value.toString()
-                val user_name = dataSnapshot.child("name").value.toString()
-                val userpassword = dataSnapshot.child("password").value.toString()
-                val username = dataSnapshot.child("username").value.toString()
-                val userimg = dataSnapshot.child("userimg").value.toString()
+                for (childSnapshot in dataSnapshot.children) {
+                    val username = childSnapshot.child("username").value.toString()
+                    val email = childSnapshot.child("email").value.toString()
+                    val name = childSnapshot.child("name").value.toString()
+                    val password = childSnapshot.child("childNation").value.toString()
+                    val userimg = childSnapshot.child("userimg").value.toString()
 
-                // Set the retrieved information to the respective TextViews
-                textView2.text =  useremail
-                textView.text = user_name
-                textView54.text = useremail
-                textView56.text = user_name
-                textView58.text = username
-//                //the childimg is imageview
-                val storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(userimg)
+                    textView.text = username
+                    textView2.text = email
+                    textView54.text = email
+                    textView56.text = name
+                    textView58.text = username
 
-                Glide.with(requireContext())
-                    .load(storageRef)
-                    .into(imageView)
+                    Glide.with(requireContext()).load(userimg).into(imageView)
+                }
             }
+
             override fun onCancelled(error: DatabaseError) {
-                // Handle the error
             }
         })
-
         return view
     }
 

@@ -26,6 +26,8 @@ class CusLoginPage : Fragment() {
     private lateinit var signupRedirectText: TextView
     private lateinit var forgotRedirectText: TextView
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,42 +47,27 @@ class CusLoginPage : Fragment() {
             else {
                 val userUsername = loginUsername!!.text.toString().trim { it <= ' ' }
                 val userPassword = loginPassword!!.text.toString().trim { it <= ' ' }
-                val reference = FirebaseDatabase.getInstance().getReference("users")
+                val reference = FirebaseDatabase.getInstance().reference.child("users")
                 val checkUserDatabase: Query = reference.orderByChild("username").equalTo(userUsername)
 
-
-                    //herehrehurhewurhwquebgurwereqg
                 val viewModel = ViewModelProvider(requireActivity()).get(
                     cusViewModel::class.java)
-
 
                 checkUserDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         if (snapshot.exists()) {
                             loginUsername!!.error = null
-                            val passwordFromDB = snapshot.child(userUsername).child("password").getValue(
-                                String::class.java
-                            )
+                            val passwordFromDB = snapshot.children.firstOrNull()?.child("password")?.getValue(String::class.java)
+
                             if (passwordFromDB == userPassword) {
                                 loginUsername!!.error = null
-                                val nameFromDB = snapshot.child(userUsername).child("name").getValue(
-                                    String::class.java
-                                )
-                                val emailFromDB = snapshot.child(userUsername).child("email").getValue(
-                                    String::class.java
-                                )
-                                val usernameFromDB = snapshot.child(userUsername).child("username").getValue(
-                                        String::class.java
-                                    )
 
+                                val usernameFromDB = snapshot.children.firstOrNull()?.child("username")?.getValue(String::class.java)
 
-                                    //is herereereuhruwehjfqibgiewnq
                                 if (usernameFromDB != null) {
                                     viewModel.setCustomerUsername(usernameFromDB)
                                 }
                                 view.findNavController().navigate(R.id.cusMainPage)
-
-                                //pass in the customer username to the cusViewModel
 
                             } else {
                                 loginPassword!!.error = "Invalid Credentials"
