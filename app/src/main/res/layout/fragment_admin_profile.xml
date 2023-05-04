@@ -1,4 +1,13 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.drawerlayout.widget.DrawerLayout
+    android:id="@+id/drawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -114,4 +123,16 @@
         </LinearLayout>
 
     </ScrollView>
+
 </RelativeLayout>
+    <!--  navigation drawer -->
+<!--    <com.google.android.material.navigation.NavigationView-->
+<!--        android:id="@+id/navView"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:visibility="gone"-->
+<!--        app:headerLayout="@layout/nav_header"-->
+<!--        android:layout_gravity="start"-->
+<!--        />-->
+</androidx.drawerlayout.widget.DrawerLayout>
+</layout>
