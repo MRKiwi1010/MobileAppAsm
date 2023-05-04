@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobileappasm.Customer
@@ -23,6 +25,14 @@ class CustomerAdapter(private val context: Context) :RecyclerView.Adapter<Custom
     override fun onBindViewHolder(holder: CustomerViewHolder, position: Int) {
         val customer = getItem(position)
         holder.bind(customer)
+
+        val currentCustomer = users[position]
+        holder.itemView.setOnClickListener {
+            val bundle = bundleOf("username" to currentCustomer.username)
+            holder.itemView.findNavController().navigate(R.id.adminEditCus, bundle)
+        }
+
+
     }
 
     override fun getItemCount(): Int {

@@ -1,10 +1,11 @@
 package com.example.mobileappasm
 
 data class Customer(
-    val email: String = "",
-    val name: String = "",
-    val password: String = "",
-    val username: String = ""
+    var email: String = "",
+    var name: String = "",
+    var password: String = "",
+    var username: String = "",
+    var userimg: String = ""
 ) {
-    constructor() : this("", "", "", "")
+    constructor() : this("", "", "", "", "")
 }
