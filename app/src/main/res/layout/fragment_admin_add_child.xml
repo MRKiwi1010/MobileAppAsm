@@ -85,7 +85,8 @@
             android:layout_height="300dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_profile_placeholder" />
+            android:src="@drawable/ic_profile_placeholder"
+            android:layout_gravity="center" />
 
         <Button
             android:id="@+id/btnSelectImage"
@@ -97,11 +98,11 @@
             android:id="@+id/btnAddChild"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:text="Add Child" />
 
         <Space
             android:layout_width="match_parent"
             android:layout_height="100dp" />
-</LinearLayout>
+    </LinearLayout>
 </ScrollView>
 </LinearLayout>

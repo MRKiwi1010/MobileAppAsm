@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobileappasm.Child
@@ -15,13 +17,19 @@ class ChildAdapter (private val context: Context) : RecyclerView.Adapter<ChildAd
     private var listener: OnItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChildViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_user, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_child, parent, false)
         return ChildViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ChildViewHolder, position: Int) {
         val child = getItem(position)
         holder.bind(child)
+
+        val currentChild = getItem(position)
+        holder.itemView.setOnClickListener{
+            val bundle = bundleOf("childName" to currentChild.childName)
+            holder.itemView.findNavController().navigate(R.id.adminViewChildDetails, bundle)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -47,12 +55,10 @@ class ChildAdapter (private val context: Context) : RecyclerView.Adapter<ChildAd
 
     inner class ChildViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val childNumberView: TextView = itemView.findViewById(R.id.childNumberTextView)
-        private val childIdView: TextView = itemView.findViewById(R.id.childIdTextView)
         private val childNameView: TextView = itemView.findViewById(R.id.childNameTextView)
         private val childNationView: TextView = itemView.findViewById(R.id.childNationTextView)
         private val childDescView: TextView = itemView.findViewById(R.id.childDescTextView)
         private val childAgeView: TextView = itemView.findViewById(R.id.childAgeTextView)
-        //private val durationLeftView: TextView = itemView.findViewById(R.id.durationLeftTextView)
         private val childTargetView: TextView = itemView.findViewById(R.id.childTargetTextView)
         private val totalReceivedView: TextView = itemView.findViewById(R.id.totalReceivedTextView)
 
@@ -69,10 +75,9 @@ class ChildAdapter (private val context: Context) : RecyclerView.Adapter<ChildAd
             childNumberView.text = (adapterPosition + 1).toString()
             childNameView.text = child.childName
             childNationView.text = child.childNation
-            childDescView.text = child.childDesc
+            childDescView.text = child.child_Des
             childAgeView.text = child.childAge.toString()
             childTargetView.text = child.target.toString()
-            //durationLeftView.text = child.durationLeft.toString()
             totalReceivedView.text = child.totalReceived.toString()
         }
     }
