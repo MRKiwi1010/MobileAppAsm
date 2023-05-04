@@ -69,7 +69,7 @@ class ChildAdapter (private val context: Context) : RecyclerView.Adapter<ChildAd
             childNumberView.text = (adapterPosition + 1).toString()
             childNameView.text = child.childName
             childNationView.text = child.childNation
-            childDescView.text = child.childDesc
+            childDescView.text = child.child_Des
             childAgeView.text = child.childAge.toString()
             childTargetView.text = child.target.toString()
             //durationLeftView.text = child.durationLeft.toString()

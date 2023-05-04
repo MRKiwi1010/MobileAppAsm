@@ -1,6 +1,6 @@
 package com.example.mobileappasm
 
-import com.example.mobileappasm.R
+//import com.example.mobileappasm
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -66,8 +66,6 @@ class AdminAddChild : Fragment() {
         val btnSelectImage = view.findViewById<Button>(R.id.btnSelectImage)
         val imageView = view.findViewById<ImageView>(R.id.childImageView)
 
-
-
         btnSelectImage.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             pickImageLauncher.launch(intent)
@@ -111,7 +109,7 @@ class AdminAddChild : Fragment() {
                     //upload image
                     if (selectedImageUri != null) {
                         val storageRef = FirebaseStorage.getInstance().reference
-                        val imageRef = storageRef.child("child/$childId.jpg")
+                        val imageRef = storageRef.child("child_img/$childId.jpg")
 
                         val uploadTask = imageRef.putFile(selectedImageUri!!)
                         uploadTask.continueWithTask { task ->
@@ -123,7 +121,7 @@ class AdminAddChild : Fragment() {
                             if (task.isSuccessful) {
                                 val downloadUri = task.result.toString()
 
-                                child.imageUri = downloadUri // Save the download URL with the child data
+                                child.childUrl = downloadUri // Save the download URL with the child data
                                 saveChildData(child, childId)
 
                                 val childUpdates = HashMap<String, Any>()
