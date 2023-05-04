@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/adminViewAdminList">
+    app:startDestination="@id/adminChildList">
 
     <fragment
         android:id="@+id/AAHomePage"
@@ -156,6 +156,9 @@
         <action
             android:id="@+id/action_adminChildList_to_adminViewChildDetails"
             app:destination="@id/adminViewChildDetails" />
+        <action
+            android:id="@+id/action_adminChildList_to_adminEditChild2"
+            app:destination="@id/adminEditChild2" />
     </fragment>
     <fragment
         android:id="@+id/adminAddAdmin"
@@ -222,4 +225,8 @@
         android:id="@+id/adminEditAdmin"
         android:name="com.example.mobileappasm.AdminEditAdmin"
         android:label="AdminEditAdmin" />
+    <fragment
+        android:id="@+id/adminEditChild2"
+        android:name="com.example.mobileappasm.AdminEditChild"
+        android:label="AdminEditChild" />
 </navigation>

@@ -25,10 +25,10 @@ class ChildAdapter (private val context: Context) : RecyclerView.Adapter<ChildAd
         val child = getItem(position)
         holder.bind(child)
 
-        val currentChild = child[position]
+        val currentChild = getItem(position)
         holder.itemView.setOnClickListener{
-            val bundle = bundleOf("username" to currentChild.username)
-            holder.itemView.findNavController().navigate(R.id., bundle)
+            val bundle = bundleOf("childName" to currentChild.childName)
+            holder.itemView.findNavController().navigate(R.id.adminViewChildDetails, bundle)
         }
     }
 

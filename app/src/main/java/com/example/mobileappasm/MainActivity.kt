@@ -29,45 +29,45 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
-    override fun onResume() {
-        super.onResume()
-        setUpNavBar()
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        setUpNavBar()
+//    }
 
-    private fun setUpNavBar() {
-        drawerLayout = findViewById(R.id.drawerLayout)
-        navView = findViewById(R.id.navView)
-
-        /// Retrieve the isAdmin flag from shared preferences or database
-        val sharedPref = getSharedPreferences("my_pref", Context.MODE_PRIVATE)
-        isAdmin = sharedPref.getBoolean("is_admin", false)
-        val isUser = sharedPref.getBoolean("is_User", false)
-
-//        isAdmin = false
-//        val isUser = false
-
-        if (isAdmin) {
-            navView.menu.clear()
-            navView.inflateMenu(R.menu.navigation_admin_drawer)
-            val navController = this.findNavController(R.id.myNavHostFragment)
-            NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
-            NavigationUI.setupWithNavController(navView, navController)
-        } else if (isUser){
-            navView.menu.clear()
-            navView.inflateMenu(R.menu.navdrawer_menu)
-            val navController = this.findNavController(R.id.myNavHostFragment)
-            NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
-            NavigationUI.setupWithNavController(navView, navController)
-        } else {
-            navView.visibility = View.GONE
-            navView.menu.clear()
-        }
-    }
-
-    // Handle navigation drawer open/close events
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = this.findNavController(R.id.myNavHostFragment)
-        return NavigationUI.navigateUp(navController, drawerLayout)
-    }
+//    private fun setUpNavBar() {
+//        drawerLayout = findViewById(R.id.drawerLayout)
+//        navView = findViewById(R.id.navView)
+//
+//        /// Retrieve the isAdmin flag from shared preferences or database
+//        val sharedPref = getSharedPreferences("my_pref", Context.MODE_PRIVATE)
+//        isAdmin = sharedPref.getBoolean("is_admin", false)
+//        val isUser = sharedPref.getBoolean("is_User", false)
+//
+////        isAdmin = false
+////        val isUser = false
+//
+//        if (isAdmin) {
+//            navView.menu.clear()
+//            navView.inflateMenu(R.menu.navigation_admin_drawer)
+//            val navController = this.findNavController(R.id.myNavHostFragment)
+//            NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
+//            NavigationUI.setupWithNavController(navView, navController)
+//        } else if (isUser){
+//            navView.menu.clear()
+//            navView.inflateMenu(R.menu.navdrawer_menu)
+//            val navController = this.findNavController(R.id.myNavHostFragment)
+//            NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
+//            NavigationUI.setupWithNavController(navView, navController)
+//        } else {
+//            navView.visibility = View.GONE
+//            navView.menu.clear()
+//        }
+//    }
+//
+//    // Handle navigation drawer open/close events
+//    override fun onSupportNavigateUp(): Boolean {
+//        val navController = this.findNavController(R.id.myNavHostFragment)
+//        return NavigationUI.navigateUp(navController, drawerLayout)
+//    }
 
 }
