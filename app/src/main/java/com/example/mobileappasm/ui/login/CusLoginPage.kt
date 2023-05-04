@@ -67,7 +67,7 @@ class CusLoginPage : Fragment() {
                                 if (usernameFromDB != null) {
                                     viewModel.setCustomerUsername(usernameFromDB)
                                 }
-                                view.findNavController().navigate(R.id.cusMainPage)
+                                view.findNavController().navigate(R.id.cuseditProfile)
 
                             } else {
                                 loginPassword!!.error = "Invalid Credentials"

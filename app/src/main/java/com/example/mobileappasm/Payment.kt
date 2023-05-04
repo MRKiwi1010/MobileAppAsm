@@ -9,6 +9,8 @@ data class Payment (
     val cardExp: String = "",
     val cardNo: String = "",
     val childName: String = "",
-    val date: Date = Date(),
+    val date: String = "",
+    val time: String ="",
     val username: String = ""
+
 )

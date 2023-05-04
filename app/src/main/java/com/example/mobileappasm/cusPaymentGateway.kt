@@ -15,6 +15,8 @@ import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.example.mobileappasm.data.model.cusViewModel
 import com.google.firebase.database.*
+import java.sql.Time
+import java.text.SimpleDateFormat
 import java.util.*
 
 class cusPaymentGateway : Fragment() {
@@ -60,8 +62,9 @@ class cusPaymentGateway : Fragment() {
                     val childUrl = childSnapshot.child("childUrl").value.toString()
                     textDetail.text = childName
                     textDetail2.text = childNation
-                    Glide.with(requireContext()).load(childUrl).into(imageViewff)
-                }
+                    if (isAdded && !isDetached && !isRemoving) {
+                        Glide.with(requireContext()).load(childUrl).into(imageViewff)
+                    }}
             }
             override fun onCancelled(error: DatabaseError) {
             }
@@ -81,15 +84,21 @@ class cusPaymentGateway : Fragment() {
                     val cardExp = expDate.text.toString()
                     val cardNo = editTextCardNo.text.toString()
                     val childName = viewModel.getchildname()
-                    val date = System.currentTimeMillis()
+                    val date = Date()
+                    val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+                    val formattedDate = dateFormat.format(date)
+
+                    val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+                    val formattedTime = timeFormat.format(date)
+
                     val username = viewModel.getCustomerUsername()
 
                     val payment =
-                        Payment(bankType, amount, cardCVV, cardExp, cardNo, childName, Date(), username)
+                        Payment(bankType, amount, cardCVV, cardExp, cardNo, childName, formattedDate,formattedTime, username)
                     newPaymentRef.setValue(payment)
 
                     // Retrieve the child node with the matching child name
-                    val childRef = FirebaseDatabase.getInstance().getReference("child").orderByChild("childname").equalTo(childName)
+                    val childRef = FirebaseDatabase.getInstance().getReference("child").orderByChild("childName").equalTo(childName)
                     childRef.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
                             // Get the first matching child node (there should only be one)
@@ -102,19 +111,18 @@ class cusPaymentGateway : Fragment() {
                                 val totalReceived = child?.totalReceived ?: 0.0
                                 val amountinput = arguments?.getString("paymentAmount")
                                 val newTotalReceived = totalReceived + (amountinput?.toIntOrNull() ?: 0.0).toDouble()
-                                val updateMap = mapOf("totalReceived" to newTotalReceived)
-                                FirebaseDatabase.getInstance().getReference("child").child(childKey ?: "").updateChildren(updateMap)
+
+                                FirebaseDatabase.getInstance().getReference("child").child(childKey ?: "").child("totalReceived").setValue(newTotalReceived)
+
                             }
                         }
 
                         override fun onCancelled(error: DatabaseError) {
-                            // Handle the error if needed
                         }
                     })
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    // Handle the error if needed
                 }
             })
             view.findNavController().navigate(R.id.cusMainPage)
