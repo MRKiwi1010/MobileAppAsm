@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobileappasm.Child
@@ -22,6 +24,12 @@ class ChildAdapter (private val context: Context) : RecyclerView.Adapter<ChildAd
     override fun onBindViewHolder(holder: ChildViewHolder, position: Int) {
         val child = getItem(position)
         holder.bind(child)
+
+        val currentChild = child[position]
+        holder.itemView.setOnClickListener{
+            val bundle = bundleOf("username" to currentChild.username)
+            holder.itemView.findNavController().navigate(R.id., bundle)
+        }
     }
 
     override fun getItemCount(): Int {
