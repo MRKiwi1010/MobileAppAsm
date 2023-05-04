@@ -29,7 +29,7 @@ class CustomerAdapter(private val context: Context) :RecyclerView.Adapter<Custom
         val currentCustomer = users[position]
         holder.itemView.setOnClickListener {
             val bundle = bundleOf("username" to currentCustomer.username)
-            holder.itemView.findNavController().navigate(R.id.adminEditAdmin, bundle)
+            holder.itemView.findNavController().navigate(R.id.adminEditCus, bundle)
         }
 
 

@@ -5,7 +5,7 @@ data class Customer(
     var name: String = "",
     var password: String = "",
     var username: String = "",
-    var imageUrl: String = ""
+    var userimg: String = ""
 ) {
     constructor() : this("", "", "", "", "")
 }
