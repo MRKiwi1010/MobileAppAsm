@@ -1,6 +1,7 @@
 package com.example.mobileappasm
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.text.style.TtsSpan.ARG_PASSWORD
 import android.text.style.TtsSpan.ARG_USERNAME
@@ -13,8 +14,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
@@ -25,6 +28,7 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
+import com.example.BaseActivity
 //import com.example.mobileappasm.ui.login.AdminLoginPage.Companion.USERNAME_KEY
 import com.example.mobileappasm.ui.login.adminViewModel
 import com.google.android.material.navigation.NavigationView
@@ -40,6 +44,8 @@ class AdminProfile : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
     private lateinit var adminViewModel: adminViewModel
+
+    //drawer
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -58,10 +64,12 @@ class AdminProfile : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        //drawer
         val rootView = inflater.inflate(R.layout.fragment_admin_profile, container, false)
         drawerLayout = rootView.findViewById(R.id.drawerLayout)
         navView = rootView.findViewById(R.id.navigationView) // initialize the navView property
-        navView.inflateMenu(R.menu.navigation_admin_drawer)
+//        navView.inflateMenu(R.menu.navigation_admin_drawer)
 
         // enable the navigation drawer
         setHasOptionsMenu(true)
@@ -120,6 +128,14 @@ class AdminProfile : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        // Enable back button callback
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            // do nothing when the back button is pressed
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -175,6 +191,8 @@ class AdminProfile : Fragment() {
             }
         })
     }
+
+
 
 //    override fun onSupportNavigateUp(): Boolean {
 //        // Handle the back button event
