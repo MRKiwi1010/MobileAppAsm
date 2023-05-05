@@ -97,6 +97,7 @@ class AdminEditAdmin : Fragment() {
                         "Female" -> binding.femaleBtn.setChecked(true)
                     }
                     val imageView = view?.findViewById<ImageView>(R.id.adminImageView)
+
                     if (admin != null) {
                         admin.imageUri?.let { imageUri ->
                             if (imageView != null) {
@@ -135,6 +136,50 @@ class AdminEditAdmin : Fragment() {
                                 // Username already exists in the database, show error message
                                 Toast.makeText(requireContext(), "Username already exists", Toast.LENGTH_SHORT).show()
                             } else {
+                                val name = binding.adminName.text.toString()
+                                val email = binding.adminEmail.text.toString()
+                                val username = binding.adminUsername.text.toString()
+                                val password = binding.adminPassword.text.toString()
+                                val contact = binding.adminContact.text.toString()
+                                val gender = when(binding.adminGender.checkedRadioButtonId) {
+                                    R.id.maleBtn -> "Male"
+                                    R.id.femaleBtn -> "Female"
+                                    else -> ""
+                                }
+                                val age = binding.adminAge.text.toString()
+
+                                // Check if all fields are filled
+                                if (name.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty() || contact.isEmpty() || gender.isEmpty() || age.isEmpty()) {
+                                    Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                                    return
+                                }
+
+                                // Check if password is at least 8 characters
+                                if (password.length < 8) {
+                                    Toast.makeText(requireContext(), "Password must be at least 8 characters", Toast.LENGTH_SHORT).show()
+                                    return
+                                }
+
+                                // Check if contact is in Malaysia contact format
+                                val contactRegex = "^(01)[0-46-9]-*[0-9]{7,8}\$"
+                                if (!contact.matches(contactRegex.toRegex())) {
+                                    Toast.makeText(requireContext(), "Contact number must be in Malaysia contact format", Toast.LENGTH_SHORT).show()
+                                    return
+                                }
+
+                                // Check if age is numeric
+                                if (!age.matches("[0-9]+".toRegex())) {
+                                    Toast.makeText(requireContext(), "Age must be a number", Toast.LENGTH_SHORT).show()
+                                    return
+                                }
+
+                                // Check if email is in correct format
+                                val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
+                                if (!email.matches(emailRegex.toRegex())) {
+                                    Toast.makeText(requireContext(), "Invalid email format", Toast.LENGTH_SHORT).show()
+                                    return
+                                }
+
                                 // Update the admin's information in the database
                                 adminRef.orderByChild("username").equalTo(adminUsername).addListenerForSingleValueEvent(object : ValueEventListener {
                                     override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -150,6 +195,8 @@ class AdminEditAdmin : Fragment() {
                                             if (selectedImageUri != null) {
                                                 admin?.imageUri = selectedImageUri.toString()
                                             }
+
+
 
                                             adminRef.child(dataSnapshot.children.first().key.toString()).setValue(admin)
                                                 .addOnSuccessListener {

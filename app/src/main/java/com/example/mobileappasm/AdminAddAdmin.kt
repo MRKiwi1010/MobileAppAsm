@@ -202,6 +202,11 @@ class AdminAddAdmin : Fragment() {
                             }
                         }
                     }
+                    else
+                    {
+                        Toast.makeText(requireContext(), "Please Select Image!!!", Toast.LENGTH_SHORT).show()
+                        return
+                    }
                 }
                 override fun onCancelled(databaseError: DatabaseError) {
                     Toast.makeText(requireContext(),"Failed", Toast.LENGTH_SHORT).show()
