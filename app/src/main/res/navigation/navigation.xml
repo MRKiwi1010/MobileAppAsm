@@ -55,6 +55,9 @@
         <action
             android:id="@+id/action_cusLoginPage_to_cusMainPage"
             app:destination="@id/cusMainPage" />
+        <action
+            android:id="@+id/action_cusLoginPage_to_cusSignInGoogleTest2"
+            app:destination="@id/cusSignInGoogleTest2" />
     </fragment>
     <fragment
         android:id="@+id/cusSignUp"
@@ -223,4 +226,9 @@
         android:id="@+id/adminEditAdmin"
         android:name="com.example.mobileappasm.AdminEditAdmin"
         android:label="AdminEditAdmin" />
+    <fragment
+        android:id="@+id/cusSignInGoogleTest2"
+        android:name="com.example.mobileappasm.ui.login.cusSignInGoogleTest"
+        android:label="fragment_cus_sign_in_google_test"
+        tools:layout="@layout/fragment_cus_sign_in_google_test" />
 </navigation>
