@@ -141,6 +141,9 @@ class AdminCustomerList : Fragment() {
         customerAdapter = CustomerAdapter(requireContext())
         recyclerView.adapter = customerAdapter
 
+        //Rename the fragment
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Customer List"
+
         return rootView
     }
 

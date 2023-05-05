@@ -6,10 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
@@ -58,6 +55,9 @@ class AdminAddAdmin : Fragment() {
     ): View? {
         binding = FragmentAdminAddAdminBinding.inflate(inflater, container, false)
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        //Rename the fragment
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Add Admin"
 
         setHasOptionsMenu(true)
         return binding.root
@@ -112,6 +112,38 @@ class AdminAddAdmin : Fragment() {
                     }
                     val age = binding.adminAge.text.toString()
                     val position = "Staff"
+
+                    // Check if all fields are filled
+                    if (name.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty() || contact.isEmpty() || gender.isEmpty() || age.isEmpty()) {
+                        Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                        return
+                    }
+
+                    // Check if password is at least 8 characters
+                    if (password.length < 8) {
+                        Toast.makeText(requireContext(), "Password must be at least 8 characters", Toast.LENGTH_SHORT).show()
+                        return
+                    }
+
+                    // Check if contact is in Malaysia contact format
+                    val contactRegex = "^(01)[0-46-9]-*[0-9]{7,8}\$"
+                    if (!contact.matches(contactRegex.toRegex())) {
+                        Toast.makeText(requireContext(), "Contact number must be in Malaysia contact format", Toast.LENGTH_SHORT).show()
+                        return
+                    }
+
+                    // Check if age is numeric
+                    if (!age.matches("[0-9]+".toRegex())) {
+                        Toast.makeText(requireContext(), "Age must be a number", Toast.LENGTH_SHORT).show()
+                        return
+                    }
+
+                    // Check if email is in correct format
+                    val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
+                    if (!email.matches(emailRegex.toRegex())) {
+                        Toast.makeText(requireContext(), "Invalid email format", Toast.LENGTH_SHORT).show()
+                        return
+                    }
 
                     // Check if email or username already exists
                     var isEmailUsed = false
@@ -169,6 +201,11 @@ class AdminAddAdmin : Fragment() {
                                     }
                             }
                         }
+                    }
+                    else
+                    {
+                        Toast.makeText(requireContext(), "Please Select Image!!!", Toast.LENGTH_SHORT).show()
+                        return
                     }
                 }
                 override fun onCancelled(databaseError: DatabaseError) {
