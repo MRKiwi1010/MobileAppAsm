@@ -141,6 +141,9 @@ class AdminChildList : Fragment() {
         childAdapter = ChildAdapter(requireContext())
         recyclerView.adapter = childAdapter
 
+        //Rename the fragment
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Child List"
+
         return rootView
     }
 

@@ -61,6 +61,9 @@ class AdminAddChild : Fragment() {
 
         setHasOptionsMenu(true)
 
+        //Rename the fragment
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Add Child"
+
         return binding.root
     }
 

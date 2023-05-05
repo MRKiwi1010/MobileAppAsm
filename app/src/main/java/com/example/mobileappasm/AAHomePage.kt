@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 
 class AAHomePage : Fragment() {
@@ -34,6 +35,8 @@ class AAHomePage : Fragment() {
             view.findNavController().navigate(R.id.adminLoginPage)
         }
 
+        //Rename the fragment
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Child Support Organization"
 
         return view
     }

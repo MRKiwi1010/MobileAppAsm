@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/adminChildList">
+    app:startDestination="@id/testingUploadImg">
 
     <fragment
         android:id="@+id/AAHomePage"
@@ -55,6 +55,9 @@
         <action
             android:id="@+id/action_cusLoginPage_to_cusMainPage"
             app:destination="@id/cusMainPage" />
+        <action
+            android:id="@+id/action_cusLoginPage_to_cusSignInGoogleTest2"
+            app:destination="@id/cusSignInGoogleTest2" />
     </fragment>
     <fragment
         android:id="@+id/cusSignUp"
@@ -132,7 +135,11 @@
         android:id="@+id/cusDonationHistory"
         android:name="com.example.mobileappasm.CusDonationHistory"
         android:label="fragment_cus_donation_history"
-        tools:layout="@layout/fragment_cus_donation_history" />
+        tools:layout="@layout/fragment_cus_donation_history" >
+        <action
+            android:id="@+id/action_cusDonationHistory_to_testingUploadImg"
+            app:destination="@id/testingUploadImg" />
+    </fragment>
     <fragment
         android:id="@+id/cusTotalDonation"
         android:name="com.example.mobileappasm.CusTotalDonation"
@@ -223,4 +230,14 @@
         android:id="@+id/adminEditAdmin"
         android:name="com.example.mobileappasm.AdminEditAdmin"
         android:label="AdminEditAdmin" />
+    <fragment
+        android:id="@+id/cusSignInGoogleTest2"
+        android:name="com.example.mobileappasm.ui.login.cusSignInGoogleTest"
+        android:label="fragment_cus_sign_in_google_test"
+        tools:layout="@layout/fragment_cus_sign_in_google_test" />
+    <fragment
+        android:id="@+id/testingUploadImg"
+        android:name="com.example.mobileappasm.TestingUploadImg"
+        android:label="fragment_testing_upload_img"
+        tools:layout="@layout/fragment_testing_upload_img" />
 </navigation>

@@ -17,7 +17,7 @@ import com.google.firebase.database.*
 
 class CusForgetPass : Fragment() {
 
-    private lateinit var resetEmail: EditText
+    private lateinit var resetUsername: EditText
     private lateinit var resetPassword: EditText
     private lateinit var reset_button: Button
     private lateinit var loginRedirectText: TextView
@@ -33,7 +33,7 @@ class CusForgetPass : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        resetEmail = view.findViewById(R.id.reset_email)
+        resetUsername = view.findViewById(R.id.reset_username)
         resetPassword = view.findViewById(R.id.reset_password)
         reset_button = view.findViewById(R.id.donate_button)
         loginRedirectText = view.findViewById(R.id.loginRedirectText)
@@ -52,12 +52,12 @@ class CusForgetPass : Fragment() {
 
 
     private fun validateUseremail(): Boolean {
-        val `val` = resetEmail!!.text.toString()
+        val `val` = resetUsername!!.text.toString()
         return if (`val`.isEmpty()) {
-            resetEmail!!.error = "Email cannot be empty"
+            resetUsername!!.error = "Usernmae cannot be empty"
             false
         } else {
-            resetEmail!!.error = null
+            resetUsername!!.error = null
             true
         }
     }
@@ -81,15 +81,15 @@ class CusForgetPass : Fragment() {
     }
 
     private fun checkUser() {
-        val userEmail = resetEmail!!.text.toString().trim { it <= ' ' }
+        val username = resetUsername!!.text.toString().trim { it <= ' ' }
         val userPassword = resetPassword!!.text.toString().trim { it <= ' ' }
         val reference = FirebaseDatabase.getInstance().getReference("users")
-        val checkUserDatabase: Query = reference.orderByChild("email").equalTo(userEmail)
+        val checkUserDatabase: Query = reference.orderByChild("username").equalTo(username)
         checkUserDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    resetEmail!!.error = null
-                    val userNode = snapshot.child(userEmail)
+                    resetUsername!!.error = null
+                    val userNode = snapshot.child(username)
                     val userPasswordFromDB = userNode.child("password").getValue(String::class.java)
                     if (userPasswordFromDB == userPassword) {
                         // User entered the same password as in the database, no need to update
@@ -112,8 +112,8 @@ class CusForgetPass : Fragment() {
                         }, 2000)
                     }
                 } else {
-                    resetEmail!!.error = "User Email does not exist"
-                    resetEmail!!.requestFocus()
+                    resetUsername!!.error = "Username does not exist"
+                    resetUsername!!.requestFocus()
                 }
             }
 
