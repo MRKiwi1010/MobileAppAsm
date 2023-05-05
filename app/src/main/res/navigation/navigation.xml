@@ -156,9 +156,6 @@
         <action
             android:id="@+id/action_adminChildList_to_adminViewChildDetails"
             app:destination="@id/adminViewChildDetails" />
-        <action
-            android:id="@+id/action_adminChildList_to_adminEditChild2"
-            app:destination="@id/adminEditChild2" />
     </fragment>
     <fragment
         android:id="@+id/adminAddAdmin"
@@ -225,13 +222,5 @@
     <fragment
         android:id="@+id/adminEditAdmin"
         android:name="com.example.mobileappasm.AdminEditAdmin"
-        android:label="AdminEditAdmin" >
-        <action
-            android:id="@+id/action_adminEditAdmin_to_adminViewAdminList"
-            app:destination="@id/adminViewAdminList" />
-    </fragment>
-    <fragment
-        android:id="@+id/adminEditChild2"
-        android:name="com.example.mobileappasm.AdminEditChild"
-        android:label="AdminEditChild" />
+        android:label="AdminEditAdmin" />
 </navigation>

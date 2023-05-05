@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -185,6 +186,11 @@ class AdminChildList : Fragment() {
                 // Handle error
             }
         })
+
+        val addChildBtn = view.findViewById<Button>(R.id.addChildButton)
+        addChildBtn.setOnClickListener{
+            findNavController().navigate(R.id.adminAddChild)
+        }
     }
 
     companion object {
