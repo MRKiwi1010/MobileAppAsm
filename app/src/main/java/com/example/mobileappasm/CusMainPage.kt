@@ -84,13 +84,13 @@ class CusMainPage : Fragment() {
         val viewModel = ViewModelProvider(requireActivity()).get(cusViewModel::class.java)
         val customerUsername = viewModel.getCustomerUsername()
         val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("users")
-        val username = customerUsername // replace with your actual users key
+        val username = customerUsername
         val childReference = databaseReference.child(username)
 
         childReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // Get child information from Firebase Realtime Database
-                val user_name = dataSnapshot.child("name").value.toString()
+                val user_name = dataSnapshot.child("username").value.toString()
                 val userimg = dataSnapshot.child("userimg").value.toString()
                 textView4.text = user_name
 
