@@ -5,31 +5,55 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListView
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.mobileappasm.Adapter.cusDonationAdapter
+import com.example.mobileappasm.data.model.cusViewModel
+import com.example.mobileappasm.databinding.FragmentAdminDonationHistoryBinding
+import com.google.firebase.database.*
 
 class CusDonationHistory : Fragment() {
-
+    private lateinit var binding: FragmentAdminDonationHistoryBinding
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var cusDonationAdapter: cusDonationAdapter
+    private lateinit var donationList: ArrayList<Donation>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_cus_donation_history, container, false)
+        binding = FragmentAdminDonationHistoryBinding.inflate(inflater, container, false)
+        recyclerView = binding.donationRecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        cusDonationAdapter = cusDonationAdapter(requireContext())
+        recyclerView.adapter = cusDonationAdapter
+        return binding.root
 
-        val items = arrayOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6", "Item 7", "Item 8", "Item 9", "Item 10")
-
-        // Create an ArrayAdapter using the sample data
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, items)
-
-        // Set the adapter for the ListView
-        val listView = view.findViewById<ListView>(R.id.listView)
-        listView.adapter = adapter
-
-        // need custom list view
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
 
-        return view
+        val viewModel = ViewModelProvider(requireActivity()).get(cusViewModel::class.java)
+        val customerUsername = viewModel.getCustomerUsername()
+        val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("payment")
+        val query: Query = databaseReference.orderByChild("username").equalTo(customerUsername)
+        donationList = ArrayList()
+        query.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                donationList.clear()
+                for (userSnapShot in snapshot.children) {
+                    val donation = userSnapShot.getValue(Donation::class.java)
+                    if (donation != null) {
+                        donationList.add(donation)
+                    }
+                }
+                cusDonationAdapter.submitList(donationList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
     }
 
 }
