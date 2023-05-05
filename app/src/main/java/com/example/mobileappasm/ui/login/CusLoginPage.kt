@@ -181,7 +181,11 @@ class CusLoginPage : Fragment() {
                                 var count = dataSnapshot.childrenCount.toInt() + 1
                                 var key = "users$count"
                                 dataSnapshot.children.forEach { childSnapshot ->
-                                    val user = childSnapshot.getValue(Customer::class.java)
+                                    val user = if (childSnapshot.value is HashMap<*, *>) {
+                                        childSnapshot.getValue(Customer::class.java)
+                                    } else {
+                                        null
+                                    }
                                     if (user != null && user.username == firebaseUser.displayName) {
                                         // User already exists, do not add to database
                                         key = childSnapshot.key ?: key
