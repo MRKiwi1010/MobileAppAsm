@@ -1,6 +1,7 @@
 package com.example.mobileappasm
 
 import android.annotation.SuppressLint
+import androidx.activity.OnBackPressedCallback
 import android.content.Context
 import android.os.Bundle
 import android.text.style.TtsSpan.ARG_PASSWORD
@@ -15,6 +16,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContentProviderCompat.requireContext
@@ -110,6 +112,34 @@ class AdminProfile : Fragment() {
                     view?.findNavController()?.navigate(R.id.adminDonationHistory)
                     true
                 }
+                R.id.adminLogout -> {
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Logout")
+                        .setMessage("Are you sure you want to logout?")
+                        .setPositiveButton("Yes") { dialog, which ->
+                            // Implement your logout logic here
+                            // For example, you could clear the user's session data and navigate them to the login screen.
+                            // You can use the following code to navigate to the login screen:
+                            val viewModel = ViewModelProvider(requireActivity())[adminViewModel::class.java]
+                            viewModel.username = ""
+                            view?.findNavController()?.navigate(R.id.AAHomePage)
+
+                            // Disable the drawer toggle
+                            val actionBar = (activity as AppCompatActivity?)?.supportActionBar
+                            actionBar?.setDisplayHomeAsUpEnabled(false)
+                            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+
+                            // Clear the navigation drawer and remove the hamburger button
+                            navView.menu.clear()
+                            actionBar?.setHomeAsUpIndicator(null)
+                        }
+                        .setNegativeButton("No", null)
+                        .show()
+                    true
+                }
+
+
+
                 else -> false
             }
         }
@@ -132,9 +162,19 @@ class AdminProfile : Fragment() {
         super.onAttach(context)
         // Enable back button callback
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            // do nothing when the back button is pressed
+            // Show confirmation dialog before exiting the app
+            AlertDialog.Builder(requireContext())
+                .setTitle("Exit App")
+                .setMessage("Are you sure you want to exit the app?")
+                .setPositiveButton("Yes") { _, _ ->
+                    requireActivity().finish()
+                }
+                .setNegativeButton("No", null)
+                .show()
         }
     }
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

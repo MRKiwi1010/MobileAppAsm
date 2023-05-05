@@ -1,11 +1,14 @@
 package com.example.mobileappasm
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.findNavController
 
 class AAHomePage : Fragment() {
@@ -35,5 +38,20 @@ class AAHomePage : Fragment() {
         return view
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        // Enable back button callback
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            // Show confirmation dialog before exiting the app
+            AlertDialog.Builder(requireContext())
+                .setTitle("Exit App")
+                .setMessage("Are you sure you want to exit the app?")
+                .setPositiveButton("Yes") { _, _ ->
+                    requireActivity().finish()
+                }
+                .setNegativeButton("No", null)
+                .show()
+        }
+    }
 
 }

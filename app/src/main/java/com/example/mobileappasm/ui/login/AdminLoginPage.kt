@@ -79,8 +79,6 @@ class AdminLoginPage : Fragment() {
                                             viewModel.username = admin.username
                                             val sharedPref = requireContext().getSharedPreferences("my_pref", Context.MODE_PRIVATE)
                                             sharedPref.edit().putBoolean("is_admin", true).apply() // replace true with false for user login
-                                            Log.d("TAG", "Fuck My Life!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-
                                             view.findNavController().navigate(R.id.adminProfile)
 
                                         } else {

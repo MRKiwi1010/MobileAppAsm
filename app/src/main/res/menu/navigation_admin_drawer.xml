@@ -15,4 +15,7 @@
     <item
         android:id="@+id/adminDonationHistory"
         android:title="Donation History" />
+    <item
+        android:id="@+id/adminLogout"
+        android:title="Logout" />
 </menu>
