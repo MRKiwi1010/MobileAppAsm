@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobileappasm.Adapter.ChildAdapter
 import com.example.mobileappasm.databinding.FragmentAdminChildListBinding
+import com.example.mobileappasm.ui.login.adminViewModel
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.database.*
 
@@ -100,6 +103,31 @@ class AdminChildList : Fragment() {
                 R.id.adminDonationHistory -> {
                     // Handle click for adminDonationHistory item
                     view?.findNavController()?.navigate(R.id.adminDonationHistory)
+                    true
+                }
+                R.id.adminLogout -> {
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Logout")
+                        .setMessage("Are you sure you want to logout?")
+                        .setPositiveButton("Yes") { dialog, which ->
+                            // Implement your logout logic here
+                            // For example, you could clear the user's session data and navigate them to the login screen.
+                            // You can use the following code to navigate to the login screen:
+                            val viewModel = ViewModelProvider(requireActivity())[adminViewModel::class.java]
+                            viewModel.username = ""
+                            view?.findNavController()?.navigate(R.id.AAHomePage)
+
+                            // Disable the drawer toggle
+                            val actionBar = (activity as AppCompatActivity?)?.supportActionBar
+                            actionBar?.setDisplayHomeAsUpEnabled(false)
+                            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+
+                            // Clear the navigation drawer and remove the hamburger button
+                            navView.menu.clear()
+                            actionBar?.setHomeAsUpIndicator(null)
+                        }
+                        .setNegativeButton("No", null)
+                        .show()
                     true
                 }
                 else -> false

@@ -164,7 +164,7 @@
         android:id="@+id/adminAddAdmin"
         android:name="com.example.mobileappasm.AdminAddAdmin"
         android:label="fragment_admin_add_admin"
-        tools:layout="@layout/fragment_admin_add_admin" />
+        tools:layout="@layout/fragment_admin_add_admin"/>
 
     <fragment
         android:id="@+id/adminProfile"
@@ -202,7 +202,8 @@
         tools:layout="@layout/fragment_admin_view_admin_list" >
         <action
             android:id="@+id/action_adminViewAdminList_to_adminAddAdmin"
-            app:destination="@id/adminAddAdmin" />
+            app:destination="@id/adminAddAdmin"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_adminViewAdminList_to_adminEditAdmin"
             app:destination="@id/adminEditAdmin" />
@@ -224,7 +225,11 @@
     <fragment
         android:id="@+id/adminEditAdmin"
         android:name="com.example.mobileappasm.AdminEditAdmin"
-        android:label="AdminEditAdmin" />
+        android:label="AdminEditAdmin" >
+        <action
+            android:id="@+id/action_adminEditAdmin_to_adminViewAdminList"
+            app:destination="@id/adminViewAdminList" />
+    </fragment>
     <fragment
         android:id="@+id/adminEditChild2"
         android:name="com.example.mobileappasm.AdminEditChild"
