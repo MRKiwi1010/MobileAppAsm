@@ -2,13 +2,14 @@ package com.example.mobileappasm
 
 class Donation (
     var bankType: String? = null,
-    var amount: String? = null,
-    var cardCvv: Int,
+    var cardNo: String? = null,
+    var cardCvv: String? = null,
     var cardExp: String? = null,
-    var cardNo: Int,
-    var childName: String? = null,
+    var amount: Int,
     var date: String? = null,
-    var username: Int
+    var time: String? = null,
+    var childName: String? = null,
+    var username: String? = null
 ) {
-    constructor() : this("", "", 0, "", 0, "", "", 0)
+    constructor() : this("", "","", "", 0, "", "", "", "")
 }

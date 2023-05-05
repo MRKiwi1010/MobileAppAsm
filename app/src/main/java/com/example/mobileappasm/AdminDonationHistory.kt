@@ -5,21 +5,29 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil.setContentView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.mobileappasm.Adapter.CustomerAdapter
+import com.example.mobileappasm.Adapter.DonationAdapter
+import com.example.mobileappasm.databinding.FragmentAdminCustomerListBinding
+import com.example.mobileappasm.databinding.FragmentAdminDonationHistoryBinding
+import com.google.firebase.database.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [AdminDonationHistory.newInstance] factory method to
- * create an instance of this fragment.
- */
 class AdminDonationHistory : Fragment() {
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    private lateinit var binding: FragmentAdminDonationHistoryBinding
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var donationAdapter: DonationAdapter
+    private lateinit var donationList: ArrayList<Donation>
+
+    private lateinit var database: FirebaseDatabase
+    private lateinit var donationRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,20 +41,40 @@ class AdminDonationHistory : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_admin_donation_history, container, false)
+        binding = FragmentAdminDonationHistoryBinding.inflate(inflater, container, false)
+        recyclerView = binding.donationRecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        donationAdapter = DonationAdapter(requireContext())
+        recyclerView.adapter = donationAdapter
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        database = FirebaseDatabase.getInstance()
+        donationRef = database.getReference("payment")
+
+        donationList = ArrayList()
+        donationRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                donationList.clear()
+                for (userSnapShot in snapshot.children) {
+                    val donation = userSnapShot.getValue(Donation::class.java)
+                    if (donation != null) {
+                        donationList.add(donation)
+                    }
+                }
+                donationAdapter.submitList(donationList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle error
+            }
+        })
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AdminDonationHistory.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             AdminDonationHistory().apply {
