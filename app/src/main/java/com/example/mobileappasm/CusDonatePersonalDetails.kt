@@ -9,6 +9,7 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.example.mobileappasm.data.model.cusViewModel
 import com.google.firebase.database.DataSnapshot
@@ -22,8 +23,6 @@ class CusDonatePersonalDetails : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_cus_donate_personal_details, container, false)
-
-
         val context: Context? = activity
         val database = FirebaseDatabase.getInstance().reference
         val childTable = database.child("child")
@@ -40,8 +39,7 @@ class CusDonatePersonalDetails : Fragment() {
                 }
 
                 val gridView = view.findViewById<GridView>(R.id.gridView)
-                gridView.adapter = CustomGridAdapter(activity, childNames, imageUrls)
-
+                gridView.adapter = CustomGridAdapter(activity, childNames, imageUrls, view)
                 gridView.setOnItemClickListener { _, _, position, _ ->
                     // Handle click event for each item in the grid view
                     val childName = childNames[position]
@@ -53,91 +51,56 @@ class CusDonatePersonalDetails : Fragment() {
                     if (childKey != null) {
                         viewModel.setChildKey(childKey)
                     }
-
-                    val fragment = CusViewChild()
-                    val transaction = (context).supportFragmentManager.beginTransaction()
-                    val containerId = R.id.myNavHostFragment
-
-                    val container = (context).findViewById<ViewGroup>(containerId)
-                    container.removeAllViews()
-
-                    transaction.replace(containerId, fragment)
-                    transaction.addToBackStack(null)
-                    transaction.commit()
+                    view.findNavController().navigate(R.id.cusViewChild)
                 }
-
             }
-
             override fun onCancelled(error: DatabaseError) {
-                // Handle database read error
             }
         })
 
-        // Get the childName value from arguments
         childName = arguments?.getString("childName") ?: ""
-
         return view
     }
 
     class CustomGridAdapter(
         private val activity: FragmentActivity?,
         private val childNames: ArrayList<String>,
-        private val imageUrls: ArrayList<String>
+        private val imageUrls: ArrayList<String>,
+        private val view: View
     ) :
         ArrayAdapter<String>(activity!!, R.layout.cus_view_child_grid, childNames) {
-
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             var convertView = convertView
             val viewHolder: ViewHolder
 
             if (convertView == null) {
                 convertView = LayoutInflater.from(activity).inflate(R.layout.cus_view_child_grid, parent, false)
-
                 viewHolder = ViewHolder()
                 viewHolder.imageView = convertView.findViewById(R.id.grid_image)
                 viewHolder.textView = convertView.findViewById(R.id.item_name)
                 viewHolder.button = convertView.findViewById(R.id.button2)
-
                 convertView.tag = viewHolder
             } else {
                 viewHolder = convertView.tag as ViewHolder
             }
-
             viewHolder.textView.text = childNames[position]
 
             // Load image from Firebase storage based on the URL
             val storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrls[position])
             storageRef.downloadUrl.addOnSuccessListener { uri ->
-                Glide.with(activity!!)
-                    .load(uri)
-                    .into(viewHolder.imageView)
+                Glide.with(activity!!).load(uri).into(viewHolder.imageView)
             }
 
             viewHolder.button.setOnClickListener {
                 val childname = childNames[position]
-                val viewModel = ViewModelProvider(context as FragmentActivity).get(cusViewModel::class.java)
-                viewModel.setchildname(childname)
-
-//            val viewModel = ViewModelProvider(requireActivity()).get(cusViewModel::class.java)
-                val fragment = CusViewChild()
-                val transaction = (context as FragmentActivity).supportFragmentManager.beginTransaction()
-
-// Get the ID of the fragment container
-                val containerId = R.id.myNavHostFragment
-
-// Remove all views from the parent ViewGroup of the fragment container
-                val container = (context as FragmentActivity).findViewById<ViewGroup>(containerId)
-                container.removeAllViews()
-
-// Replace the current fragment with the new one
-                transaction.replace(containerId, fragment)
-                transaction.addToBackStack(null)
-                transaction.commit()
+                activity?.let {
+                    val viewModel = ViewModelProvider(it).get(cusViewModel::class.java)
+                    viewModel.setchildname(childname)
+                    view.findNavController().navigate(R.id.cusViewChild)
+                }
             }
-
             return convertView!!
         }
-
         private class ViewHolder {
             lateinit var imageView: ImageView
             lateinit var textView: TextView
