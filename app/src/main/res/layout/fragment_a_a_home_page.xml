@@ -11,4 +11,12 @@
         android:layout_width="251dp"
         android:layout_height="219dp"
         android:text="Play" />
+
+    <Button
+        android:id="@+id/playplayBtn"
+        android:layout_width="251dp"
+        android:layout_height="219dp"
+        android:text="Play"
+        android:layout_marginTop="300dp"
+        />
 </FrameLayout>

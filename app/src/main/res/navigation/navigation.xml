@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/cusLoginPage">
+    app:startDestination="@id/AAHomePage">
 
     <fragment
         android:id="@+id/AAHomePage"
@@ -55,9 +55,6 @@
         <action
             android:id="@+id/action_cusLoginPage_to_cusMainPage"
             app:destination="@id/cusMainPage" />
-        <action
-            android:id="@+id/action_cusLoginPage_to_cusSignInGoogleTest"
-            app:destination="@id/cusSignInGoogleTest" />
     </fragment>
     <fragment
         android:id="@+id/cusSignUp"
@@ -164,7 +161,7 @@
         android:id="@+id/adminAddAdmin"
         android:name="com.example.mobileappasm.AdminAddAdmin"
         android:label="fragment_admin_add_admin"
-        tools:layout="@layout/fragment_admin_add_admin" />
+        tools:layout="@layout/fragment_admin_add_admin"/>
 
     <fragment
         android:id="@+id/adminProfile"
@@ -202,7 +199,8 @@
         tools:layout="@layout/fragment_admin_view_admin_list" >
         <action
             android:id="@+id/action_adminViewAdminList_to_adminAddAdmin"
-            app:destination="@id/adminAddAdmin" />
+            app:destination="@id/adminAddAdmin"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_adminViewAdminList_to_adminEditAdmin"
             app:destination="@id/adminEditAdmin" />
@@ -225,9 +223,4 @@
         android:id="@+id/adminEditAdmin"
         android:name="com.example.mobileappasm.AdminEditAdmin"
         android:label="AdminEditAdmin" />
-    <fragment
-        android:id="@+id/cusSignInGoogleTest"
-        android:name="com.example.mobileappasm.ui.login.cusSignInGoogleTest"
-        android:label="fragment_cus_sign_in_google_test"
-        tools:layout="@layout/fragment_cus_sign_in_google_test" />
 </navigation>

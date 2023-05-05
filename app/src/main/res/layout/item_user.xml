@@ -14,14 +14,14 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/customerNumberTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_alignParentStart="true"/>
+<!--        <TextView-->
+<!--            android:id="@+id/customerNumberTextView"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textColor="@android:color/black"-->
+<!--            android:textSize="16sp"-->
+<!--            android:textStyle="bold"-->
+<!--            android:layout_alignParentStart="true"/>-->
 
         <TextView
             android:id="@+id/customerNameTextView"
@@ -30,7 +30,7 @@
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:layout_toEndOf="@id/customerNumberTextView"/>
+            android:layout_alignParentStart="true"/>
 
         <TextView
             android:id="@+id/customerEmailTextView"
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
             android:textSize="14sp"
-            android:layout_below="@id/customerUsernameTextView"/>
+            android:layout_below="@id/customerPasswordTextView"/>
 
     </RelativeLayout>
 

@@ -3,5 +3,19 @@
     <item
         android:id="@+id/adminProfile"
         android:title="Profile Page" />
-    <item android:title="Testing 2" />
+    <item
+        android:id="@+id/adminViewAdminList"
+        android:title="Admin List" />
+    <item
+        android:id="@+id/adminChildList"
+        android:title="Child List" />
+    <item
+        android:id="@+id/adminCustomerList"
+        android:title="Customer List" />
+    <item
+        android:id="@+id/adminDonationHistory"
+        android:title="Donation History" />
+    <item
+        android:id="@+id/adminLogout"
+        android:title="Logout" />
 </menu>
