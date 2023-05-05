@@ -58,7 +58,7 @@ class CustomerAdapter(private val context: Context) :RecyclerView.Adapter<Custom
     }
 
     inner class CustomerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val customerNumberView: TextView = itemView.findViewById(R.id.customerNumberTextView)
+//        private val customerNumberView: TextView = itemView.findViewById(R.id.customerNumberTextView)
         private val customerPasswordView: TextView = itemView.findViewById(R.id.customerPasswordTextView)
         private val customerNameView: TextView = itemView.findViewById(R.id.customerNameTextView)
         private val customerEmailView: TextView = itemView.findViewById(R.id.customerEmailTextView)
@@ -75,7 +75,7 @@ class CustomerAdapter(private val context: Context) :RecyclerView.Adapter<Custom
         }
 
         fun bind(customer: Customer) {
-            customerNumberView.text = (adapterPosition + 1).toString()
+//            customerNumberView.text = (adapterPosition + 1).toString()
             customerNameView.text = customer.name
             customerEmailView.text = customer.email
             customerPasswordView.text = customer.password

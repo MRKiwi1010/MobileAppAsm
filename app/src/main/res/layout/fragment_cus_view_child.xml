@@ -139,7 +139,7 @@ architectural features and high-end finishes.
                 >
 
             <TextView
-                android:id="@+id/totalReceived"
+                android:id="@+id/historyText"
                 android:layout_width="147dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"

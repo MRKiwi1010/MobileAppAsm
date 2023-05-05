@@ -9,6 +9,7 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -16,6 +17,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.findNavController
 import com.example.mobileappasm.databinding.FragmentAdminAddChildBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -54,7 +57,21 @@ class AdminAddChild : Fragment() {
 
         binding = FragmentAdminAddChildBinding.inflate(inflater, container, false)
 
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        setHasOptionsMenu(true)
+
         return binding.root
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                findNavController().navigateUp()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

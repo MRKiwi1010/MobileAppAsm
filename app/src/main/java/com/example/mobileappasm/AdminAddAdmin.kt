@@ -1,25 +1,25 @@
 package com.example.mobileappasm
 
-import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.databinding.DataBindingUtil
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.mobileappasm.databinding.FragmentAdminAddAdminBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 
 
@@ -43,6 +43,7 @@ class AdminAddAdmin : Fragment() {
         }
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -55,10 +56,21 @@ class AdminAddAdmin : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         binding = FragmentAdminAddAdminBinding.inflate(inflater, container, false)
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        setHasOptionsMenu(true)
         return binding.root
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                findNavController().navigateUp()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,15 +87,18 @@ class AdminAddAdmin : Fragment() {
         }
 
         val btnAddAdmin = binding.btnAddAdmin
+        var adminId = ""
         btnAddAdmin.setOnClickListener {
-            database.child("admin").orderByKey().limitToFirst(1).addListenerForSingleValueEvent(object : ValueEventListener {
+            database.child("admin").orderByKey().limitToLast(1).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     var adminCount = 1
                     for (adminSnapshot in snapshot.children) {
-                        val adminId = adminSnapshot.key.toString()
-                        adminCount = adminId.substring(5).toInt() + 1
-                    }
-                    val adminId = "admin" + "%03d".format(adminCount)
+                        adminId = adminSnapshot.key.toString()
+                        val currentCount = adminId.substring(5).toInt()
+                        if (currentCount >= adminCount) {
+                            adminCount = currentCount + 1
+                        }}
+                    adminId = "admin" + "%03d".format(adminCount)
 
                     val name = binding.adminName.text.toString()
                     val email = binding.adminEmail.text.toString()
@@ -146,6 +161,7 @@ class AdminAddAdmin : Fragment() {
                                 database.child("admin").updateChildren(childUpdates)
                                     .addOnSuccessListener {
                                         Toast.makeText(requireContext(), "Added Successfully!", Toast.LENGTH_SHORT).show()
+                                        findNavController().navigate(R.id.adminViewAdminList)
                                     }
                                     .addOnFailureListener{
                                         Toast.makeText(requireContext(),"Failed", Toast.LENGTH_SHORT).show()
