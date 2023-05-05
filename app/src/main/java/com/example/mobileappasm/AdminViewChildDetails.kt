@@ -39,6 +39,9 @@ class AdminViewChildDetails : Fragment() {
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         setHasOptionsMenu(true)
+
+        //Rename the fragment
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Edit Child"
         return binding.root
     }
 

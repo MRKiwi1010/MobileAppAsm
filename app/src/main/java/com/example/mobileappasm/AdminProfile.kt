@@ -66,7 +66,7 @@ class AdminProfile : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        //Rename the fragment
         //drawer
         val rootView = inflater.inflate(R.layout.fragment_admin_profile, container, false)
         drawerLayout = rootView.findViewById(R.id.drawerLayout)
@@ -83,6 +83,8 @@ class AdminProfile : Fragment() {
         appBarConfiguration = AppBarConfiguration(setOf(R.id.adminProfile), drawerLayout)
         setupActionBarWithNavController(requireActivity() as AppCompatActivity, navController, appBarConfiguration)
         NavigationUI.setupWithNavController(navView, navController)
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Profile"
 
         // handle navigation item clicks
         navView.setNavigationItemSelectedListener { menuItem ->

@@ -37,6 +37,9 @@ class AdminEditCus : Fragment() {
 
         setHasOptionsMenu(true)
 
+        //Rename the fragment
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Edit Customer"
+
         return binding.root
     }
 
