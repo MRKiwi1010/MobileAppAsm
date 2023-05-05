@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/cusMainPage">
+    app:startDestination="@id/cusLoginPage">
 
     <fragment
         android:id="@+id/AAHomePage"
@@ -55,6 +55,9 @@
         <action
             android:id="@+id/action_cusLoginPage_to_cusMainPage"
             app:destination="@id/cusMainPage" />
+        <action
+            android:id="@+id/action_cusLoginPage_to_cusSignInGoogleTest"
+            app:destination="@id/cusSignInGoogleTest" />
     </fragment>
     <fragment
         android:id="@+id/cusSignUp"
@@ -222,4 +225,9 @@
         android:id="@+id/adminEditAdmin"
         android:name="com.example.mobileappasm.AdminEditAdmin"
         android:label="AdminEditAdmin" />
+    <fragment
+        android:id="@+id/cusSignInGoogleTest"
+        android:name="com.example.mobileappasm.ui.login.cusSignInGoogleTest"
+        android:label="fragment_cus_sign_in_google_test"
+        tools:layout="@layout/fragment_cus_sign_in_google_test" />
 </navigation>
