@@ -36,7 +36,6 @@ class CuseditProfile : Fragment() {
         signup_email = view.findViewById(R.id.signup_email)
         signup_username = view.findViewById(R.id.signup_username)
         signup_password = view.findViewById(R.id.signup_password)
-        imageView12 = view.findViewById(R.id.imageView12)
         signup_button = view.findViewById(R.id.signup_button)
 
         val viewModel = ViewModelProvider(requireActivity()).get(cusViewModel::class.java)
@@ -59,7 +58,6 @@ class CuseditProfile : Fragment() {
                     signup_email.setText(email)
                     signup_password.setText(password)
                     signup_username.setText(username)
-                    Glide.with(requireContext()).load(userimg).into(imageView12)
                 }
             }
             override fun onCancelled(error: DatabaseError) {

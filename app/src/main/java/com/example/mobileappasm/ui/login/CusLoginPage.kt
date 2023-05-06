@@ -94,7 +94,7 @@ class CusLoginPage : Fragment() {
                                 if (usernameFromDB != null) {
                                     viewModel.setCustomerUsername(usernameFromDB)
                                 }
-                                view.findNavController().navigate(R.id.cuseditProfile)
+                                view.findNavController().navigate(R.id.cusMainPage)
 
                             } else {
                                 loginPassword!!.error = "Invalid Credentials"
@@ -220,7 +220,7 @@ class CusLoginPage : Fragment() {
         if (user != null) {
             // Navigate to the next screen using NavController
             //view?.findNavController()?.navigate(R.id.cusSignInGoogleTest)
-            view?.findNavController()?.navigate(R.id.cuseditProfile)
+            view?.findNavController()?.navigate(R.id.cusMainPage)
         }
     }
     companion object {

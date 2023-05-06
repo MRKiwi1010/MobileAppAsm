@@ -11,11 +11,14 @@ import android.provider.MediaStore
 import android.provider.Settings
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.findNavController
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.mobileappasm.databinding.FragmentCusSignUpBinding
@@ -56,8 +59,27 @@ class TestingUploadImg : Fragment() {
             }
             pictureDialog.show()
         }
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        //Rename the fragment
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Upload Image"
+
+        setHasOptionsMenu(true)
+
         return view
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                findNavController().navigateUp()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun galleryCheckPermission() {
         Dexter.withContext(requireContext()).withPermission(
             android.Manifest.permission.READ_EXTERNAL_STORAGE
