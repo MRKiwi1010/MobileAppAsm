@@ -170,4 +170,13 @@ class cusPaymentGateway : Fragment() {
     fun isValidCVV(cvv: String): Boolean {
         return cvv.trim().matches("^\\d{3,4}$".toRegex())
     }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                findNavController().navigateUp()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }

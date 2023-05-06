@@ -78,7 +78,7 @@
                     android:id="@+id/childAge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="188dp"
+                    android:layout_marginStart="152dp"
                     android:text="12 Years Old"
                     android:textColor="@color/white"
                     android:textSize="17sp"
@@ -86,19 +86,6 @@
                     app:layout_constraintStart_toEndOf="@+id/childNation"
                     app:layout_constraintTop_toTopOf="@+id/imageView8"
                     app:layout_constraintVertical_bias="1.0" />
-
-                <TextView
-                    android:id="@+id/textView142"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="265+ Donated"
-                    android:textColor="@color/white"
-                    android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/pic"
-                    app:layout_constraintEnd_toEndOf="@+id/view"
-                    app:layout_constraintHorizontal_bias="0.903"
-                    app:layout_constraintStart_toEndOf="@+id/childName"
-                    app:layout_constraintTop_toBottomOf="@+id/childAge" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

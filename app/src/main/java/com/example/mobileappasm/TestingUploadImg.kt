@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import coil.load
@@ -36,7 +37,15 @@ class TestingUploadImg : Fragment() {
     private lateinit var binding: FragmentTestingUploadImgBinding
     private val CAMERA_REQUEST_CODE = 1
     private val GALLERY_REQUEST_CODE = 2
-    private lateinit var imageView213 : ImageView
+    private lateinit var adminImageView : ImageView
+    private var selectedImageUri: Uri? = null
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            selectedImageUri = result.data?.data
+            binding.adminImageView.setImageURI(selectedImageUri)
+        }
+    }
+    private val MY_PERMISSIONS_REQUEST_CAMERA = 123
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,8 +53,8 @@ class TestingUploadImg : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_testing_upload_img, container, false)
         binding = FragmentTestingUploadImgBinding.bind(view)
-        imageView213 = view.findViewById(R.id.imageView213)
-        imageView213.setOnClickListener {
+        adminImageView = view.findViewById(R.id.adminImageView)
+        adminImageView.setOnClickListener {
             val pictureDialog = AlertDialog.Builder(requireContext())
             pictureDialog.setTitle("Select Action")
             val pictureDialogItem = arrayOf("Select photo from Gallery",
@@ -127,29 +136,29 @@ class TestingUploadImg : Fragment() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         requireActivity().startActivityForResult(intent, CAMERA_REQUEST_CODE)
     }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                CAMERA_REQUEST_CODE -> {
-                    val bitmap = data?.extras?.get("data") as Bitmap?
-                    if (bitmap != null) {
-                        imageView213.setImageBitmap(bitmap)
-                    } else {
-                        Toast.makeText(requireContext(), "Unable to retrieve image", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                GALLERY_REQUEST_CODE -> {
-                    val uri = data?.data
-                    if (uri != null) {
-                        imageView213.setImageURI(uri)
-                    } else {
-                        Toast.makeText(requireContext(), "Unable to retrieve image", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (resultCode == Activity.RESULT_OK) {
+//            when (requestCode) {
+//                CAMERA_REQUEST_CODE -> {
+//                    val bitmap = data?.extras?.get("data") as Bitmap?
+//                    if (bitmap != null) {
+//                        imageView213.setImageBitmap(bitmap)
+//                    } else {
+//                        Toast.makeText(requireContext(), "Unable to retrieve image", Toast.LENGTH_SHORT).show()
+//                    }
+//                }
+//                GALLERY_REQUEST_CODE -> {
+//                    val uri = data?.data
+//                    if (uri != null) {
+//                        imageView213.setImageURI(uri)
+//                    } else {
+//                        Toast.makeText(requireContext(), "Unable to retrieve image", Toast.LENGTH_SHORT).show()
+//                    }
+//                }
+//            }
+//        }
+//    }
     private fun showRotationalDialogForPermission() {
         AlertDialog.Builder(requireContext())
             .setMessage("It looks like you have turned off permissions" + "required for this feature. It can be enabled under App settings!!!")

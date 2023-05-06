@@ -7,9 +7,8 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
     android:background="#f2f2f2"
 tools:context=".CusSignUp">
-
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageView2123"
         android:layout_width="408dp"
         android:layout_height="170dp"
         android:scaleType="centerCrop"
@@ -17,8 +16,32 @@ tools:context=".CusSignUp">
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/top_background" />
-    <ImageView
-        android:id="@+id/imageView12"
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:text="Create \nAccount"
+            android:textColor="#ffffff"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageView
+        android:id="@+id/adminImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
@@ -26,19 +49,19 @@ tools:context=".CusSignUp">
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/profile_profile" />
+<!--        <Button-->
+<!--            android:id="@+id/btnSelectImage"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Select Image" />-->
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:text="Create \nAccount"
-        android:textColor="#ffffff"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--        <Button-->
+<!--            android:id="@+id/btnAddAdmin"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Add" />-->
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -192,4 +215,6 @@ tools:context=".CusSignUp">
             android:textSize="18sp"/>
 
     </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

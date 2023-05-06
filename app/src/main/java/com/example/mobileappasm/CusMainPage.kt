@@ -9,7 +9,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
@@ -83,7 +82,6 @@ class CusMainPage : Fragment() {
         fourlayout.setOnClickListener {
             rootView.findNavController().navigate(R.id.cusDonationHistory)
         }
-
 
         textView73= rootView.findViewById(R.id.textView73)
         // this is the child text view
@@ -189,37 +187,23 @@ class CusMainPage : Fragment() {
             rootView.findNavController().navigate(R.id.cusDonatePersonalDetails)
         }
 
-
-
-
         val viewModel = ViewModelProvider(requireActivity()).get(cusViewModel::class.java)
         val username = viewModel.getCustomerUsername()
-        textView4.text = username
 
         val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("users")
-        val childReference = databaseReference.child(username)
-//        childReference.addValueEventListener(object : ValueEventListener {
-//            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                // Get child information from Firebase Realtime Database
-//                val user_name = dataSnapshot.child("username").value.toString()
-//                val userimg = dataSnapshot.child("userimg").value.toString()
-//
-//
-//                Glide.with(requireContext()).load(userimg).into(imageView2)
-//            }
-//            override fun onCancelled(error: DatabaseError) {
-//                // Handle the error
-//            }
-//        })
-        childReference.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Get child information from Firebase Realtime Database
-                val firebaseUsername = dataSnapshot.child("username").value.toString()
-                val userimg = dataSnapshot.child("userimg").value.toString()
+        val Databasequery = databaseReference.orderByChild("username").equalTo(username)
 
-                if (firebaseUsername == username) {
-                    textView4.text = firebaseUsername
-                    Glide.with(requireContext()).load(userimg).into(imageView2)
+        Databasequery.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (userSnapshot in dataSnapshot.children) {
+                        val firebaseUsername = userSnapshot.child("username").value.toString()
+                        val userimg = userSnapshot.child("userimg").value.toString()
+                        if (firebaseUsername == username) {
+                            textView4.text = firebaseUsername
+                            Glide.with(requireContext()).load(userimg).into(imageView2)
+                        }
+                    }
                 }
             }
             override fun onCancelled(error: DatabaseError) {

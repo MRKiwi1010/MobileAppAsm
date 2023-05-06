@@ -26,10 +26,8 @@ class CusViewChild : Fragment() {
     private lateinit var targetTxt: TextView
     private lateinit var descriptionTxt: TextView
     private lateinit var priceTxt13: TextView
-    private lateinit var textView142: TextView
     private lateinit var picTxt: ImageView
     private lateinit var button: Button
-    private var item: ItemsDomain? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,9 +40,9 @@ class CusViewChild : Fragment() {
         descriptionTxt = view.findViewById(R.id.descriptionTxt)
         targetTxt = view.findViewById(R.id.priceTxt23)
         priceTxt13 = view.findViewById(R.id.priceTxt13)
-        textView142 = view.findViewById(R.id.textView142)
         picTxt = view.findViewById(R.id.picTxt)
         button = view.findViewById(R.id.button)
+
 
         button.setOnClickListener {
             view.findNavController().navigate(R.id.cusDonateNow)
@@ -72,6 +70,7 @@ class CusViewChild : Fragment() {
                     val target = childSnapshot.child("target").value.toString()
                     val totalReceived = childSnapshot.child("totalReceived").value.toString()
                     val childUrl = childSnapshot.child("childUrl").value.toString()
+
 
                     // Set the retrieved information to the respective TextViews
                     childAgeTxt.text =  childAge + " Years Old"

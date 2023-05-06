@@ -168,7 +168,16 @@ class CusLoginPage : Fragment() {
                         usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(dataSnapshot: DataSnapshot) {
                                 var count = dataSnapshot.childrenCount.toInt() + 1
-                                var key = "users$count"
+//                                var key = "users"+"03d".format(count)
+                                var usersCount = 1
+                                for (cusSnapshot in dataSnapshot.children) {
+                                    var userid = cusSnapshot.key.toString()
+                                    val currentCount = userid.substring(5).toInt()
+                                    if (currentCount >= usersCount) {
+                                        usersCount = currentCount + 1
+                                    }}
+                                var key = "users" + "%03d".format(usersCount)
+
                                 dataSnapshot.children.forEach { childSnapshot ->
                                     val user = if (childSnapshot.value is HashMap<*, *>) {
                                         childSnapshot.getValue(Customer::class.java)
