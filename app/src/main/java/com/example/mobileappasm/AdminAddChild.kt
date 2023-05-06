@@ -150,6 +150,7 @@ class AdminAddChild : Fragment() {
                                 database.child("child").updateChildren(childUpdates)
                                     .addOnSuccessListener {
                                         Toast.makeText(requireContext(), "Added Successfully!", Toast.LENGTH_SHORT).show()
+                                        findNavController().navigate(R.id.adminChildList)
                                     }
                                     .addOnFailureListener{
                                         Toast.makeText(requireContext(),"Failed", Toast.LENGTH_SHORT).show()
