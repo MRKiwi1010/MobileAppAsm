@@ -6,11 +6,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -19,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.example.mobileappasm.data.model.cusViewModel
 import com.google.firebase.database.*
 import java.sql.Time
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -96,6 +93,24 @@ class cusPaymentGateway : Fragment() {
 
                     val username = viewModel.getCustomerUsername()
 
+                    // Validate card number
+                    if (!isValidCardNumber(cardNo)) {
+                        editTextCardNo.error = "Invalid card number"
+                        return
+                    }
+
+                    // Validate expiration date
+                    if (!isValidExpiryDate(cardExp)) {
+                        expDate.error = "Invalid expiry date (MM/yy)"
+                        return
+                    }
+
+                    // Validate CVV
+                    if (!isValidCVV(cardCVV)) {
+                        cvv.error = "Invalid CVV (3 or 4 digits)"
+                        return
+                    }
+
                     val payment =
                         Payment(bankType, amount, cardCVV, cardExp, cardNo, childName, formattedDate,formattedTime, username)
                     newPaymentRef.setValue(payment)
@@ -125,8 +140,11 @@ class cusPaymentGateway : Fragment() {
                 override fun onCancelled(error: DatabaseError) {
                 }
             })
-            view.findNavController().navigate(R.id.cusMainPage)
+            view.findNavController().navigate(R.id.cusPaymentDone)
         }
+
+
+
 
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -146,6 +164,26 @@ class cusPaymentGateway : Fragment() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun isValidCardNumber(cardNumber: String): Boolean {
+        val regex = "^(?:(?:4[0-9]{12}(?:[0-9]{3})?)|(?:5[1-5][0-9]{14})|(?:3[47][0-9]{13})|(?:3(?:0[0-5]|[68][0-9])[0-9]{11})|(?:6(?:011|5[0-9][0-9])[0-9]{12})|(?:^(?:2131|1800|35\\d{3})\\d{11}$))$"
+        return cardNumber.matches(regex.toRegex())
+    }
+    fun isValidExpiryDate(expiryDate: String): Boolean {
+        val dateFormat = SimpleDateFormat("MM/yy", Locale.getDefault())
+        dateFormat.isLenient = false
+        return try {
+            val expiryDateObj = dateFormat.parse(expiryDate)
+            val today = Date()
+            expiryDateObj.after(today)
+        } catch (e: ParseException) {
+            false
+        }
+    }
+    fun isValidCVV(cvv: String): Boolean {
+        val regex = "^[0-9]{3,4}$"
+        return cvv.matches(regex.toRegex())
     }
 
 }

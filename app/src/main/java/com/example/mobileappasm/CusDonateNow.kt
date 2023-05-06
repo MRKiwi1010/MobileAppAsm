@@ -30,8 +30,12 @@ class CusDonateNow : Fragment() {
         radioButton = view.findViewById(R.id.radioButton)
 
         btnPayment.setOnClickListener {
-            val amount = editAmount.text.toString()
-            if (radioButton.isChecked) {
+            val amount = editAmount.text.toString().trim()
+            if (amount.isEmpty()) {
+                Toast.makeText(requireContext(), "Please enter an amount", Toast.LENGTH_SHORT).show()
+            } else if (!amount.matches("^\\d+(\\.\\d{1,2})?$".toRegex())) {
+                Toast.makeText(requireContext(), "Please enter a valid amount", Toast.LENGTH_SHORT).show()
+            } else if (radioButton.isChecked) {
                 // Pass the payment amount to the cusPaymentGateway fragment
                 val bundle = Bundle()
                 bundle.putString("paymentAmount", amount)
@@ -45,7 +49,7 @@ class CusDonateNow : Fragment() {
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         //Rename the fragment
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Donate"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Donate Now"
 
         setHasOptionsMenu(true)
 
