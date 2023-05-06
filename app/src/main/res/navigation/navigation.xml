@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/AAHomePage">
+    app:startDestination="@id/cusDonatePersonalDetails">
 
     <fragment
         android:id="@+id/AAHomePage"
@@ -135,11 +135,7 @@
         android:id="@+id/cusDonationHistory"
         android:name="com.example.mobileappasm.CusDonationHistory"
         android:label="fragment_cus_donation_history"
-        tools:layout="@layout/fragment_cus_donation_history" >
-        <action
-            android:id="@+id/action_cusDonationHistory_to_testingUploadImg"
-            app:destination="@id/testingUploadImg" />
-    </fragment>
+        tools:layout="@layout/fragment_cus_donation_history" />
     <fragment
         android:id="@+id/cusTotalDonation"
         android:name="com.example.mobileappasm.CusTotalDonation"
@@ -184,12 +180,20 @@
         android:id="@+id/cuseditProfile"
         android:name="com.example.mobileappasm.CuseditProfile"
         android:label="fragment_cus_edit_profile"
-        tools:layout="@layout/fragment_cus_edit_profile" />
+        tools:layout="@layout/fragment_cus_edit_profile" >
+        <action
+            android:id="@+id/action_cuseditProfile_to_testingUploadImg"
+            app:destination="@id/testingUploadImg" />
+    </fragment>
     <fragment
         android:id="@+id/cusPaymentGateway"
         android:name="com.example.mobileappasm.cusPaymentGateway"
         android:label="fragment_cus_payment_gateway"
-        tools:layout="@layout/fragment_cus_payment_gateway" />
+        tools:layout="@layout/fragment_cus_payment_gateway" >
+        <action
+            android:id="@+id/action_cusPaymentGateway_to_cusPaymentDone"
+            app:destination="@id/cusPaymentDone" />
+    </fragment>
     <fragment
         android:id="@+id/adminDonationHistory"
         android:name="com.example.mobileappasm.AdminDonationHistory"
@@ -240,4 +244,9 @@
         android:name="com.example.mobileappasm.TestingUploadImg"
         android:label="fragment_testing_upload_img"
         tools:layout="@layout/fragment_testing_upload_img" />
+    <fragment
+        android:id="@+id/cusPaymentDone"
+        android:name="com.example.mobileappasm.cusPaymentDone"
+        android:label="fragment_cus_payment_done"
+        tools:layout="@layout/fragment_cus_payment_done" />
 </navigation>

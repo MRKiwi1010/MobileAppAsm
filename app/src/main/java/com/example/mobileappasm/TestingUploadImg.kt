@@ -33,10 +33,7 @@ class TestingUploadImg : Fragment() {
     private lateinit var binding: FragmentTestingUploadImgBinding
     private val CAMERA_REQUEST_CODE = 1
     private val GALLERY_REQUEST_CODE = 2
-    private lateinit var btnCamera : Button
-    private lateinit var btnGallery : Button
     private lateinit var imageView : ImageView
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,20 +41,7 @@ class TestingUploadImg : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_testing_upload_img, container, false)
         binding = FragmentTestingUploadImgBinding.bind(view)
-
-        btnCamera = view.findViewById(R.id.btnCamera)
-        btnGallery = view.findViewById(R.id.btnGallery)
         imageView = view.findViewById(R.id.imageView)
-
-//        btnCamera.setOnClickListener {
-//            cameraCheckPermission()
-//        }
-//
-//        btnGallery.setOnClickListener {
-//            galleryCheckPermission()
-//        }
-
-        //when you click on the image
         imageView.setOnClickListener {
             val pictureDialog = AlertDialog.Builder(requireContext())
             pictureDialog.setTitle("Select Action")
@@ -70,21 +54,17 @@ class TestingUploadImg : Fragment() {
                     1 -> cameraCheckPermission()
                 }
             }
-
             pictureDialog.show()
         }
         return view
     }
-
     private fun galleryCheckPermission() {
-
         Dexter.withContext(requireContext()).withPermission(
             android.Manifest.permission.READ_EXTERNAL_STORAGE
         ).withListener(object : PermissionListener {
             override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
                 gallery()
             }
-
             override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
                 Toast.makeText(
                     requireContext(),
@@ -100,32 +80,18 @@ class TestingUploadImg : Fragment() {
             }
         }).onSameThread().check()
     }
-
     private fun gallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         requireActivity().startActivityForResult(intent, GALLERY_REQUEST_CODE)
     }
-
-
     private fun cameraCheckPermission() {
-
         Dexter.withContext(requireContext())
             .withPermissions(
                 android.Manifest.permission.READ_EXTERNAL_STORAGE,
                 android.Manifest.permission.CAMERA).withListener(
-
                 object : MultiplePermissionsListener {
-                    override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
-                        report?.let {
-
-                            if (report.areAllPermissionsGranted()) {
-                                camera()
-                            }
-
-                        }
-                    }
-
+                    override fun onPermissionsChecked(report: MultiplePermissionsReport?) { report?.let { if (report.areAllPermissionsGranted()) { camera() } } }
                     override fun onPermissionRationaleShouldBeShown(
                         p0: MutableList<PermissionRequest>?,
                         p1: PermissionToken?) {
@@ -135,40 +101,29 @@ class TestingUploadImg : Fragment() {
                 }
             ).onSameThread().check()
     }
-
-
     private fun camera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         requireActivity().startActivityForResult(intent, CAMERA_REQUEST_CODE)
     }
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (resultCode == Activity.RESULT_OK) {
-
             when (requestCode) {
-
                 CAMERA_REQUEST_CODE -> {
-                    val bitmap = data?.extras?.get("data") as Bitmap
-                    binding.imageView.load(bitmap) {
-                        crossfade(true)
-                        crossfade(1000)
-                        transformations(CircleCropTransformation())
+                    val bitmap = data?.extras?.get("data") as Bitmap?
+                    if(bitmap != null) {
+                        imageView.setImageBitmap(bitmap)
+                    } else {
+                        Toast.makeText(requireContext(), "Unable to retrieve image", Toast.LENGTH_SHORT).show()
                     }
                 }
                 GALLERY_REQUEST_CODE -> {
-                    binding.imageView.load(data?.data) {
-                        crossfade(true)
-                        crossfade(1000)
-                        transformations(CircleCropTransformation())
-                    }
+                    val uri = data?.data
+                    imageView.setImageURI(uri)
                 }
             }
         }
     }
-
     private fun showRotationalDialogForPermission() {
         AlertDialog.Builder(requireContext())
             .setMessage("It looks like you have turned off permissions" + "required for this feature. It can be enabled under App settings!!!")
@@ -178,7 +133,6 @@ class TestingUploadImg : Fragment() {
                     val uri = Uri.fromParts("package", requireActivity().packageName, null)
                     intent.data = uri
                     startActivity(intent)
-
                 } catch (e: ActivityNotFoundException) {
                     e.printStackTrace()
                 }
