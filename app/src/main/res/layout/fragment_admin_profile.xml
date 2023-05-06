@@ -144,6 +144,9 @@
             app:headerLayout="@layout/nav_header"
             app:menu="@menu/navigation_admin_drawer"/>
 
+<!--        android:background="@{isDarkMode ? @color/dark_theme_color : @color/light_theme_color}"-->
+
+
     </androidx.drawerlayout.widget.DrawerLayout>
 
 </layout>
