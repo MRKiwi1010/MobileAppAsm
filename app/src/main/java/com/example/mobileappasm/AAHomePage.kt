@@ -9,8 +9,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
+import androidx.appcompat.app.AppCompatActivity
+
 
 class AAHomePage : Fragment() {
 
@@ -37,6 +38,9 @@ class AAHomePage : Fragment() {
 
         //Rename the fragment
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Child Support Organization"
+
+        // Hide the top bar that shows the fragment title
+//        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 
         return view
     }
