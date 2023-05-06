@@ -110,6 +110,27 @@ class AdminEditCus : Fragment() {
     }
 
     private fun saveChanges() {
+        val cusName = binding.cusName.text.toString();
+        val cusEmail = binding.cusEmail.text.toString();
+        val cusUsername = binding.cusUsername.text.toString();
+        val cusPassword = binding.cusPassword.text.toString();
+
+        if (cusName.isEmpty() || cusEmail.isEmpty() || cusUsername.isEmpty() || cusPassword.isEmpty()) {
+            Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (cusPassword.length < 8) {
+            Toast.makeText(requireContext(), "Password must be at least 8 characters", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
+        if (!cusEmail.matches(emailRegex.toRegex())) {
+            Toast.makeText(requireContext(), "Invalid email format", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val databaseReference = firebaseDatabase.getReference("users")
         val query = databaseReference.orderByChild("username").equalTo(customerUsername)
         query.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -135,6 +156,7 @@ class AdminEditCus : Fragment() {
 
     private fun uploadImageToFirebaseStorage() {
         if (selectedImageUri == null) {
+            Toast.makeText(requireContext(), "Please Select Image!!!", Toast.LENGTH_SHORT).show()
             saveChangesToDatabase()
             return
         }

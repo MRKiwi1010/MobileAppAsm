@@ -195,6 +195,11 @@ class AdminEditAdmin : Fragment() {
                                             if (selectedImageUri != null) {
                                                 admin?.imageUri = selectedImageUri.toString()
                                             }
+                                            else
+                                            {
+                                                Toast.makeText(requireContext(), "Please Select Image!!!", Toast.LENGTH_SHORT).show()
+                                                return
+                                            }
 
 
 

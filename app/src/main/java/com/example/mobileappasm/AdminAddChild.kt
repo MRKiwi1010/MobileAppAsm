@@ -115,6 +115,22 @@ class AdminAddChild : Fragment() {
                     val age = binding.childAge.text.toString()
                     val desc = binding.childDesc.text.toString()
                     val target = binding.childTarget.text.toString()
+
+                    if(name.isEmpty() || age.isEmpty() || desc.isEmpty() || target.isEmpty() || nation.isEmpty())
+                    {
+                        Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                        return
+                    }
+                    if (!age.matches("[0-9]+".toRegex())) {
+                        Toast.makeText(requireContext(), "Age must be a number", Toast.LENGTH_SHORT).show()
+                        return
+                    }
+                    val moneyRegex = "^\\$?[0-9]+(\\.[0-9]{1,2})?$" // accepts formats like $10.99 or 100.00
+                    if (!target.matches(moneyRegex.toRegex())) {
+                        Toast.makeText(requireContext(), "Invalid money format", Toast.LENGTH_SHORT).show()
+                        return
+                    }
+
                     val totalReceived = 0;
                     val child = Child(
                         selectedImageUri.toString(),
@@ -125,6 +141,8 @@ class AdminAddChild : Fragment() {
                         target.toDouble(),
                         totalReceived.toDouble()
                     )
+
+
 
                     //upload image
                     if (selectedImageUri != null) {
@@ -158,6 +176,11 @@ class AdminAddChild : Fragment() {
                                     }
                             }
                         }
+                    }
+                    else
+                    {
+                        Toast.makeText(requireContext(), "Please Select Image!!!", Toast.LENGTH_SHORT).show()
+                        return
                     }
                 }
                 override fun onCancelled(databaseError: DatabaseError) {
