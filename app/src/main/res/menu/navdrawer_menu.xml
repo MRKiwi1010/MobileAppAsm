@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/cusMainPage"
         android:title="Main Page" />
-    <item android:title="Item" />
+    <item
+        android:id="@+id/cusProfile"
+        android:title="Profile" />
+    <item
+        android:id="@+id/cusDonatePersonalDetails"
+        android:title="Child List" />
+    <item
+        android:id="@+id/cusTotalDonation"
+        android:title="Total Donation" />
+    <item
+        android:id="@+id/cusDonationHistory"
+        android:title="Donation History" />
+    <item
+        android:id="@+id/cusAboutUs"
+        android:title="About Us" />
+    <item
+        android:id="@+id/cusLogout"
+        android:title="Logout" />
 </menu>

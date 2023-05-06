@@ -9,5 +9,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="lavender">#8692f7</color>
     <color name="orange">#FE6900</color>
-
+    <color name="light_theme_color">#FFFFFF</color>
+    <color name="dark_theme_color">#000000</color>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#7e53c5</color>
 </resources>
