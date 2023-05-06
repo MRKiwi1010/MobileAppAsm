@@ -53,8 +53,8 @@ class AdminAdapter(private val context: Context) : RecyclerView.Adapter<AdminAda
 
         fun bind(admin: Admin) {
             adminUsernameView.text = admin.username
-            adminEmailView.text = admin.email
-            adminPositionView.text = admin.position
+            adminEmailView.text = "Email : " + admin.email
+            adminPositionView.text = "Position : " +  admin.position
         }
     }
 

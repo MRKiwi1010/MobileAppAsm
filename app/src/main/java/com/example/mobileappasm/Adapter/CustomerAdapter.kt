@@ -76,10 +76,10 @@ class CustomerAdapter(private val context: Context) :RecyclerView.Adapter<Custom
 
         fun bind(customer: Customer) {
 //            customerNumberView.text = (adapterPosition + 1).toString()
-            customerNameView.text = "Name" + customer.name
-            customerEmailView.text = customer.email
-            customerPasswordView.text = customer.password
-            customerUsernameView.text = customer.username
+            customerNameView.text =  customer.name
+            customerEmailView.text = "Email : " + customer.email
+            customerPasswordView.text = "Password : " + customer.password
+            customerUsernameView.text = "Username : " + customer.username
         }
     }
 
