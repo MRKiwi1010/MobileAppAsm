@@ -75,7 +75,7 @@ class CusProfile : Fragment() {
         )
         NavigationUI.setupWithNavController(navView2, navController)
 
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Main Page"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Profile"
 
         // handle navigation item clicks
         navView2.setNavigationItemSelectedListener { menuItem ->
@@ -146,8 +146,6 @@ class CusProfile : Fragment() {
         val paymentNavi = rootView.findViewById<LinearLayout>(R.id.paymentNavi)
         val locationNavi = rootView.findViewById<LinearLayout>(R.id.locationNavi)
         val historyNavi = rootView.findViewById<LinearLayout>(R.id.historyNavi)
-
-//        paymentNavi.setOnClickListener{view.findNavController().navigate(R.id.cus)}
         textView52.setOnClickListener{ rootView.findNavController().navigate(R.id.cuseditProfile) }
         button.setOnClickListener { rootView.findNavController().navigate(R.id.cuseditProfile) }
         paymentNavi.setOnClickListener { rootView.findNavController().navigate(R.id.cusDonateNow) }

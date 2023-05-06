@@ -80,8 +80,10 @@ class CusViewChild : Fragment() {
                     descriptionTxt.text = child_Des
                     priceTxt13.text = "RM"+totalReceived
                     targetTxt.text = "RM"+target
+                    if (isAdded()) {
+                        Glide.with(requireContext()).load(childUrl).into(picTxt)
+                    }
 
-                    Glide.with(requireContext()).load(childUrl).into(picTxt)
                 }
             }
 
