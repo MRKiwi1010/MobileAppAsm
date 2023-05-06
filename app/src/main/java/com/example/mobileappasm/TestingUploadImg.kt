@@ -152,7 +152,6 @@ class TestingUploadImg : Fragment() {
 
                 CAMERA_REQUEST_CODE -> {
                     val bitmap = data?.extras?.get("data") as Bitmap
-                    //we are using coroutine image loader (coil)
                     binding.imageView.load(bitmap) {
                         crossfade(true)
                         crossfade(1000)
