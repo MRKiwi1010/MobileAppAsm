@@ -32,6 +32,10 @@ private const val ARG_PARAM2 = "param2"
 
 class AdminAddAdmin : Fragment() {
 
+    private var param1: String? = null
+    private var param2: String? = null
+
+
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
     private lateinit var binding: FragmentAdminAddAdminBinding
@@ -43,6 +47,14 @@ class AdminAddAdmin : Fragment() {
         }
     }
     private val MY_PERMISSIONS_REQUEST_CAMERA = 123
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
