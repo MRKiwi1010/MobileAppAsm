@@ -101,10 +101,7 @@ class cusPaymentGateway : Fragment() {
                     val childRef = FirebaseDatabase.getInstance().getReference("child").orderByChild("childName").equalTo(childName)
                     childRef.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            // Get the first matching child node (there should only be one)
                             val childSnapshot = dataSnapshot.children.firstOrNull()
-
-                            // Update the totalReceived field by adding the payment amount
                             childSnapshot?.let {
                                 val childKey = it.key
                                 val child = it.getValue(Child::class.java)

@@ -132,7 +132,6 @@ class CusLoginPage : Fragment() {
             true
         }
     }
-
     private fun validatePassword(): Boolean {
         val `val` = loginPassword!!.text.toString()
         return if (`val`.isEmpty()) {
@@ -143,8 +142,6 @@ class CusLoginPage : Fragment() {
             true
         }
     }
-
-
     private fun signIn() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
@@ -187,7 +184,6 @@ class CusLoginPage : Fragment() {
                                         null
                                     }
                                     if (user != null && user.username == firebaseUser.displayName) {
-                                        // User already exists, do not add to database
                                         key = childSnapshot.key ?: key
                                         count--
                                         return@forEach
@@ -224,7 +220,7 @@ class CusLoginPage : Fragment() {
         if (user != null) {
             // Navigate to the next screen using NavController
             //view?.findNavController()?.navigate(R.id.cusSignInGoogleTest)
-            view?.findNavController()?.navigate(R.id.cusMainPage)
+            view?.findNavController()?.navigate(R.id.cusDonationHistory)
         }
     }
     companion object {
