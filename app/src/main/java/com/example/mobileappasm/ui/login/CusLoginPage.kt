@@ -2,26 +2,25 @@ package com.example.mobileappasm.ui.login
 
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.net.Uri
 import com.example.mobileappasm.R
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import com.example.mobileappasm.AdminAddChild
 import com.example.mobileappasm.Customer
 import com.example.mobileappasm.data.model.cusViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -29,6 +28,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+
 class CusLoginPage : Fragment() {
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var auth: FirebaseAuth
@@ -44,9 +45,6 @@ class CusLoginPage : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_cus_login_page, container, false)
-
-
-        // Initialize your views and variables here
         loginUsername = view.findViewById(R.id.login_username)
         loginPassword = view.findViewById(R.id.login_password)
         loginButton = view.findViewById(R.id.login_button)
@@ -110,8 +108,6 @@ class CusLoginPage : Fragment() {
                 })
             }
         }
-
-
         signupRedirectText.setOnClickListener {
             view.findNavController().navigate(R.id.cusSignUp)
         }
@@ -146,10 +142,8 @@ class CusLoginPage : Fragment() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
@@ -158,12 +152,10 @@ class CusLoginPage : Fragment() {
                 Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
                 firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
-                // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e)
             }
         }
     }
-
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
@@ -192,14 +184,35 @@ class CusLoginPage : Fragment() {
                                 val user = hashMapOf(
                                     "email" to firebaseUser.email,
                                     "name" to firebaseUser.displayName,
-                                    "userimg" to firebaseUser.photoUrl.toString(),
+                                    "userimg" to "",
+                                    "password" to "",
                                     "username" to firebaseUser.displayName
 
                                 )
                                 usersRef.child(key).setValue(user)
                                 updateUI(firebaseUser)
+
+                                val firebaseUser = auth.currentUser
                                 val viewModel = ViewModelProvider(requireActivity()).get(cusViewModel::class.java)
-                                viewModel.setCustomerUsername(firebaseUser.displayName ?: "username")
+
+                                val uid = firebaseUser?.uid
+                                if (uid != null) {
+                                    val storageRef = FirebaseStorage.getInstance().reference.child("user_img/$uid")
+                                    storageRef.putFile(firebaseUser.photoUrl!!)
+                                        .addOnSuccessListener {
+                                            Log.d(TAG, "Image uploaded successfully")
+                                        }
+                                        .addOnFailureListener { exception ->
+                                            Log.e(TAG, "Image upload failed: ${exception.message}")
+                                        }
+                                }
+                                if (firebaseUser != null) {
+                                    val username = firebaseUser.displayName
+                                    if (username != null) {
+                                        viewModel.setCustomerUsername(username)
+                                    } else {
+                                    }
+                                }
                             }
 
                             override fun onCancelled(databaseError: DatabaseError) {
@@ -216,10 +229,9 @@ class CusLoginPage : Fragment() {
     }
 
 
+
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
-            // Navigate to the next screen using NavController
-            //view?.findNavController()?.navigate(R.id.cusSignInGoogleTest)
             view?.findNavController()?.navigate(R.id.cusMainPage)
         }
     }
@@ -227,6 +239,4 @@ class CusLoginPage : Fragment() {
         const val RC_SIGN_IN = 1001
         const val EXTRA_NAME = "EXTRA_NAME"
     }
-
-
 }

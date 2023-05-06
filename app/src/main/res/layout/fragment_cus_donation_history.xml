@@ -31,10 +31,6 @@
                     android:clipToPadding="false"
                     android:padding="8dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-
-<!--                    app:layout_constraintBottom_toBottomOf="@id/historyText"-->
-<!--                    tools:layout_editor_absoluteX="0dp" -->
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -9,10 +9,12 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -60,13 +62,39 @@ class CusMainPage : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-//        val view = inflater.inflate(R.layout.fragment_cus_main_page, container, false)
-
-        //Rename the fragment
-        //drawer
         val rootView = inflater.inflate(R.layout.fragment_cus_main_page, container, false)
         drawerLayout2 = rootView.findViewById(R.id.drawerLayout2)
         navView2 = rootView.findViewById(R.id.navigationView_cus) // initialize the navView property
+        val firstLayout = rootView.findViewById<ConstraintLayout>(R.id.firstlayout)
+        val secondlayout = rootView.findViewById<ConstraintLayout>(R.id.secondlayout)
+        val thirdlayout = rootView.findViewById<ConstraintLayout>(R.id.thirdlayout)
+        val fourlayout = rootView.findViewById<ConstraintLayout>(R.id.fourlayout)
+
+
+        firstLayout.setOnClickListener {
+            rootView.findNavController().navigate(R.id.cusDonatePersonalDetails)
+        }
+        secondlayout.setOnClickListener {
+            rootView.findNavController().navigate(R.id.cusTotalDonation)
+        }
+        thirdlayout.setOnClickListener {
+            rootView.findNavController().navigate(R.id.cusAboutUs)
+        }
+        fourlayout.setOnClickListener {
+            rootView.findNavController().navigate(R.id.cusDonationHistory)
+        }
+
+
+        textView73= rootView.findViewById(R.id.textView73)
+        // this is the child text view
+        textView52 = rootView.findViewById(R.id.textView52)
+// donate now
+        textView54 = rootView.findViewById(R.id.textView54)
+// about us
+        textView56 = rootView.findViewById(R.id.textView56)
+// history
+        textView58 = rootView.findViewById(R.id.textView58)
+
 
         // enable the navigation drawer
         setHasOptionsMenu(true)
@@ -148,16 +176,11 @@ class CusMainPage : Fragment() {
         textView4 = rootView.findViewById(R.id.textView4)
         imageView2 = rootView.findViewById(R.id.imageView2)
         textView71 = rootView.findViewById(R.id.textView71)
-        textView73= rootView.findViewById(R.id.textView73)
-        // this is the child text view
-        textView52 = rootView.findViewById(R.id.textView52)
-// donate now
-        textView54 = rootView.findViewById(R.id.textView54)
-// about us
-        textView56 = rootView.findViewById(R.id.textView56)
-// history
-        textView58 = rootView.findViewById(R.id.textView58)
 
+
+        imageView2.setOnClickListener{
+            rootView.findNavController().navigate(R.id.cusProfile)
+        }
 
         textView71.setOnClickListener {
             rootView.findNavController().navigate(R.id.cusDonatePersonalDetails)
@@ -166,37 +189,40 @@ class CusMainPage : Fragment() {
             rootView.findNavController().navigate(R.id.cusDonatePersonalDetails)
         }
 
-        textView52.setOnClickListener {
-            rootView.findNavController().navigate(R.id.cusViewChild)
-        }
-        textView54.setOnClickListener {
-            rootView.findNavController().navigate(R.id.cusDonateNow)
-        }
-        textView56.setOnClickListener {
-            rootView.findNavController().navigate(R.id.cusAboutUs)
-        }
-        textView58.setOnClickListener {
-            rootView.findNavController().navigate(R.id.cusDonationHistory)
-        }
+
 
 
         val viewModel = ViewModelProvider(requireActivity()).get(cusViewModel::class.java)
-        val customerUsername = viewModel.getCustomerUsername()
-        val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("users")
-        val username = customerUsername
-        val childReference = databaseReference.child(username)
+        val username = viewModel.getCustomerUsername()
+        textView4.text = username
 
+        val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("users")
+        val childReference = databaseReference.child(username)
+//        childReference.addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                // Get child information from Firebase Realtime Database
+//                val user_name = dataSnapshot.child("username").value.toString()
+//                val userimg = dataSnapshot.child("userimg").value.toString()
+//
+//
+//                Glide.with(requireContext()).load(userimg).into(imageView2)
+//            }
+//            override fun onCancelled(error: DatabaseError) {
+//                // Handle the error
+//            }
+//        })
         childReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // Get child information from Firebase Realtime Database
-                val user_name = dataSnapshot.child("username").value.toString()
+                val firebaseUsername = dataSnapshot.child("username").value.toString()
                 val userimg = dataSnapshot.child("userimg").value.toString()
-                textView4.text = user_name
 
-                Glide.with(requireContext()).load(userimg).into(imageView2)
+                if (firebaseUsername == username) {
+                    textView4.text = firebaseUsername
+                    Glide.with(requireContext()).load(userimg).into(imageView2)
+                }
             }
             override fun onCancelled(error: DatabaseError) {
-                // Handle the error
             }
         })
 

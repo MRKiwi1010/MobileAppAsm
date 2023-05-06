@@ -72,7 +72,7 @@ class DonationAdapter(private val context: Context) :RecyclerView.Adapter<Donati
 
         fun bind(donation: Donation) {
             donationNumberView.text = (adapterPosition + 1).toString()
-            donationUsernameView.text = "Name : " + donation.username
+            donationUsernameView.text = "Name" + donation.username
             donationChildNameView.text = String.format("Donation Child Name: %s", donation.childName)
             donationAmountView.text = "RM "+ donation.amount.toString()
             donationDateView.text = "Date"+ donation.date

@@ -36,7 +36,7 @@ class TestingUploadImg : Fragment() {
     private lateinit var binding: FragmentTestingUploadImgBinding
     private val CAMERA_REQUEST_CODE = 1
     private val GALLERY_REQUEST_CODE = 2
-    private lateinit var imageView : ImageView
+    private lateinit var imageView213 : ImageView
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,8 +44,8 @@ class TestingUploadImg : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_testing_upload_img, container, false)
         binding = FragmentTestingUploadImgBinding.bind(view)
-        imageView = view.findViewById(R.id.imageView)
-        imageView.setOnClickListener {
+        imageView213 = view.findViewById(R.id.imageView213)
+        imageView213.setOnClickListener {
             val pictureDialog = AlertDialog.Builder(requireContext())
             pictureDialog.setTitle("Select Action")
             val pictureDialogItem = arrayOf("Select photo from Gallery",
@@ -133,15 +133,19 @@ class TestingUploadImg : Fragment() {
             when (requestCode) {
                 CAMERA_REQUEST_CODE -> {
                     val bitmap = data?.extras?.get("data") as Bitmap?
-                    if(bitmap != null) {
-                        imageView.setImageBitmap(bitmap)
+                    if (bitmap != null) {
+                        imageView213.setImageBitmap(bitmap)
                     } else {
                         Toast.makeText(requireContext(), "Unable to retrieve image", Toast.LENGTH_SHORT).show()
                     }
                 }
                 GALLERY_REQUEST_CODE -> {
                     val uri = data?.data
-                    imageView.setImageURI(uri)
+                    if (uri != null) {
+                        imageView213.setImageURI(uri)
+                    } else {
+                        Toast.makeText(requireContext(), "Unable to retrieve image", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }

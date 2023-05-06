@@ -78,6 +78,7 @@
                     android:orientation="horizontal">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/firstlayout"
                         android:layout_width="0dp"
                         android:layout_height="70dp"
                         android:layout_marginStart="32dp"
@@ -87,13 +88,13 @@
 
                         <ImageView
                             android:id="@+id/imageView41"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="67dp"
+                            android:layout_height="51dp"
                             android:layout_marginEnd="8dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/cat_1" />
+                            app:srcCompat="@drawable/firstlayer" />
 
                         <TextView
                             android:id="@+id/textView52"
@@ -109,6 +110,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/secondlayout"
                         android:layout_width="0dp"
                         android:layout_height="70dp"
                         android:layout_marginStart="8dp"
@@ -118,20 +120,20 @@
 
                         <ImageView
                             android:id="@+id/imageView43"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="71dp"
+                            android:layout_height="57dp"
                             android:layout_marginEnd="8dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/cat_2" />
+                            app:srcCompat="@drawable/thirlayer" />
 
                         <TextView
                             android:id="@+id/textView54"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
-                            android:text="Donate"
+                            android:text="Donation"
                             android:textColor="#000000"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -147,6 +149,7 @@
                     android:orientation="horizontal">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/thirdlayout"
                         android:layout_width="0dp"
                         android:layout_height="70dp"
                         android:layout_marginStart="32dp"
@@ -156,13 +159,13 @@
 
                         <ImageView
                             android:id="@+id/imageView45"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="62dp"
+                            android:layout_height="55dp"
                             android:layout_marginEnd="8dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/cat_3" />
+                            app:srcCompat="@drawable/seclayer" />
 
                         <TextView
                             android:id="@+id/textView56"
@@ -178,6 +181,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/fourlayout"
                         android:layout_width="0dp"
                         android:layout_height="70dp"
                         android:layout_marginStart="8dp"
@@ -187,13 +191,13 @@
 
                         <ImageView
                             android:id="@+id/imageView47"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="67dp"
+                            android:layout_height="56dp"
                             android:layout_marginEnd="8dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/cat_4" />
+                            app:srcCompat="@drawable/forlayer" />
 
                         <TextView
                             android:id="@+id/textView58"
@@ -223,7 +227,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Child"
+                    android:text="On Going"
                     android:textColor="#000000"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -260,7 +264,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="New"
+                    android:text="Target Achived"
                     android:textColor="#000000"
                     android:textSize="20sp"
                     android:textStyle="bold" />
