@@ -86,6 +86,9 @@
         <action
             android:id="@+id/action_cusMainPage_to_cusDonatePersonalDetails"
             app:destination="@id/cusDonatePersonalDetails" />
+        <action
+            android:id="@+id/action_cusMainPage_to_cusDonationHistory"
+            app:destination="@id/cusDonationHistory" />
     </fragment>
     <fragment
         android:id="@+id/cusAboutUs"
@@ -115,9 +118,6 @@
         android:name="com.example.mobileappasm.CusProfile"
         android:label="fragment_cus_profile"
         tools:layout="@layout/fragment_cus_profile" >
-        <action
-            android:id="@+id/action_cusProfile_to_cusDonationHistory"
-            app:destination="@id/cusDonationHistory" />
         <action
             android:id="@+id/action_cusProfile_to_cuseditProfile"
             app:destination="@id/cuseditProfile" />

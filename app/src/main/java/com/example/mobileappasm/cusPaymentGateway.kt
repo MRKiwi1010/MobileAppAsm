@@ -3,6 +3,7 @@ package com.example.mobileappasm
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -10,8 +11,10 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.mobileappasm.data.model.cusViewModel
 import com.google.firebase.database.*
@@ -125,6 +128,24 @@ class cusPaymentGateway : Fragment() {
             view.findNavController().navigate(R.id.cusMainPage)
         }
 
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        //Rename the fragment
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Payment"
+
+        setHasOptionsMenu(true)
+
         return view
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                findNavController().navigateUp()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 }

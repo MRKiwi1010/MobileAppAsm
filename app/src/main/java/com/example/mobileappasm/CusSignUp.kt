@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Patterns
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -12,6 +13,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -58,10 +60,25 @@ class CusSignUp : Fragment() {
 
         }
 
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        //Rename the fragment
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Sign Up"
+
+        setHasOptionsMenu(true)
+
         return view
     }
 
-
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                findNavController().navigateUp()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     private fun validatename(): Boolean {
         val name = signupName.text.toString().trim()
