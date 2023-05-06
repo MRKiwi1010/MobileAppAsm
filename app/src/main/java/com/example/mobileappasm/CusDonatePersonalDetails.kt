@@ -68,7 +68,7 @@ class CusDonatePersonalDetails : Fragment() {
         )
         NavigationUI.setupWithNavController(navView2, navController)
 
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Main Page"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Child List"
 
         // handle navigation item clicks
         navView2.setNavigationItemSelectedListener { menuItem ->

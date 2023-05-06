@@ -16,7 +16,7 @@ class DonationAdapter(private val context: Context) :RecyclerView.Adapter<Donati
     private var listener: DonationAdapter.OnItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DonationViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_donation, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_donation2, parent, false)
         return DonationViewHolder(view)
     }
 
@@ -72,12 +72,12 @@ class DonationAdapter(private val context: Context) :RecyclerView.Adapter<Donati
 
         fun bind(donation: Donation) {
             donationNumberView.text = (adapterPosition + 1).toString()
-            donationUsernameView.text = donation.username
-            donationChildNameView.text = donation.childName
-            donationAmountView.text = donation.amount.toString()
-            donationDateView.text = donation.date
-            donationTimeView.text = donation.time
-            donationBankTypeView.text = donation.bankType
+            donationUsernameView.text = "Name : " + donation.username
+            donationChildNameView.text = String.format("Donation Child Name: %s", donation.childName)
+            donationAmountView.text = "RM "+ donation.amount.toString()
+            donationDateView.text = "Date"+ donation.date
+            donationTimeView.text = "Time"+ donation.time
+            donationBankTypeView.text = "Bank Type"+ donation.bankType
         }
     }
 }

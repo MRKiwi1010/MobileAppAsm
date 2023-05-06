@@ -13,6 +13,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.mobileappasm.data.model.cusViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import java.sql.Time
 import java.text.ParseException
@@ -29,6 +30,8 @@ class cusPaymentGateway : Fragment() {
     private lateinit var textDetail: TextView
     private lateinit var textDetail2: TextView
     private lateinit var btnPayment: Button
+    private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,6 +46,9 @@ class cusPaymentGateway : Fragment() {
         textDetail = view.findViewById(R.id.textDetail)
         textDetail2 = view.findViewById(R.id.textDetail2)
         btnPayment = view.findViewById(R.id.btnPayment)
+
+        auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance().reference
 
         val spinnerBank = view.findViewById<Spinner>(R.id.spinnerBank)
         val amount123 = arguments?.getString("paymentAmount")
@@ -70,14 +76,34 @@ class cusPaymentGateway : Fragment() {
             }
         })
 
+        var paymentId = ""
         btnPayment.setOnClickListener {
+
+            database.child("payment").orderByKey().limitToLast(1).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot2: DataSnapshot) {
+                    var paymentCount = 1
+                    for(paymentSnapshot in snapshot2.children)
+                    {
+                        paymentId = paymentSnapshot.key.toString()
+                        val currentCount = paymentId.substring(7).toInt()
+                        if (currentCount >= paymentCount) {
+                            paymentCount = currentCount + 1
+                        }
+                    }
+                    paymentId = "payment" + "%03d".format(paymentCount)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    paymentId = "payment001"
+                }
+            })
             val paymentRef = FirebaseDatabase.getInstance().getReference("payment")
             paymentRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val paymentCount = snapshot.childrenCount + 1
-                    val paymentKey = "p$paymentCount"
-                    val newPaymentRef = paymentRef.child(paymentKey)
-
+//                    val paymentCount = snapshot.childrenCount + 1
+//                    val paymentId = "payment001"
+//                    val paymentKey = "p$paymentCount"
+                    val newPaymentRef = paymentRef.child(paymentId)
                     val bankType = spinnerBank.selectedItem.toString()
                     val amount = amount123?.toDouble() ?: 0.0
                     val cardCVV = cvv.text.toString()
@@ -87,103 +113,61 @@ class cusPaymentGateway : Fragment() {
                     val date = Date()
                     val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
                     val formattedDate = dateFormat.format(date)
-
                     val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
                     val formattedTime = timeFormat.format(date)
-
                     val username = viewModel.getCustomerUsername()
 
-                    // Validate card number
                     if (!isValidCardNumber(cardNo)) {
                         editTextCardNo.error = "Invalid card number"
                         return
                     }
-
-                    // Validate expiration date
                     if (!isValidExpiryDate(cardExp)) {
                         expDate.error = "Invalid expiry date (MM/yy)"
                         return
                     }
-
-                    // Validate CVV
                     if (!isValidCVV(cardCVV)) {
                         cvv.error = "Invalid CVV (3 or 4 digits)"
                         return
                     }
 
-                    val payment =
-                        Payment(bankType, amount, cardCVV, cardExp, cardNo, childName, formattedDate,formattedTime, username)
-                    newPaymentRef.setValue(payment)
-
-                    // Retrieve the child node with the matching child name
-                    val childRef = FirebaseDatabase.getInstance().getReference("child").orderByChild("childName").equalTo(childName)
-                    childRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            val childSnapshot = dataSnapshot.children.firstOrNull()
-                            childSnapshot?.let {
-                                val childKey = it.key
-                                val child = it.getValue(Child::class.java)
-                                val totalReceived = child?.totalReceived ?: 0.0
-                                val amountinput = arguments?.getString("paymentAmount")
-                                val newTotalReceived = totalReceived + (amountinput?.toIntOrNull() ?: 0.0).toDouble()
-
-                                FirebaseDatabase.getInstance().getReference("child").child(childKey ?: "").child("totalReceived").setValue(newTotalReceived)
-
+                    if(isValidCardNumber(cardNo)&&isValidExpiryDate(cardExp)&&isValidCVV(cardCVV)){
+                        val payment = Payment(bankType, amount, cardCVV, cardExp, cardNo, childName, formattedDate,formattedTime, username)
+                        newPaymentRef.setValue(payment)
+                        val childRef = FirebaseDatabase.getInstance().getReference("child").orderByChild("childName").equalTo(childName)
+                        childRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                val childSnapshot = dataSnapshot.children.firstOrNull()
+                                childSnapshot?.let {
+                                    val childKey = it.key
+                                    val child = it.getValue(Child::class.java)
+                                    val totalReceived = child?.totalReceived ?: 0.0
+                                    val amountinput = arguments?.getString("paymentAmount")
+                                    val newTotalReceived = totalReceived + (amountinput?.toIntOrNull() ?: 0.0).toDouble()
+                                    FirebaseDatabase.getInstance().getReference("child").child(childKey ?: "").child("totalReceived").setValue(newTotalReceived)
+                                }
                             }
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-                        }
-                    })
+                            override fun onCancelled(error: DatabaseError) {
+                            }
+                        })
+                        view.findNavController().navigate(R.id.cusPaymentDone)
+                    }
                 }
-
                 override fun onCancelled(error: DatabaseError) {
                 }
             })
-            view.findNavController().navigate(R.id.cusPaymentDone)
         }
-
-
-
-
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        //Rename the fragment
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Payment"
-
         setHasOptionsMenu(true)
-
         return view
     }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                findNavController().navigateUp()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     fun isValidCardNumber(cardNumber: String): Boolean {
-        val regex = "^(?:(?:4[0-9]{12}(?:[0-9]{3})?)|(?:5[1-5][0-9]{14})|(?:3[47][0-9]{13})|(?:3(?:0[0-5]|[68][0-9])[0-9]{11})|(?:6(?:011|5[0-9][0-9])[0-9]{12})|(?:^(?:2131|1800|35\\d{3})\\d{11}$))$"
-        return cardNumber.matches(regex.toRegex())
+        return cardNumber.trim().matches("^\\d{16}$".toRegex())
     }
     fun isValidExpiryDate(expiryDate: String): Boolean {
-        val dateFormat = SimpleDateFormat("MM/yy", Locale.getDefault())
-        dateFormat.isLenient = false
-        return try {
-            val expiryDateObj = dateFormat.parse(expiryDate)
-            val today = Date()
-            expiryDateObj.after(today)
-        } catch (e: ParseException) {
-            false
-        }
+        return expiryDate.trim().matches("^(0[1-9]|1[0-2])/(\\d{2})$".toRegex())
     }
     fun isValidCVV(cvv: String): Boolean {
-        val regex = "^[0-9]{3,4}$"
-        return cvv.matches(regex.toRegex())
+        return cvv.trim().matches("^\\d{3,4}$".toRegex())
     }
-
 }

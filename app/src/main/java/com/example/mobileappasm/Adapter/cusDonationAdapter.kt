@@ -26,10 +26,10 @@ class cusDonationAdapter(private val context: Context) : RecyclerView.Adapter<cu
             holder.bind(donation)
 
             val currentDonation = donations[position]
-            holder.itemView.setOnClickListener {
-                val bundle = bundleOf("username" to currentDonation.username)
-                holder.itemView.findNavController().navigate(R.id.adminViewDonationDetails, bundle)
-            }
+//            holder.itemView.setOnClickListener {
+//                val bundle = bundleOf("username" to currentDonation.username)
+////                holder.itemView.findNavController().navigate(R.id.adminViewDonationDetails, bundle)
+//            }
         }
 
         override fun getItemCount(): Int {
