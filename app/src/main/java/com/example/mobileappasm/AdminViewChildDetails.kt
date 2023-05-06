@@ -74,6 +74,7 @@ class AdminViewChildDetails : Fragment() {
     }
 
     private fun fetchCustomerData() {
+
         val databaseReference = firebaseDatabase.getReference("child")
         val query = databaseReference.orderByChild("childName").equalTo(childName)
         query.addValueEventListener(object : ValueEventListener {
@@ -124,6 +125,27 @@ class AdminViewChildDetails : Fragment() {
     }
 
     private fun saveChanges() {
+        val childName = binding.childName.text.toString();
+        val childAge = binding.childAge.text.toString();
+        val childDesc = binding.childDesc.text.toString();
+        val childTarget = binding.childTarget.text.toString();
+        val childNation = binding.spinnerChildNation.selectedItem.toString();
+
+        if(childName.isEmpty() || childAge.isEmpty() || childDesc.isEmpty() || childTarget.isEmpty() || childNation.isEmpty())
+        {
+            Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (!childAge.matches("[0-9]+".toRegex())) {
+            Toast.makeText(requireContext(), "Age must be a number", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val moneyRegex = "^\\$?[0-9]+(\\.[0-9]{1,2})?$" // accepts formats like $10.99 or 100.00
+        if (!childTarget.matches(moneyRegex.toRegex())) {
+            Toast.makeText(requireContext(), "Invalid money format", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val databaseReference = firebaseDatabase.getReference("child")
         val query = databaseReference.orderByChild("childName").equalTo(childName)
         query.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -173,6 +195,7 @@ class AdminViewChildDetails : Fragment() {
 
     private fun uploadImageToFirebaseStorage() {
         if (selectedImageUri == null) {
+            Toast.makeText(requireContext(), "Please Select Image!!!", Toast.LENGTH_SHORT).show()
             saveChangesToDatabase()
             return
         }

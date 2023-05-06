@@ -2,6 +2,7 @@ package com.example.mobileappasm
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -11,6 +12,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -18,6 +20,11 @@ import com.example.mobileappasm.databinding.FragmentAdminAddAdminBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import java.io.ByteArrayOutputStream
 
 
 private const val ARG_PARAM1 = "param1"
@@ -39,7 +46,7 @@ class AdminAddAdmin : Fragment() {
             binding.adminImageView.setImageURI(selectedImageUri)
         }
     }
-
+    private val MY_PERMISSIONS_REQUEST_CAMERA = 123
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,10 +88,46 @@ class AdminAddAdmin : Fragment() {
         val btnSelectImage = view.findViewById<Button>(R.id.btnSelectImage)
         val imageView = view.findViewById<ImageView>(R.id.adminImageView)
 
-        btnSelectImage.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            pickImageLauncher.launch(intent)
+        // Check if the CAMERA permission has been granted
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+            != PackageManager.PERMISSION_GRANTED) {
+            // If the permission has not been granted, request it
+            ActivityCompat.requestPermissions(requireActivity(),
+                arrayOf(Manifest.permission.CAMERA),
+                MY_PERMISSIONS_REQUEST_CAMERA)
         }
+
+//        btnSelectImage.setOnClickListener {
+//            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+//            pickImageLauncher.launch(intent)
+//        }
+
+        btnSelectImage.setOnClickListener {
+            val options = mutableListOf<CharSequence>("Choose from Gallery", "Cancel")
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+                options.add(0, "Take Photo")
+            }
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Add Photo!")
+            builder.setItems(options.toTypedArray()) { dialog, item ->
+                when {
+                    options[item] == "Take Photo" -> {
+                        val takePicture = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                        startActivityForResult(takePicture, 0)
+                    }
+                    options[item] == "Choose from Gallery" -> {
+                        val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                        startActivityForResult(pickPhoto, 1)
+                    }
+                    options[item] == "Cancel" -> {
+                        dialog.dismiss()
+                    }
+                }
+            }
+            builder.show()
+        }
+
 
         val btnAddAdmin = binding.btnAddAdmin
         var adminId = ""
@@ -202,6 +245,10 @@ class AdminAddAdmin : Fragment() {
                             }
                         }
                     }
+//                    else if(selectedImage != null)
+//                    {
+//
+//                    }
                     else
                     {
                         Toast.makeText(requireContext(), "Please Select Image!!!", Toast.LENGTH_SHORT).show()
@@ -213,6 +260,60 @@ class AdminAddAdmin : Fragment() {
                 }
             })
         }
+    }
+
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//
+//        val pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+//
+//            if (result.resultCode == RESULT_OK) {
+//                val data = result.data
+//                if (data?.extras?.containsKey("data") == true) {
+//                    val thumbnail: Bitmap = data.extras?.get("data") as Bitmap
+//                    binding.adminImageView.setImageBitmap(thumbnail)
+//                } else {
+//                    selectedImageUri = data?.data
+//                    binding.adminImageView.setImageURI(selectedImageUri)
+//                }
+//            }
+//        }
+//    }
+
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (resultCode == RESULT_OK) {
+//            when (requestCode) {
+//                0 -> {
+//                    val selectedImage = data?.extras?.get("data") as Bitmap
+//                    binding.adminImageView.setImageBitmap(selectedImage)
+//                }
+//                1 -> { // Gallery
+//                    selectedImageUri = data?.data
+//                    binding.adminImageView.setImageURI(selectedImageUri)
+//                }
+//            }
+//        }
+//    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RESULT_OK && requestCode == 1 && data != null) {
+            selectedImageUri = data.data
+            binding.adminImageView.setImageURI(selectedImageUri)
+        } else if (resultCode == RESULT_OK && requestCode == 0 && data != null) {
+            val imageBitmap = data.extras?.get("data") as Bitmap
+            selectedImageUri = getImageUri(imageBitmap)
+            binding.adminImageView.setImageBitmap(imageBitmap)
+        }
+    }
+
+    private fun getImageUri(inImage: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(requireContext().contentResolver, inImage, "Title", null)
+        return Uri.parse(path)
     }
 
     fun saveAdminData(admin: Admin, adminId: String) {
