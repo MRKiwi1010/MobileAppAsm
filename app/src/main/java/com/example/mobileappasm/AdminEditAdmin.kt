@@ -13,19 +13,23 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.mobileappasm.databinding.FragmentAdminEditAdminBinding
+import com.example.mobileappasm.ui.login.adminViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
+import de.hdodenhof.circleimageview.CircleImageView
 import java.io.ByteArrayOutputStream
 
 private const val ARG_PARAM1 = "param1"
@@ -39,6 +43,10 @@ class AdminEditAdmin : Fragment() {
     private lateinit var adminUsername: String
     private var selectedImageUri: Uri? = null
     private lateinit var database: DatabaseReference
+    private var adminPosition = ""
+
+    private lateinit var database2: FirebaseDatabase
+    private lateinit var adminRef2: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +89,39 @@ class AdminEditAdmin : Fragment() {
 //        binding.btnSelectImage.setOnClickListener {
 //            selectImage()
 //        }
-        binding.btnSelectImage.setOnClickListener {
+
+        database2 = FirebaseDatabase.getInstance()
+        adminRef2 = database2.getReference("admin")
+
+        val viewModel = ViewModelProvider(requireActivity())[adminViewModel::class.java]
+        val adminUsername = viewModel.username
+
+        adminRef2.orderByChild("username").equalTo(adminUsername).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val admin = snapshot.children.first().getValue(Admin::class.java)
+
+                // check if admin's position is admin
+                if (admin != null) {
+                    if (admin.position == "Admin") {
+                        // set button visibility to visible
+                        val buttonSave = view.findViewById<Button>(R.id.btnSaveChanges)
+                        val buttonDelete = view.findViewById<Button>(R.id.btnDelete)
+                        buttonSave.visibility = View.VISIBLE
+                        buttonDelete.visibility = View.VISIBLE
+                    } else if(admin.position == "staff") {
+                        val buttonSave = view.findViewById<Button>(R.id.btnSaveChanges)
+                        val buttonDelete = view.findViewById<Button>(R.id.btnDelete)
+                        buttonSave.visibility = View.GONE
+                        buttonDelete.visibility = View.GONE
+                    }
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                // handle error
+            }
+        })
+
+        binding.adminImageView.setOnClickListener {
             val options = mutableListOf<CharSequence>("Choose from Gallery", "Cancel")
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -133,7 +173,7 @@ class AdminEditAdmin : Fragment() {
                         "Male" -> binding.maleBtn.setChecked(true)
                         "Female" -> binding.femaleBtn.setChecked(true)
                     }
-                    val imageView = view?.findViewById<ImageView>(R.id.adminImageView)
+                    val imageView = view?.findViewById<CircleImageView>(R.id.adminImageView)
 
                     if (admin != null) {
                         admin.imageUri?.let { imageUri ->
@@ -141,6 +181,14 @@ class AdminEditAdmin : Fragment() {
                                 Glide.with(requireContext()).load(imageUri).into(imageView)
                             }
                         }
+                    }
+                    if(admin?.position == "Admin")
+                    {
+                        adminPosition = "Admin"
+                    }
+                    else
+                    {
+                        adminPosition = "staff"
                     }
                     selectedImageUri = admin?.imageUri?.toUri()
                 }
@@ -277,7 +325,7 @@ class AdminEditAdmin : Fragment() {
                                             contact,
                                             gender,
                                             age,
-                                            position = "staff"
+                                            position = adminPosition
                                         )
 
                                         // If a new image is selected, upload it to Firebase Storage

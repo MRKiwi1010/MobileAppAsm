@@ -25,6 +25,7 @@ import com.example.mobileappasm.databinding.FragmentAdminAddChildBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
+import de.hdodenhof.circleimageview.CircleImageView
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -89,10 +90,10 @@ class AdminAddChild : Fragment() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
 //        val btnSelectImage = binding.btnSelectImage
-        val btnSelectImage = view.findViewById<Button>(R.id.btnSelectImage)
-        val imageView = view.findViewById<ImageView>(R.id.childImageView)
+//        val btnSelectImage = view.findViewById<Button>(R.id.btnSelectImage)
+        val imageView = view.findViewById<CircleImageView>(R.id.childImageView)
 
-        btnSelectImage.setOnClickListener {
+        imageView.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             pickImageLauncher.launch(intent)
         }
@@ -118,7 +119,7 @@ class AdminAddChild : Fragment() {
 
                     val name = binding.childName.text.toString()
                     val nation = binding.childNationSpinner.selectedItem as String
-                    val age = binding.childAge.text.toString()
+                    val age = "10"
                     val desc = binding.childDesc.text.toString()
                     val target = binding.childTarget.text.toString()
 

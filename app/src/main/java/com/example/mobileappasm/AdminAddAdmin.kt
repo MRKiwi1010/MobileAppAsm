@@ -25,6 +25,7 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import de.hdodenhof.circleimageview.CircleImageView
 import java.io.ByteArrayOutputStream
 
 
@@ -90,8 +91,8 @@ class AdminAddAdmin : Fragment() {
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
-        val btnSelectImage = view.findViewById<Button>(R.id.btnSelectImage)
-        val imageView = view.findViewById<ImageView>(R.id.adminImageView)
+//        val btnSelectImage = view.findViewById<Button>(R.id.btnSelectImage)
+        val imageView = view.findViewById<CircleImageView>(R.id.adminImageView)
 
         // Check if the CAMERA permission has been granted
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
@@ -107,7 +108,7 @@ class AdminAddAdmin : Fragment() {
 //            pickImageLauncher.launch(intent)
 //        }
 
-        btnSelectImage.setOnClickListener {
+        binding.adminImageView.setOnClickListener {
             val options = mutableListOf<CharSequence>("Choose from Gallery", "Cancel")
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -159,7 +160,7 @@ class AdminAddAdmin : Fragment() {
                         else -> ""
                     }
                     val age = binding.adminAge.text.toString()
-                    val position = "Admin"
+                    val position = "staff"
 
                     // Check if all fields are filled
                     if (name.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty() || contact.isEmpty() || gender.isEmpty() || age.isEmpty()) {

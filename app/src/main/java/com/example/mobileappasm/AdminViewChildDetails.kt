@@ -62,7 +62,7 @@ class AdminViewChildDetails : Fragment() {
         childName = arguments?.getString("childName") ?: ""
         fetchCustomerData()
         setupSpinner()
-        binding.btnSelectImage.setOnClickListener {
+        binding.childImageView.setOnClickListener {
             selectImage()
         }
         binding.btnSaveChanges.setOnClickListener {

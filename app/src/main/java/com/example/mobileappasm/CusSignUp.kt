@@ -27,6 +27,7 @@ import com.example.mobileappasm.databinding.FragmentCusSignUpBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
+import de.hdodenhof.circleimageview.CircleImageView
 import java.io.ByteArrayOutputStream
 
 private const val ARG_PARAM1 = "param1"
@@ -108,8 +109,8 @@ class CusSignUp : Fragment() {
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
-        val btnSelectImage = view.findViewById<Button>(R.id.btnSelectImage)
-        val imageView = view.findViewById<ImageView>(R.id.adminImageView)
+//        val btnSelectImage = view.findViewById<Button>(R.id.btnSelectImage)
+        val imageView = view.findViewById<CircleImageView>(R.id.adminImageView)
         val checkBox = view.findViewById<CheckBox>(R.id.checkBox)
         val loginRedirectText = view.findViewById<TextView>(R.id.loginRedirectText)
         loginRedirectText.setOnClickListener { view.findNavController().navigate(R.id.cusLoginPage) }

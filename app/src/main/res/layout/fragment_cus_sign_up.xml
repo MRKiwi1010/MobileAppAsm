@@ -40,15 +40,16 @@ tools:context=".CusSignUp">
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/adminImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginTop="60dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/profile_profile" />
+        android:background="@drawable/profile"
+        android:src="@drawable/ic_profile_placeholder" />
 <!--        <Button-->
 <!--            android:id="@+id/btnSelectImage"-->
 <!--            android:layout_width="match_parent"-->
