@@ -145,6 +145,9 @@ class AdminDonationHistory : Fragment() {
         donationAdapter = DonationAdapter(requireContext())
         recyclerView.adapter = donationAdapter
 
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Donation List"
+
+
         return rootView
     }
 

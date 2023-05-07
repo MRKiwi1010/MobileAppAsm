@@ -1,5 +1,6 @@
 package com.example.mobileappasm
 
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil.setContentView
 import androidx.drawerlayout.widget.DrawerLayout
@@ -143,6 +145,10 @@ class AdminCustomerList : Fragment() {
 
         //Rename the fragment
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Customer List"
+
+        val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
+        actionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.black)))
+
 
         return rootView
     }

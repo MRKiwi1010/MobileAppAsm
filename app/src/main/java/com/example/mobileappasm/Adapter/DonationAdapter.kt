@@ -53,7 +53,7 @@ class DonationAdapter(private val context: Context) :RecyclerView.Adapter<Donati
     }
 
     inner class DonationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val donationNumberView: TextView = itemView.findViewById(R.id.donationNumberTextView)
+//        private val donationNumberView: TextView = itemView.findViewById(R.id.donationNumberTextView)
         private val donationUsernameView: TextView = itemView.findViewById(R.id.donationUsernameTextView)
         private val donationChildNameView: TextView = itemView.findViewById(R.id.donationChildNameTextView)
         private val donationAmountView: TextView = itemView.findViewById(R.id.donationAmountTextView)
@@ -71,13 +71,13 @@ class DonationAdapter(private val context: Context) :RecyclerView.Adapter<Donati
         }
 
         fun bind(donation: Donation) {
-            donationNumberView.text = (adapterPosition + 1).toString()
+//            donationNumberView.text = (adapterPosition + 1).toString()
             donationUsernameView.text = "Name" + donation.username
-            donationChildNameView.text = String.format("Donation Child Name: %s", donation.childName)
-            donationAmountView.text = "RM "+ donation.amount.toString()
-            donationDateView.text = "Date"+ donation.date
-            donationTimeView.text = "Time"+ donation.time
-            donationBankTypeView.text = "Bank Type"+ donation.bankType
+            donationChildNameView.text = String.format("Child : %s", donation.childName)
+            donationAmountView.text = "RM : "+ donation.amount.toString()
+            donationDateView.text = "Date : "+ donation.date
+            donationTimeView.text = "Time : "+ donation.time
+            donationBankTypeView.text = "Bank : "+ donation.bankType
         }
     }
 }

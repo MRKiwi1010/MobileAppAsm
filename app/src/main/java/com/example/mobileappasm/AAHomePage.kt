@@ -1,6 +1,7 @@
 package com.example.mobileappasm
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.findNavController
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 
 
 class AAHomePage : Fragment() {
@@ -41,6 +43,10 @@ class AAHomePage : Fragment() {
 
         // Hide the top bar that shows the fragment title
 //        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+
+        val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
+        actionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.black)))
+
 
         return view
     }

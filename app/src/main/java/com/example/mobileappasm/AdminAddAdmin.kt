@@ -22,6 +22,7 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.drawable.ColorDrawable
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.io.ByteArrayOutputStream
@@ -65,6 +66,10 @@ class AdminAddAdmin : Fragment() {
 
         //Rename the fragment
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Add Admin"
+
+        val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
+        actionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.black)))
+
 
         setHasOptionsMenu(true)
         return binding.root
@@ -154,7 +159,7 @@ class AdminAddAdmin : Fragment() {
                         else -> ""
                     }
                     val age = binding.adminAge.text.toString()
-                    val position = "Staff"
+                    val position = "Admin"
 
                     // Check if all fields are filled
                     if (name.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty() || contact.isEmpty() || gender.isEmpty() || age.isEmpty()) {

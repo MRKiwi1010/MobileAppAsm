@@ -15,7 +15,7 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/childNumberTextView"
+            android:id="@+id/childNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
@@ -23,13 +23,6 @@
             android:textStyle="bold"
             android:layout_alignParentStart="true"/>
 
-        <TextView
-            android:id="@+id/childNameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:textSize="14sp"
-            android:layout_toEndOf="@id/childNumberTextView"/>
 
         <TextView
             android:id="@+id/childNationTextView"
@@ -48,20 +41,12 @@
             android:layout_below="@id/childNationTextView"/>
 
         <TextView
-            android:id="@+id/childDescTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:textSize="14sp"
-            android:layout_below="@id/childAgeTextView"/>
-
-        <TextView
             android:id="@+id/childTargetTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
             android:textSize="14sp"
-            android:layout_below="@id/childDescTextView"/>
+            android:layout_below="@id/childAgeTextView"/>
 
         <TextView
             android:id="@+id/totalReceivedTextView"

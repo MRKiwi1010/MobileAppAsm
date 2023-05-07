@@ -3,6 +3,7 @@ package com.example.mobileappasm
 //import com.example.mobileappasm
 import android.app.Activity
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -18,6 +19,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.example.mobileappasm.databinding.FragmentAdminAddChildBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -63,6 +65,10 @@ class AdminAddChild : Fragment() {
 
         //Rename the fragment
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Add Child"
+
+        val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
+        actionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.black)))
+
 
         return binding.root
     }

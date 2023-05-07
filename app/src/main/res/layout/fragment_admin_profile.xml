@@ -7,16 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-<!--        <androidx.appcompat.widget.Toolbar-->
-<!--            android:id="@+id/toolbar"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="?attr/actionBarSize"-->
-<!--            android:background="?attr/colorPrimary"-->
-<!--            android:elevation="4dp"-->
-<!--            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
-<!--            app:navigationIcon="@drawable/ic_menu"-->
-<!--            app:contentInsetStartWithNavigation="0dp"/>-->
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -30,12 +20,27 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <ImageView
+<!--                <ImageView-->
+<!--                    android:id="@+id/profile_image"-->
+<!--                    android:layout_width="150dp"-->
+<!--                    android:layout_height="150dp"-->
+<!--                    android:layout_gravity="center_horizontal"-->
+<!--                    android:layout_marginTop="24dp"-->
+<!--                    android:background="@drawable/circle_background"-->
+<!--                    android:src="@drawable/ic_account_circle"/>-->
+
+                <View
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="24dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profile_image"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="24dp"
                     android:src="@drawable/ic_account_circle"/>
 
                 <TextView
@@ -43,6 +48,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
                     android:gravity="center_horizontal"
                     android:textSize="18sp"/>
 
@@ -51,13 +58,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:textStyle="bold"
                     android:text="@string/name_label"
-                    android:textSize="16sp"/>
+                    android:layout_marginLeft="30dp"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"/>
 
                 <TextView
                     android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
                     android:textSize="16sp"/>
 
                 <TextView
@@ -65,13 +76,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="30dp"
+                    android:textStyle="bold"
                     android:text="@string/email_label"
-                    android:textSize="16sp"/>
+                    android:textSize="20sp"/>
 
                 <TextView
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
                     android:textSize="16sp"/>
 
                 <TextView
@@ -79,13 +94,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="30dp"
                     android:text="@string/contact_label"
-                    android:textSize="16sp"/>
+                    android:textSize="20sp"/>
 
                 <TextView
                     android:id="@+id/contact"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
                     android:textSize="16sp"/>
 
                 <TextView
@@ -93,13 +112,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
                     android:text="@string/gender_label"
-                    android:textSize="16sp"/>
+                    android:layout_marginLeft="30dp"
+                    android:textSize="20sp"/>
 
                 <TextView
                     android:id="@+id/gender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
                     android:textSize="16sp"/>
 
                 <TextView
@@ -107,13 +130,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:layout_marginLeft="30dp"
+                    android:textStyle="bold"
                     android:text="@string/age_label"
-                    android:textSize="16sp"/>
+                    android:textColor="@color/black"
+                    android:textSize="20sp"/>
 
                 <TextView
                     android:id="@+id/age"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
                     android:textSize="16sp"/>
 
                 <TextView
@@ -122,13 +149,24 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="@string/position_label"
-                    android:textSize="16sp"/>
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="30dp"
+                    android:textSize="20sp"/>
 
                 <TextView
                     android:id="@+id/position"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
                     android:textSize="16sp"/>
+
+                <View
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="24dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black" />
 
             </LinearLayout>
 

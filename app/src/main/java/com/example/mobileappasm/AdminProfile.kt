@@ -39,6 +39,7 @@ import com.example.mobileappasm.ui.login.adminViewModel
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import de.hdodenhof.circleimageview.CircleImageView
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -238,7 +239,7 @@ class AdminProfile : Fragment() {
                         val positionTextView = view.findViewById<TextView>(R.id.position)
                         positionTextView.text = admin.position
 
-                        val imageView = view.findViewById<ImageView>(R.id.profile_image)
+                        val imageView = view.findViewById<CircleImageView>(R.id.profile_image)
                         admin.imageUri?.let { imageUri ->
                             Glide.with(requireContext()).load(imageUri).into(imageView)
                         }

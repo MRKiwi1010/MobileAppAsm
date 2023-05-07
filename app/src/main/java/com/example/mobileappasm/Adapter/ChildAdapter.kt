@@ -54,10 +54,9 @@ class ChildAdapter (private val context: Context) : RecyclerView.Adapter<ChildAd
     }
 
     inner class ChildViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val childNumberView: TextView = itemView.findViewById(R.id.childNumberTextView)
         private val childNameView: TextView = itemView.findViewById(R.id.childNameTextView)
         private val childNationView: TextView = itemView.findViewById(R.id.childNationTextView)
-        private val childDescView: TextView = itemView.findViewById(R.id.childDescTextView)
+//        private val childDescView: TextView = itemView.findViewById(R.id.childDescTextView)
         private val childAgeView: TextView = itemView.findViewById(R.id.childAgeTextView)
         private val childTargetView: TextView = itemView.findViewById(R.id.childTargetTextView)
         private val totalReceivedView: TextView = itemView.findViewById(R.id.totalReceivedTextView)
@@ -72,13 +71,11 @@ class ChildAdapter (private val context: Context) : RecyclerView.Adapter<ChildAd
         }
 
         fun bind(child: Child) {
-            childNumberView.text = (adapterPosition + 1).toString()
             childNameView.text = child.childName
-            childNationView.text = child.childNation
-            childDescView.text = child.child_Des
-            childAgeView.text = child.childAge.toString()
-            childTargetView.text = child.target.toString()
-            totalReceivedView.text = child.totalReceived.toString()
+            childNationView.text = "Nation : " +  child.childNation
+            childAgeView.text = "Age : " +  child.childAge.toString()
+            childTargetView.text = "Target Amount (RM) : " + child.target.toString()
+            totalReceivedView.text = "Current Amount (RM) : " +  child.totalReceived.toString()
         }
     }
 }

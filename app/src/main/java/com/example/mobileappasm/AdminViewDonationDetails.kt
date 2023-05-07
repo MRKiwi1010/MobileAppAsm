@@ -25,6 +25,8 @@ class AdminViewDonationDetails : Fragment() {
         binding = FragmentAdminViewDonationDetailsBinding.inflate(inflater, container, false)
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Donation Details"
+
         setHasOptionsMenu(true)
         return binding.root
     }

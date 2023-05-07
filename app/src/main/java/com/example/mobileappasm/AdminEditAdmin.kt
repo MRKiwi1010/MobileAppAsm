@@ -1,8 +1,11 @@
 package com.example.mobileappasm
 
+import android.Manifest
 import android.app.Activity.RESULT_OK
 import androidx.appcompat.app.AlertDialog
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -13,14 +16,17 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.mobileappasm.databinding.FragmentAdminEditAdminBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
+import java.io.ByteArrayOutputStream
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -72,9 +78,36 @@ class AdminEditAdmin : Fragment() {
         adminUsername = arguments?.getString("username") ?: ""
         database = FirebaseDatabase.getInstance().reference
         fetchAdminData()
+//        binding.btnSelectImage.setOnClickListener {
+//            selectImage()
+//        }
         binding.btnSelectImage.setOnClickListener {
-            selectImage()
+            val options = mutableListOf<CharSequence>("Choose from Gallery", "Cancel")
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+                options.add(0, "Take Photo")
+            }
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Add Photo!")
+            builder.setItems(options.toTypedArray()) { dialog, item ->
+                when {
+                    options[item] == "Take Photo" -> {
+                        val takePicture = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                        startActivityForResult(takePicture, 0)
+                    }
+                    options[item] == "Choose from Gallery" -> {
+                        val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                        startActivityForResult(pickPhoto, 1)
+                    }
+                    options[item] == "Cancel" -> {
+                        dialog.dismiss()
+                    }
+                }
+            }
+            builder.show()
         }
+
+
         binding.btnSaveChanges.setOnClickListener {
             saveChanges()
         }
@@ -120,13 +153,13 @@ class AdminEditAdmin : Fragment() {
     }
 
     private fun saveChanges() {
-        val adminRef = firebaseDatabase.getReference("admin")
-
         // Get the current admin's username and email
         val currentUsername = binding.adminUsername.text.toString().trim()
         val currentEmail = binding.adminEmail.text.toString().trim()
+        val adminRef = firebaseDatabase.getReference("admin")
+
         var adminId = ""
-        database.child("admin").orderByKey().limitToLast(1)
+        database.child("admin").orderByChild("email").equalTo(currentEmail)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (adminSnapshot in snapshot.children) {
@@ -139,20 +172,27 @@ class AdminEditAdmin : Fragment() {
                 }
             })
 
-        // Check if the new email already exists in the database
+
+
         adminRef.orderByChild("email").equalTo(currentEmail)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    if (dataSnapshot.exists()) {
+                    if (dataSnapshot.exists() && dataSnapshot.child(adminId).value == null) {
                         // Email already exists in the database, show error message
-                        Toast.makeText(requireContext(), "Email already exists", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Email already exists",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
                         // Check if the new username already exists in the database
-                        adminRef.orderByChild("username").equalTo(currentUsername)
+                        adminRef.orderByChild("username").equalTo(adminUsername)
                             .addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                    if (dataSnapshot.exists()) {
+                                    if (dataSnapshot.exists() && dataSnapshot.child(
+                                            adminId
+                                        ).value == null
+                                    ) {
                                         // Username already exists in the database, show error message
                                         Toast.makeText(
                                             requireContext(),
@@ -194,7 +234,8 @@ class AdminEditAdmin : Fragment() {
                                         }
 
                                         // Check if contact is in Malaysia contact format
-                                        val contactRegex = "^(01)[0-46-9]-*[0-9]{7,8}\$"
+                                        val contactRegex =
+                                            "^(01)[0-46-9]-*[0-9]{7,8}\$"
                                         if (!contact.matches(contactRegex.toRegex())) {
                                             Toast.makeText(
                                                 requireContext(),
@@ -215,7 +256,8 @@ class AdminEditAdmin : Fragment() {
                                         }
 
                                         // Check if email is in correct format
-                                        val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
+                                        val emailRegex =
+                                            "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
                                         if (!email.matches(emailRegex.toRegex())) {
                                             Toast.makeText(
                                                 requireContext(),
@@ -235,92 +277,100 @@ class AdminEditAdmin : Fragment() {
                                             contact,
                                             gender,
                                             age,
-                                            position = "Staff"
+                                            position = "staff"
                                         )
 
+                                        // If a new image is selected, upload it to Firebase Storage
                                         if (selectedImageUri != null) {
-                                            val storageReference =
-                                                FirebaseStorage.getInstance().reference
-                                            val imageRef =
-                                                storageReference.child("admin_img/$adminId.jpg")
+                                            val storageRef = FirebaseStorage.getInstance()
+                                                .getReference("admin_images/${adminId}")
+                                            storageRef.putFile(selectedImageUri!!)
+                                                .addOnSuccessListener {
+                                                    // Get the download URL of the uploaded image
+                                                    storageRef.downloadUrl
+                                                        .addOnSuccessListener { uri ->
+                                                            admin.imageUri = uri.toString()
 
-                                            val uploadTask = imageRef.putFile(selectedImageUri!!)
-                                            uploadTask.continueWithTask { task ->
-                                                if (!task.isSuccessful) {
-                                                    task.exception?.let { throw it }
+                                                            val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("admin")
+
+
+                                                            // Save the new admin object to Firebase Database
+                                                            adminRef.child(dataSnapshot.children.first().key.toString()).setValue(admin)
+                                                                .addOnSuccessListener {
+                                                                    Toast.makeText(
+                                                                        requireContext(),
+                                                                        "Changes saved",
+                                                                        Toast.LENGTH_SHORT
+                                                                    ).show()
+                                                                    // Navigate back to the previous screen
+                                                                    findNavController().navigate(R.id.adminViewAdminList)
+                                                                }
+                                                                .addOnFailureListener {
+                                                                    Toast.makeText(
+                                                                        requireContext(),
+                                                                        "Failed to save changes",
+                                                                        Toast.LENGTH_SHORT
+                                                                    ).show()
+                                                                }
+                                                        }
+                                                        .addOnFailureListener {
+                                                            Toast.makeText(
+                                                                requireContext(),
+                                                                "Failed to get image URL",
+                                                                Toast.LENGTH_SHORT
+                                                            ).show()
+                                                        }
                                                 }
-                                                imageRef.downloadUrl
-                                            }.addOnCompleteListener { task ->
-                                                if (task.isSuccessful) {
-                                                    val downloadUri = task.result.toString()
-
-                                                    admin.imageUri = downloadUri
-                                                    saveAdminData(admin, adminId)
-
-                                                }
-                                            }
-                                        }
-                                        // If the adminId is not empty, update the existing admin with the new admin object
-                                        if (adminId.isNotEmpty()) {
-                                            adminRef.child(adminId).setValue(admin)
-                                                .addOnCompleteListener { task ->
-                                                    if (task.isSuccessful) {
-                                                        Toast.makeText(
-                                                            requireContext(),
-                                                            "Admin updated successfully",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
-                                                        findNavController().navigate(R.id.adminViewAdminList)
-                                                    } else {
-                                                        Toast.makeText(
-                                                            requireContext(),
-                                                            "Failed to update admin",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
-                                                    }
+                                                .addOnFailureListener {
+                                                    Toast.makeText(
+                                                        requireContext(),
+                                                        "Failed to upload image",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
                                                 }
                                         } else {
-                                            // If the adminId is empty, create a new admin with the new admin object
-                                            val newAdminRef = adminRef.push()
-                                            newAdminRef.setValue(admin)
-                                                .addOnCompleteListener { task ->
-                                                    if (task.isSuccessful) {
-                                                        Toast.makeText(
-                                                            requireContext(),
-                                                            "Admin added successfully",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
-                                                    } else {
-                                                        Toast.makeText(
-                                                            requireContext(),
-                                                            "Failed to add admin",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
-                                                    }
+                                            // Save the new admin object to Firebase Database
+                                            adminRef.child(currentUsername).setValue(admin)
+                                                .addOnSuccessListener {
+                                                    Toast.makeText(
+                                                        requireContext(),
+                                                        "Changes saved",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                    // Navigate back to the previous screen
+                                                    findNavController().navigate(R.id.adminViewAdminList)
+                                                }
+                                                .addOnFailureListener {
+                                                    Toast.makeText(
+                                                        requireContext(),
+                                                        "Failed to save changes",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
                                                 }
                                         }
                                     }
                                 }
 
                                 override fun onCancelled(databaseError: DatabaseError) {
-                                    Toast.makeText(requireContext(), "Failed", Toast.LENGTH_SHORT)
-                                        .show()
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Failed to check username",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             })
                     }
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
-                    Toast.makeText(requireContext(), "Failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Failed to check email",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
     }
-
-
-
-
-
-
 
 
 
@@ -372,13 +422,34 @@ class AdminEditAdmin : Fragment() {
         startActivityForResult(intent, REQUEST_IMAGE_PICK)
     }
 
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK && data != null) {
+//            selectedImageUri = data.data
+//            Glide.with(this).load(selectedImageUri).into(binding.adminImageView)
+//        }
+//    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK && data != null) {
+
+        if (resultCode == RESULT_OK && requestCode == 1 && data != null) {
             selectedImageUri = data.data
-            Glide.with(this).load(selectedImageUri).into(binding.adminImageView)
+            binding.adminImageView.setImageURI(selectedImageUri)
+        } else if (resultCode == RESULT_OK && requestCode == 0 && data != null) {
+            val imageBitmap = data.extras?.get("data") as Bitmap
+            selectedImageUri = getImageUri(imageBitmap)
+            binding.adminImageView.setImageBitmap(imageBitmap)
         }
     }
+
+    private fun getImageUri(inImage: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(requireContext().contentResolver, inImage, "Title", null)
+        return Uri.parse(path)
+    }
+
 
 
     companion object {

@@ -44,13 +44,13 @@
     </string-array>
 
     <!--    Admin-->
-    <string name="name_label">Name:</string>
-    <string name="email_label">Email:</string>
-    <string name="contact_label">Contact Number:</string>
-    <string name="gender_label">Gender:</string>
-    <string name="age_label">Age:</string>
-    <string name="position_label">Position:</string>
-    <string name="company_label">Company:</string>
-    <string name="address_label">Address:</string>
+    <string name="name_label">Name </string>
+    <string name="email_label">Email </string>
+    <string name="contact_label">Contact Number </string>
+    <string name="gender_label">Gender </string>
+    <string name="age_label">Age </string>
+    <string name="position_label">Position </string>
+    <string name="company_label">Company </string>
+    <string name="address_label">Address </string>
     <string name="edit_button_label">Edit Profile</string>
 </resources>

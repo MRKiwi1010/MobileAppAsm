@@ -3,11 +3,8 @@ package com.example.mobileappasm
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
@@ -187,6 +184,31 @@ class AdminViewAdminList : Fragment() {
 
             override fun onCancelled(error: DatabaseError) {
                 // Handle error
+            }
+        })
+
+        val viewModel = ViewModelProvider(requireActivity())[adminViewModel::class.java]
+        val adminUsername = viewModel.username
+
+        adminRef.orderByChild("username").equalTo(adminUsername).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val admin = snapshot.children.first().getValue(Admin::class.java)
+
+                // check if admin's position is admin
+                if (admin != null) {
+                    if (admin.position == "Admin") {
+                        // set button visibility to visible
+                        val button = view.findViewById<Button>(R.id.AddAdmin)
+                        button.visibility = View.VISIBLE
+                    } else if(admin.position == "staff") {
+                        val button = view.findViewById<Button>(R.id.AddAdmin)
+                        button.visibility = View.GONE
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // handle error
             }
         })
 
