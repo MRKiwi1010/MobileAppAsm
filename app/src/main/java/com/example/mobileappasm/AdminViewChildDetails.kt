@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
+import de.hdodenhof.circleimageview.CircleImageView
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -29,7 +30,10 @@ class AdminViewChildDetails : Fragment() {
     private lateinit var firebaseDatabase: FirebaseDatabase
     private lateinit var childName: String
     private var selectedImageUri: Uri? = null
+    private var childchildnamename = ""
+    private var totalReceive = ""
     private lateinit var child: Child
+//    private lateinit var databaseReference: DatabaseReference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,7 +45,7 @@ class AdminViewChildDetails : Fragment() {
         setHasOptionsMenu(true)
 
         //Rename the fragment
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Edit Child"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Edit Event"
         return binding.root
     }
 
@@ -82,9 +86,11 @@ class AdminViewChildDetails : Fragment() {
                 if (dataSnapshot.exists()) {
                     child = dataSnapshot.children.first().getValue(Child::class.java)!!
                     binding.childName.setText(child.childName)
+                    childchildnamename = child.childName
                     binding.childAge.setText(child.childAge.toString())
                     binding.childDesc.setText(child.child_Des)
                     binding.childTarget.setText(child.target.toString())
+                    totalReceive = child.totalReceived.toString()
                     Glide.with(requireContext()).load(child.childUrl).into(binding.childImageView)
                     val spinner: Spinner = binding.spinnerChildNation
                     val adapter = spinner.adapter as ArrayAdapter<String>
@@ -130,6 +136,7 @@ class AdminViewChildDetails : Fragment() {
         val childDesc = binding.childDesc.text.toString();
         val childTarget = binding.childTarget.text.toString();
         val childNation = binding.spinnerChildNation.selectedItem.toString();
+        totalReceive
 
         if(childName.isEmpty() || childAge.isEmpty() || childDesc.isEmpty() || childTarget.isEmpty() || childNation.isEmpty())
         {
@@ -147,21 +154,31 @@ class AdminViewChildDetails : Fragment() {
         }
 
         val databaseReference = firebaseDatabase.getReference("child")
-        val query = databaseReference.orderByChild("childName").equalTo(childName)
+        val query = databaseReference.orderByChild("childName").equalTo(childchildnamename)
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    dataSnapshot.children.first().ref.child("childName")
+                    val childRef = dataSnapshot.children.first().ref
+
+                    childRef.child("childName")
                         .setValue(binding.childName.text.toString())
-                    dataSnapshot.children.first().ref.child("childAge")
+                    childRef.child("childAge")
                         .setValue(binding.childAge.text.toString().toInt())
-                    dataSnapshot.children.first().ref.child("child_Des")
+                    childRef.child("child_Des")
                         .setValue(binding.childDesc.text.toString())
-                    dataSnapshot.children.first().ref.child("target")
+                    childRef.child("target")
                         .setValue(binding.childTarget.text.toString().toDouble())
-                    dataSnapshot.children.first().ref.child("childNation")
+                    childRef.child("childNation")
                         .setValue(binding.spinnerChildNation.selectedItem.toString())
+                    childRef.child("totalReceived")
+                        .setValue(totalReceive.toDouble())
                     uploadImageToFirebaseStorage()
+                    view?.findNavController()?.navigate(R.id.adminChildList)
+                }
+                else
+                {
+                    Toast.makeText(context, "Data not exists", Toast.LENGTH_SHORT).show()
+
                 }
             }
 
@@ -195,7 +212,7 @@ class AdminViewChildDetails : Fragment() {
 
     private fun uploadImageToFirebaseStorage() {
         if (selectedImageUri == null) {
-            Toast.makeText(requireContext(), "Please Select Image!!!", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(requireContext(), "Please Select Image!!!", Toast.LENGTH_SHORT).show()
             saveChangesToDatabase()
             return
         }
@@ -211,7 +228,7 @@ class AdminViewChildDetails : Fragment() {
                 // If the image upload is successful, get the download URL and save it to the database
                 storageReference.downloadUrl.addOnSuccessListener { uri ->
                     val databaseReference = firebaseDatabase.getReference("child")
-                    val query = databaseReference.orderByChild("childName").equalTo(childName)
+                    val query = databaseReference.orderByChild("childName").equalTo(childchildnamename)
                     query.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
                             if (dataSnapshot.exists()) {

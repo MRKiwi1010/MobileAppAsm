@@ -40,13 +40,7 @@
             android:textSize="14sp"
             android:layout_below="@id/customerNameTextView"/>
 
-        <TextView
-            android:id="@+id/customerPasswordTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:textSize="14sp"
-            android:layout_below="@id/customerEmailTextView"/>
+
 
         <TextView
             android:id="@+id/customerUsernameTextView"
@@ -54,7 +48,7 @@
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
             android:textSize="14sp"
-            android:layout_below="@id/customerPasswordTextView"/>
+            android:layout_below="@id/customerEmailTextView"/>
 
     </RelativeLayout>
 

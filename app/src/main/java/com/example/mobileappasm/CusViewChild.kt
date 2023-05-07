@@ -20,7 +20,6 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 
 class CusViewChild : Fragment() {
-    private lateinit var  childAgeTxt : TextView
     private lateinit var childNameTxt: TextView
     private lateinit var childNationTxt: TextView
     private lateinit var targetTxt: TextView
@@ -34,7 +33,6 @@ class CusViewChild : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.fragment_cus_view_child, container, false)
-        childAgeTxt = view.findViewById(R.id.childAge)
         childNameTxt = view.findViewById(R.id.childName)
         childNationTxt = view.findViewById(R.id.childNation)
         descriptionTxt = view.findViewById(R.id.descriptionTxt)
@@ -63,7 +61,6 @@ class CusViewChild : Fragment() {
                 // Iterate over the child nodes returned by the query
                 for (childSnapshot in dataSnapshot.children) {
                     // Get the child information from the snapshot
-                    val childAge = childSnapshot.child("childAge").value.toString()
                     val childName = childSnapshot.child("childName").value.toString()
                     val childNation = childSnapshot.child("childNation").value.toString()
                     val child_Des = childSnapshot.child("child_Des").value.toString()
@@ -73,7 +70,6 @@ class CusViewChild : Fragment() {
 
 
                     // Set the retrieved information to the respective TextViews
-                    childAgeTxt.text =  childAge + " Years Old"
                     childNameTxt.text = childName
                     childNationTxt.text = childNation
                     descriptionTxt.text = child_Des

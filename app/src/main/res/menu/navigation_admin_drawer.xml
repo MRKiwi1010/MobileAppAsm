@@ -8,7 +8,7 @@
         android:title="Admin List" />
     <item
         android:id="@+id/adminChildList"
-        android:title="Child List" />
+        android:title="Event List" />
     <item
         android:id="@+id/adminCustomerList"
         android:title="Customer List" />

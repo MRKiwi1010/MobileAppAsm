@@ -144,7 +144,7 @@ class AdminChildList : Fragment() {
         recyclerView.adapter = childAdapter
 
         //Rename the fragment
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Child List"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Event List"
 
         val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
         actionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.black)))

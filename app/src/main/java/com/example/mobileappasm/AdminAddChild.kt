@@ -65,7 +65,7 @@ class AdminAddChild : Fragment() {
         setHasOptionsMenu(true)
 
         //Rename the fragment
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Add Child"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Add Event"
 
         val actionBar = (requireActivity() as AppCompatActivity).supportActionBar
         actionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.black)))
@@ -108,12 +108,16 @@ class AdminAddChild : Fragment() {
 
         val btnAddChild = binding.btnAddChild
         btnAddChild.setOnClickListener {
-            database.child("child").orderByKey().limitToFirst(1).addListenerForSingleValueEvent(object : ValueEventListener {
+            database.child("child").orderByKey().limitToLast(1).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     var childCount = 1
                     for (childSnapshot in snapshot.children) {
                         val childId = childSnapshot.key.toString()
-                        childCount = childId.substring(5).toInt() + 1
+                        var currentCount = childId.substring(5).toInt()
+                        if(currentCount >= childCount)
+                        {
+                            childCount = currentCount + 1
+                        }
                     }
                     val childId = "child" + "%03d".format(childCount)
 

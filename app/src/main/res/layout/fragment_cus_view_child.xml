@@ -74,18 +74,7 @@
                     app:layout_constraintStart_toEndOf="@+id/imageView8"
                     app:layout_constraintTop_toTopOf="@+id/imageView8" />
 
-                <TextView
-                    android:id="@+id/childAge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="152dp"
-                    android:text="12 Years Old"
-                    android:textColor="@color/white"
-                    android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/childName"
-                    app:layout_constraintStart_toEndOf="@+id/childNation"
-                    app:layout_constraintTop_toTopOf="@+id/imageView8"
-                    app:layout_constraintVertical_bias="1.0" />
+
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

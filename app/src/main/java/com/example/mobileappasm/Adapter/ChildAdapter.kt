@@ -57,7 +57,7 @@ class ChildAdapter (private val context: Context) : RecyclerView.Adapter<ChildAd
         private val childNameView: TextView = itemView.findViewById(R.id.childNameTextView)
         private val childNationView: TextView = itemView.findViewById(R.id.childNationTextView)
 //        private val childDescView: TextView = itemView.findViewById(R.id.childDescTextView)
-        private val childAgeView: TextView = itemView.findViewById(R.id.childAgeTextView)
+//        private val childAgeView: TextView = itemView.findViewById(R.id.childAgeTextView)
         private val childTargetView: TextView = itemView.findViewById(R.id.childTargetTextView)
         private val totalReceivedView: TextView = itemView.findViewById(R.id.totalReceivedTextView)
 
@@ -73,7 +73,7 @@ class ChildAdapter (private val context: Context) : RecyclerView.Adapter<ChildAd
         fun bind(child: Child) {
             childNameView.text = child.childName
             childNationView.text = "Nation : " +  child.childNation
-            childAgeView.text = "Age : " +  child.childAge.toString()
+//            childAgeView.text = "Age : " +  child.childAge.toString()
             childTargetView.text = "Target Amount (RM) : " + child.target.toString()
             totalReceivedView.text = "Current Amount (RM) : " +  child.totalReceived.toString()
         }
