@@ -53,19 +53,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:src="@drawable/c" />
 
-            <Button
-                android:id="@+id/btnSelectImage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Select Image" />
-
-            <Button
-                android:id="@+id/btnAddAdmin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Add" />
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -143,7 +130,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/signup_username"
+            android:id="@+id/signup_password1"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginStart="32dp"
@@ -170,7 +157,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/signup_password"
+            android:id="@+id/signup_password2"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginStart="32dp"

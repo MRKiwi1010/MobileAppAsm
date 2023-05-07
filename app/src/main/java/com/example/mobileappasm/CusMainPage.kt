@@ -201,7 +201,12 @@ class CusMainPage : Fragment() {
                         val userimg = userSnapshot.child("userimg").value.toString()
                         if (firebaseUsername == username) {
                             textView4.text = firebaseUsername
-                            Glide.with(requireContext()).load(userimg).into(imageView2)
+//                            Glide.with(requireContext()).load(userimg).into(imageView2)
+                            if (userimg.isNotEmpty()) {
+                                Glide.with(requireContext()).load(userimg).into(imageView2)
+                            } else {
+                                imageView2.setImageResource(R.drawable.profile)
+                            }
                         }
                     }
                 }
@@ -225,7 +230,7 @@ class CusMainPage : Fragment() {
 //                    val child_Des = childSnapshot.child("child_Des").getValue(String::class.java)
                     val target = childSnapshot.child("target").getValue(Int::class.java)?.toInt() ?: 0
                     val  childimg= childSnapshot.child("childUrl").getValue(String::class.java)
-                    val totalReceived = childSnapshot.child("totalReceived").getValue(Int::class.java)?.toInt() ?: 0
+                    val totalReceived = childSnapshot.child("totalReceived").getValue(Double::class.java)?.toDouble() ?: 0.0
 
 //                    val item = ItemsDomain(childName!!, childNation!!,"",totalReceived!!,0, childimg!!,0 )
 //                    itemsArraylist.add(item)

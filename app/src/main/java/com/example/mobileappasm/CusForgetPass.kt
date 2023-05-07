@@ -54,7 +54,7 @@ class CusForgetPass : Fragment() {
     private fun validateUseremail(): Boolean {
         val `val` = resetUsername!!.text.toString()
         return if (`val`.isEmpty()) {
-            resetUsername!!.error = "Usernmae cannot be empty"
+            resetUsername!!.error = "Username cannot be empty"
             false
         } else {
             resetUsername!!.error = null
@@ -89,8 +89,14 @@ class CusForgetPass : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     resetUsername!!.error = null
-                    val userNode = snapshot.child(username)
-                    val userPasswordFromDB = userNode.child("password").getValue(String::class.java)
+                    var userNode: DataSnapshot? = null
+                    for (childSnapshot in snapshot.children) {
+                        if (childSnapshot.child("username").getValue(String::class.java) == username) {
+                            userNode = childSnapshot
+                            break
+                        }
+                    }
+                    val userPasswordFromDB = userNode?.child("password")?.getValue(String::class.java)
                     if (userPasswordFromDB == userPassword) {
                         // User entered the same password as in the database, no need to update
                         val toast = Toast.makeText(activity, "Password is same. No changes will be made", Toast.LENGTH_SHORT)
@@ -103,7 +109,7 @@ class CusForgetPass : Fragment() {
                         // Update password
                         val updatedUserData = HashMap<String, Any>()
                         updatedUserData["password"] = userPassword
-                        reference.child(userNode.key!!).updateChildren(updatedUserData)
+                        reference.child(userNode!!.key!!).updateChildren(updatedUserData)
                         val toast = Toast.makeText(activity, "Password changed successfully", Toast.LENGTH_SHORT)
                         toast.show()
                         // Navigate to CusLoginPage fragment using Navigation Component

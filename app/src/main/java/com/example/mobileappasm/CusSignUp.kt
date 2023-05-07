@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.mobileappasm.databinding.FragmentCusSignUpBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -35,7 +36,7 @@ class CusSignUp : Fragment() {
     private lateinit var signupUsername: EditText
     private lateinit var signupEmail: EditText
     private lateinit var signupPassword: EditText
-    private lateinit var loginRedirectText: TextView
+
     private lateinit var signupButton: Button
     private lateinit var checkBox: CheckBox
     private lateinit var database: DatabaseReference
@@ -71,9 +72,9 @@ class CusSignUp : Fragment() {
 //        signupEmail = view.findViewById(R.id.signup_email)
 //        signupUsername = view.findViewById(R.id.signup_username)
 //        signupPassword = view.findViewById(R.id.signup_password)
-//        loginRedirectText = view.findViewById(R.id.loginRedirectText)
+
 //        signupButton = view.findViewById(R.id.signup_button)
-//        checkBox = view.findViewById(R.id.checkBox)
+
 //
 //
 //        signupButton.setOnClickListener {
@@ -109,6 +110,9 @@ class CusSignUp : Fragment() {
         database = FirebaseDatabase.getInstance().reference
         val btnSelectImage = view.findViewById<Button>(R.id.btnSelectImage)
         val imageView = view.findViewById<ImageView>(R.id.adminImageView)
+        val checkBox = view.findViewById<CheckBox>(R.id.checkBox)
+        val loginRedirectText = view.findViewById<TextView>(R.id.loginRedirectText)
+        loginRedirectText.setOnClickListener { view.findNavController().navigate(R.id.cusLoginPage) }
 
         // Check if the CAMERA permission has been granted
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
@@ -149,108 +153,154 @@ class CusSignUp : Fragment() {
         val signup_button = view.findViewById<Button>(R.id.signup_button)
         var userid = ""
         signup_button.setOnClickListener {
-            database.child("users").orderByKey().limitToLast(1).addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    var usersCount = 1
-                    for (cusSnapshot in snapshot.children) {
-                        userid = cusSnapshot.key.toString()
-                        val currentCount = userid.substring(5).toInt()
-                        if (currentCount >= usersCount) {
-                            usersCount = currentCount + 1
-                        }}
-                    userid = "users" + "%03d".format(usersCount)
+            if (checkBox.isChecked) {
 
-                    val name = view.findViewById<EditText>(R.id.signup_name).text.toString()
-                    val email = view.findViewById<EditText>(R.id.signup_email).text.toString()
-                    val username = view.findViewById<EditText>(R.id.signup_username).text.toString()
-                    val password = view.findViewById<EditText>(R.id.signup_password).text.toString()
-                    // Check if all fields are filled
-                    if (name.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty() ) {
-                        Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
-                        return
-                    }
-
-                    // Check if password is at least 8 characters
-                    if (password.length < 8) {
-                        Toast.makeText(requireContext(), "Password must be at least 8 characters", Toast.LENGTH_SHORT).show()
-                        return
-                    }
-
-                    // Check if email is in correct format
-                    val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
-                    if (!email.matches(emailRegex.toRegex())) {
-                        Toast.makeText(requireContext(), "Invalid email format", Toast.LENGTH_SHORT).show()
-                        return
-                    }
-
-                    // Check if email or username already exists
-                    var isEmailUsed = false
-                    var isUsernameUsed = false
-                    for (adminSnapshot in snapshot.children) {
-                        val admin = adminSnapshot.getValue(Customer::class.java)
-                        if (admin?.email == email) {
-                            isEmailUsed = true
-                        }
-                        if (admin?.username == username) {
-                            isUsernameUsed = true
-                        }
-                    }
-
-                    if (isEmailUsed) {
-                        Toast.makeText(requireContext(), "Email already in use", Toast.LENGTH_SHORT).show()
-                        return
-                    }
-                    if (isUsernameUsed) {
-                        Toast.makeText(requireContext(), "Username already in use", Toast.LENGTH_SHORT).show()
-                        return
-                    }
-
-                    val customer = Customer(email,name,password,username,selectedImageUri.toString())
-
-                    //upload image
-                    if (selectedImageUri != null) {
-                        val storageRef = FirebaseStorage.getInstance().reference
-                        val imageRef = storageRef.child("user_img/$userid.jpg")
-
-                        val uploadTask = imageRef.putFile(selectedImageUri!!)
-                        uploadTask.continueWithTask { task ->
-                            if (!task.isSuccessful) {
-                                task.exception?.let { throw it }
+                database.child("users").orderByKey().limitToLast(1)
+                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            var usersCount = 1
+                            for (cusSnapshot in snapshot.children) {
+                                userid = cusSnapshot.key.toString()
+                                val currentCount = userid.substring(5).toInt()
+                                if (currentCount >= usersCount) {
+                                    usersCount = currentCount + 1
+                                }
                             }
-                            imageRef.downloadUrl
-                        }.addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                val downloadUri = task.result.toString()
+                            userid = "users" + "%03d".format(usersCount)
 
-                                customer.userimg = downloadUri // Save the download URL with the admin data
-                                saveAdminData(customer, userid)
+                            val name = view.findViewById<EditText>(R.id.signup_name).text.toString()
+                            val email = view.findViewById<EditText>(R.id.signup_email).text.toString()
+                            val username = view.findViewById<EditText>(R.id.signup_password1).text.toString()
+                            val password = view.findViewById<EditText>(R.id.signup_password2).text.toString()
+                            // Check if all fields are filled
+                            if (name.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty()) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Please fill in all fields",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                return
+                            }
 
-                                val childUpdates = HashMap<String, Any>()
-                                childUpdates[userid] = customer
+                            // Check if password is at least 8 characters
+                            if (password.length < 8) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Password must be at least 8 characters",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                return
+                            }
 
-                                database.child("users").updateChildren(childUpdates)
-                                    .addOnSuccessListener {
-                                        Toast.makeText(requireContext(), "Added Successfully!", Toast.LENGTH_SHORT).show()
-                                        findNavController().navigate(R.id.cusLoginPage)
+                            // Check if email is in correct format
+                            val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
+                            if (!email.matches(emailRegex.toRegex())) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Invalid email format",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                return
+                            }
+
+                            // Check if email or username already exists
+                            var isEmailUsed = false
+                            var isUsernameUsed = false
+                            for (adminSnapshot in snapshot.children) {
+                                val admin = adminSnapshot.getValue(Customer::class.java)
+                                if (admin?.email == email) {
+                                    isEmailUsed = true
+                                }
+                                if (admin?.username == username) {
+                                    isUsernameUsed = true
+                                }
+                            }
+
+                            if (isEmailUsed) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Email already in use",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                return
+                            }
+                            if (isUsernameUsed) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Username already in use",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                return
+                            }
+
+                            val customer = Customer(
+                                email,
+                                name,
+                                password,
+                                username,
+                                selectedImageUri.toString()
+                            )
+
+                            //upload image
+                            if (selectedImageUri != null) {
+                                val storageRef = FirebaseStorage.getInstance().reference
+                                val imageRef = storageRef.child("user_img/$userid.jpg")
+
+                                val uploadTask = imageRef.putFile(selectedImageUri!!)
+                                uploadTask.continueWithTask { task ->
+                                    if (!task.isSuccessful) {
+                                        task.exception?.let { throw it }
                                     }
-                                    .addOnFailureListener{
-                                        Toast.makeText(requireContext(),"Failed", Toast.LENGTH_SHORT).show()
-                                        Log.e(TAG, "Failed", it)
+                                    imageRef.downloadUrl
+                                }.addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        val downloadUri = task.result.toString()
+
+                                        customer.userimg =
+                                            downloadUri // Save the download URL with the admin data
+                                        saveAdminData(customer, userid)
+
+                                        val childUpdates = HashMap<String, Any>()
+                                        childUpdates[userid] = customer
+
+                                        database.child("users").updateChildren(childUpdates)
+                                            .addOnSuccessListener {
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    "Added Successfully!",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                findNavController().navigate(R.id.cusLoginPage)
+                                            }
+                                            .addOnFailureListener {
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    "Failed",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                Log.e(TAG, "Failed", it)
+                                            }
                                     }
+                                }
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Please Select Image!!!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                return
                             }
                         }
-                    }
-                    else
-                    {
-                        Toast.makeText(requireContext(), "Please Select Image!!!", Toast.LENGTH_SHORT).show()
-                        return
-                    }
-                }
-                override fun onCancelled(databaseError: DatabaseError) {
-                    Toast.makeText(requireContext(),"Failed", Toast.LENGTH_SHORT).show()
-                }
-            })
+
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            Toast.makeText(requireContext(), "Failed", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+            }else{
+                Toast.makeText(requireContext(), "Please agree to the terms and conditions", Toast.LENGTH_SHORT).show()
+            }
         }
+
     }
 
 //    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -412,32 +462,6 @@ class CusSignUp : Fragment() {
 
 
 
-//    private fun addUser() {
-//        if (checkBox.isChecked) {
-//            database = FirebaseDatabase.getInstance()
-//            reference = database!!.getReference("users")
-//            val userfullname = signupName.text.toString()
-//            val useremail = signupEmail.text.toString()
-//            val username = signupUsername.text.toString()
-//            val userpassword = signupPassword.text.toString()
-//            val helperClass = HelperClass(userfullname, useremail, username, userpassword)
-//            reference!!.child(username).setValue(helperClass)
-//            Toast.makeText(
-//                requireContext(),
-//                "You have registered successfully!",
-//                Toast.LENGTH_SHORT
-//            ).show()
-//            Handler(Looper.getMainLooper()).postDelayed({
-//                findNavController().navigate(R.id.cusLoginPage)
-//            }, 1000)
-//        }else
-//            Toast.makeText(
-//                requireContext(),
-//                "Please agree the terms and conditions",
-//                Toast.LENGTH_SHORT
-//            ).show()
-//
-//    }
     companion object {
         private const val TAG = "CusSignUp"
         @JvmStatic

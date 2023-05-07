@@ -127,16 +127,16 @@ class CusTotalDonation : Fragment() {
         btnPayment = rootView.findViewById(R.id.btnPayment)
 
         val database = FirebaseDatabase.getInstance().reference
-        var totalAmountRaised = 0
+        var totalAmountRaised = 0.0
         database.child("child").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (childSnapshot in snapshot.children) {
-                    val totalReceived = childSnapshot.child("totalReceived").getValue(Int::class.java) ?: 0
+                    val totalReceived = childSnapshot.child("totalReceived").getValue(Double::class.java) ?: 0.0
                     totalAmountRaised += totalReceived
                 }
 
                 // Update the UI with the total amount raised
-                amountRaised.text = "RM " + totalAmountRaised.toString()+".00"
+                amountRaised.text = "RM " + totalAmountRaised.toDouble()
             }
             override fun onCancelled(error: DatabaseError) {
             }

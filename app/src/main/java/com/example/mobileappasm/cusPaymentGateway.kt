@@ -100,9 +100,6 @@ class cusPaymentGateway : Fragment() {
             val paymentRef = FirebaseDatabase.getInstance().getReference("payment")
             paymentRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-//                    val paymentCount = snapshot.childrenCount + 1
-//                    val paymentId = "payment001"
-//                    val paymentKey = "p$paymentCount"
                     val newPaymentRef = paymentRef.child(paymentId)
                     val bankType = spinnerBank.selectedItem.toString()
                     val amount = amount123?.toDouble() ?: 0.0
@@ -126,26 +123,37 @@ class cusPaymentGateway : Fragment() {
                         return
                     }
                     if (!isValidCVV(cardCVV)) {
-                        cvv.error = "Invalid CVV (3 or 4 digits)"
+                        cvv.error = "Invalid CVV (3 digits)"
                         return
                     }
 
                     if(isValidCardNumber(cardNo)&&isValidExpiryDate(cardExp)&&isValidCVV(cardCVV)){
                         val payment = Payment(bankType, amount, cardCVV, cardExp, cardNo, childName, formattedDate,formattedTime, username)
                         newPaymentRef.setValue(payment)
-                        val childRef = FirebaseDatabase.getInstance().getReference("child").orderByChild("childName").equalTo(childName)
-                        childRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                val childSnapshot = dataSnapshot.children.firstOrNull()
-                                childSnapshot?.let {
-                                    val childKey = it.key
-                                    val child = it.getValue(Child::class.java)
-                                    val totalReceived = child?.totalReceived ?: 0.0
-                                    val amountinput = arguments?.getString("paymentAmount")
-                                    val newTotalReceived = totalReceived + (amountinput?.toIntOrNull() ?: 0.0).toDouble()
-                                    FirebaseDatabase.getInstance().getReference("child").child(childKey ?: "").child("totalReceived").setValue(newTotalReceived)
+
+
+                            val childRef = FirebaseDatabase.getInstance().getReference("child").orderByChild("childName").equalTo(childName)
+                            childRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    if (snapshot.exists()) {
+                                        val childSnapshot = snapshot.children.firstOrNull()
+                                        childSnapshot?.let {
+                                            val childKey = it.key
+                                            val child = it.getValue(Child::class.java)
+                                            val totalReceived = child?.totalReceived ?: 0.0
+                                            val amountinput = arguments?.getString("paymentAmount")
+                                            val newTotalReceived = totalReceived + (amountinput?.toDoubleOrNull() ?: 0.0)
+                                            FirebaseDatabase.getInstance().getReference("child").child(childKey ?: "").child("totalReceived").setValue(newTotalReceived)
+
+//                                            val newTotalReceived =
+//                                                totalReceived + (amountinput?.toIntOrNull()
+//                                                    ?: 0.0).toDouble()
+//                                            FirebaseDatabase.getInstance().getReference("child")
+//                                                .child(childKey ?: "").child("totalReceived")
+//                                                .setValue(newTotalReceived)
+                                        }
+                                    }
                                 }
-                            }
                             override fun onCancelled(error: DatabaseError) {
                             }
                         })
@@ -168,7 +176,7 @@ class cusPaymentGateway : Fragment() {
         return expiryDate.trim().matches("^(0[1-9]|1[0-2])/(\\d{2})$".toRegex())
     }
     fun isValidCVV(cvv: String): Boolean {
-        return cvv.trim().matches("^\\d{3,4}$".toRegex())
+        return cvv.trim().matches("^\\d{3}$".toRegex())
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

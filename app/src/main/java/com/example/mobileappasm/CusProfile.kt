@@ -173,8 +173,13 @@ class CusProfile : Fragment() {
                     textView54.text = email
                     textView56.text = name
                     textView58.text = username
-
-                    Glide.with(requireContext()).load(userimg).into(imageView)
+//
+//                    Glide.with(requireContext()).load(userimg).into(imageView)
+                    if (userimg.isNotEmpty()) {
+                        Glide.with(requireContext()).load(userimg).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.profile)
+                    }
                 }
             }
 
