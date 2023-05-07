@@ -66,7 +66,7 @@ class CusTotalDonation : Fragment() {
         )
         NavigationUI.setupWithNavController(navView2, navController)
 
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Main Page"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Total Donation"
 
         // handle navigation item clicks
         navView2.setNavigationItemSelectedListener { menuItem ->
