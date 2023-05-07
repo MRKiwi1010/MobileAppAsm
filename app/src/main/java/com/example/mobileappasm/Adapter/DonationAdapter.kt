@@ -16,7 +16,7 @@ class DonationAdapter(private val context: Context) :RecyclerView.Adapter<Donati
     private var listener: DonationAdapter.OnItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DonationViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_donation2, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_donation, parent, false)
         return DonationViewHolder(view)
     }
 
