@@ -13,12 +13,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.mobileappasm.databinding.FragmentAdminEditAdminBinding
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -30,6 +32,7 @@ class AdminEditAdmin : Fragment() {
     private lateinit var firebaseDatabase: FirebaseDatabase
     private lateinit var adminUsername: String
     private var selectedImageUri: Uri? = null
+    private lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +70,7 @@ class AdminEditAdmin : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         firebaseDatabase = FirebaseDatabase.getInstance()
         adminUsername = arguments?.getString("username") ?: ""
+        database = FirebaseDatabase.getInstance().reference
         fetchAdminData()
         binding.btnSelectImage.setOnClickListener {
             selectImage()
@@ -105,7 +109,7 @@ class AdminEditAdmin : Fragment() {
                             }
                         }
                     }
-
+                    selectedImageUri = admin?.imageUri?.toUri()
                 }
             }
 
@@ -121,120 +125,209 @@ class AdminEditAdmin : Fragment() {
         // Get the current admin's username and email
         val currentUsername = binding.adminUsername.text.toString().trim()
         val currentEmail = binding.adminEmail.text.toString().trim()
+        var adminId = ""
+        database.child("admin").orderByKey().limitToLast(1)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (adminSnapshot in snapshot.children) {
+                        adminId = adminSnapshot.key.toString()
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Toast.makeText(requireContext(), "Failed", Toast.LENGTH_SHORT).show()
+                }
+            })
 
         // Check if the new email already exists in the database
-        adminRef.orderByChild("email").equalTo(currentEmail).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // Email already exists in the database, show error message
-                    Toast.makeText(requireContext(), "Email already exists", Toast.LENGTH_SHORT).show()
-                } else {
-                    // Check if the new username already exists in the database
-                    adminRef.orderByChild("username").equalTo(currentUsername).addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                // Username already exists in the database, show error message
-                                Toast.makeText(requireContext(), "Username already exists", Toast.LENGTH_SHORT).show()
-                            } else {
-                                val name = binding.adminName.text.toString()
-                                val email = binding.adminEmail.text.toString()
-                                val username = binding.adminUsername.text.toString()
-                                val password = binding.adminPassword.text.toString()
-                                val contact = binding.adminContact.text.toString()
-                                val gender = when(binding.adminGender.checkedRadioButtonId) {
-                                    R.id.maleBtn -> "Male"
-                                    R.id.femaleBtn -> "Female"
-                                    else -> ""
-                                }
-                                val age = binding.adminAge.text.toString()
-
-                                // Check if all fields are filled
-                                if (name.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty() || contact.isEmpty() || gender.isEmpty() || age.isEmpty()) {
-                                    Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
-                                    return
-                                }
-
-                                // Check if password is at least 8 characters
-                                if (password.length < 8) {
-                                    Toast.makeText(requireContext(), "Password must be at least 8 characters", Toast.LENGTH_SHORT).show()
-                                    return
-                                }
-
-                                // Check if contact is in Malaysia contact format
-                                val contactRegex = "^(01)[0-46-9]-*[0-9]{7,8}\$"
-                                if (!contact.matches(contactRegex.toRegex())) {
-                                    Toast.makeText(requireContext(), "Contact number must be in Malaysia contact format", Toast.LENGTH_SHORT).show()
-                                    return
-                                }
-
-                                // Check if age is numeric
-                                if (!age.matches("[0-9]+".toRegex())) {
-                                    Toast.makeText(requireContext(), "Age must be a number", Toast.LENGTH_SHORT).show()
-                                    return
-                                }
-
-                                // Check if email is in correct format
-                                val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
-                                if (!email.matches(emailRegex.toRegex())) {
-                                    Toast.makeText(requireContext(), "Invalid email format", Toast.LENGTH_SHORT).show()
-                                    return
-                                }
-
-                                // Update the admin's information in the database
-                                adminRef.orderByChild("username").equalTo(adminUsername).addListenerForSingleValueEvent(object : ValueEventListener {
-                                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                        if (dataSnapshot.exists()) {
-                                            val admin = dataSnapshot.children.first().getValue(Admin::class.java)
-                                            admin?.name = binding.adminName.text.toString()
-                                            admin?.email = currentEmail
-                                            admin?.username = currentUsername
-                                            admin?.age = binding.adminAge.text.toString()
-                                            admin?.password = binding.adminPassword.text.toString()
-                                            admin?.contact = binding.adminContact.text.toString()
-                                            admin?.gender = if (binding.maleBtn.isChecked) "Male" else "Female"
-                                            if (selectedImageUri != null) {
-                                                admin?.imageUri = selectedImageUri.toString()
+        adminRef.orderByChild("email").equalTo(currentEmail)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        // Email already exists in the database, show error message
+                        Toast.makeText(requireContext(), "Email already exists", Toast.LENGTH_SHORT)
+                            .show()
+                    } else {
+                        // Check if the new username already exists in the database
+                        adminRef.orderByChild("username").equalTo(currentUsername)
+                            .addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        // Username already exists in the database, show error message
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Username already exists",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else {
+                                        val name = binding.adminName.text.toString()
+                                        val email = binding.adminEmail.text.toString()
+                                        val username = binding.adminUsername.text.toString()
+                                        val password = binding.adminPassword.text.toString()
+                                        val contact = binding.adminContact.text.toString()
+                                        val gender =
+                                            when (binding.adminGender.checkedRadioButtonId) {
+                                                R.id.maleBtn -> "Male"
+                                                R.id.femaleBtn -> "Female"
+                                                else -> ""
                                             }
-                                            else
-                                            {
-                                                Toast.makeText(requireContext(), "Please Select Image!!!", Toast.LENGTH_SHORT).show()
-                                                return
-                                            }
+                                        val age = binding.adminAge.text.toString()
 
+                                        // Check if all fields are filled
+                                        if (name.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty() || contact.isEmpty() || gender.isEmpty() || age.isEmpty()) {
+                                            Toast.makeText(
+                                                requireContext(),
+                                                "Please fill in all fields",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            return
+                                        }
 
+                                        // Check if password is at least 8 characters
+                                        if (password.length < 8) {
+                                            Toast.makeText(
+                                                requireContext(),
+                                                "Password must be at least 8 characters",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            return
+                                        }
 
-                                            adminRef.child(dataSnapshot.children.first().key.toString()).setValue(admin)
-                                                .addOnSuccessListener {
-                                                    Toast.makeText(requireContext(), "Admin updated successfully", Toast.LENGTH_SHORT).show()
-                                                    view?.findNavController()?.navigate(R.id.adminViewAdminList)
+                                        // Check if contact is in Malaysia contact format
+                                        val contactRegex = "^(01)[0-46-9]-*[0-9]{7,8}\$"
+                                        if (!contact.matches(contactRegex.toRegex())) {
+                                            Toast.makeText(
+                                                requireContext(),
+                                                "Contact number must be in Malaysia contact format",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            return
+                                        }
+
+                                        // Check if age is numeric
+                                        if (!age.matches("[0-9]+".toRegex())) {
+                                            Toast.makeText(
+                                                requireContext(),
+                                                "Age must be a number",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            return
+                                        }
+
+                                        // Check if email is in correct format
+                                        val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
+                                        if (!email.matches(emailRegex.toRegex())) {
+                                            Toast.makeText(
+                                                requireContext(),
+                                                "Invalid email format",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            return
+                                        }
+
+                                        // Create a new admin object
+                                        val admin = Admin(
+                                            selectedImageUri.toString(),
+                                            name,
+                                            email,
+                                            username,
+                                            password,
+                                            contact,
+                                            gender,
+                                            age,
+                                            position = "Staff"
+                                        )
+
+                                        if (selectedImageUri != null) {
+                                            val storageReference =
+                                                FirebaseStorage.getInstance().reference
+                                            val imageRef =
+                                                storageReference.child("admin_img/$adminId.jpg")
+
+                                            val uploadTask = imageRef.putFile(selectedImageUri!!)
+                                            uploadTask.continueWithTask { task ->
+                                                if (!task.isSuccessful) {
+                                                    task.exception?.let { throw it }
                                                 }
-                                                .addOnFailureListener {
-                                                    Toast.makeText(requireContext(), "Failed to update admin", Toast.LENGTH_SHORT).show()
+                                                imageRef.downloadUrl
+                                            }.addOnCompleteListener { task ->
+                                                if (task.isSuccessful) {
+                                                    val downloadUri = task.result.toString()
+
+                                                    admin.imageUri = downloadUri
+                                                    saveAdminData(admin, adminId)
+
+                                                }
+                                            }
+                                        }
+                                        // If the adminId is not empty, update the existing admin with the new admin object
+                                        if (adminId.isNotEmpty()) {
+                                            adminRef.child(adminId).setValue(admin)
+                                                .addOnCompleteListener { task ->
+                                                    if (task.isSuccessful) {
+                                                        Toast.makeText(
+                                                            requireContext(),
+                                                            "Admin updated successfully",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                        findNavController().navigate(R.id.adminViewAdminList)
+                                                    } else {
+                                                        Toast.makeText(
+                                                            requireContext(),
+                                                            "Failed to update admin",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    }
+                                                }
+                                        } else {
+                                            // If the adminId is empty, create a new admin with the new admin object
+                                            val newAdminRef = adminRef.push()
+                                            newAdminRef.setValue(admin)
+                                                .addOnCompleteListener { task ->
+                                                    if (task.isSuccessful) {
+                                                        Toast.makeText(
+                                                            requireContext(),
+                                                            "Admin added successfully",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    } else {
+                                                        Toast.makeText(
+                                                            requireContext(),
+                                                            "Failed to add admin",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    }
                                                 }
                                         }
                                     }
+                                }
 
-                                    override fun onCancelled(databaseError: DatabaseError) {
-                                        // Handle database error if needed
-                                    }
-                                })
-                            }
-                        }
-
-                        override fun onCancelled(databaseError: DatabaseError) {
-                            // Handle database error if needed
-                        }
-                    })
+                                override fun onCancelled(databaseError: DatabaseError) {
+                                    Toast.makeText(requireContext(), "Failed", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            })
+                    }
                 }
-            }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Handle database error if needed
-            }
-        })
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Toast.makeText(requireContext(), "Failed", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 
-    private fun deleteAdmin() {
+
+
+
+
+
+
+
+
+
+
+
+        private fun deleteAdmin() {
         val adminRef = firebaseDatabase.getReference("admin")
         val query = adminRef.orderByChild("username").equalTo(adminUsername)
         query.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -266,6 +359,11 @@ class AdminEditAdmin : Fragment() {
                 // Handle database error if needed
             }
         })
+    }
+
+
+    fun saveAdminData(admin: Admin, adminId: String) {
+        // Your code to save the admin data
     }
 
 

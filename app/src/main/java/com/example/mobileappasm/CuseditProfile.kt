@@ -55,7 +55,7 @@ class CuseditProfile : Fragment() {
     private var selectedImageUri: Uri? = null
 
 
-    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    private var pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             selectedImageUri = result.data?.data
             binding.adminImageView.setImageURI(selectedImageUri)
@@ -158,11 +158,11 @@ class CuseditProfile : Fragment() {
 
                      selectedImageUri = userimg?.toUri()
 
-//                    if (userimg.isNotEmpty()) {
+                    if (userimg.isNotEmpty()) {
                         Glide.with(requireContext()).load(userimg).into(adminImageView)
-//                    } else {
-//                        adminImageView.setImageResource(R.drawable.profile)
-//                    }
+                    } else {
+                        adminImageView.setImageResource(R.drawable.profile)
+                    }
 
                 }
             }
@@ -189,8 +189,6 @@ class CuseditProfile : Fragment() {
                                 val newEmail = signup_email.text.toString()
                                 val newPassword = signup_password1.text.toString()
                                 val newPassword2 = signup_password2.text.toString()
-//                                 selectedImageUri = selectedImageUri
-
                                 val username = dataSnapshot.child("username").value.toString()
                                 if (newName == username && newEmail == dataSnapshot.child("email").value.toString() &&
                                     newPassword == "" && selectedImageUri == null
@@ -204,10 +202,8 @@ class CuseditProfile : Fragment() {
 
                                 val customer = Customer(newEmail, newName, newPassword, username, selectedImageUri.toString())
 
-
-
-
                                 if (selectedImageUri != null) {
+
                                     val storageRef = FirebaseStorage.getInstance().reference
                                     val imageRef = storageRef.child("user_img/$username.jpg")
 
@@ -221,6 +217,9 @@ class CuseditProfile : Fragment() {
                                         if (task.isSuccessful) {
                                             val downloadUri = task.result.toString()
 
+                                            customer.userimg = downloadUri
+                                            saveAdminData(customer, username)
+
                                             // Update the user's information in the database
                                             val updateMap = hashMapOf<String, Any>(
                                                 "email" to newEmail,
@@ -229,6 +228,7 @@ class CuseditProfile : Fragment() {
                                                 "userimg" to customer.userimg,
                                                 "username" to customerUsername
                                             )
+
                                             val userRef = databaseReference.child(userSnapshot.key!!)
                                             userRef.setValue(updateMap).addOnSuccessListener {
                                                 Toast.makeText(
@@ -324,7 +324,7 @@ class CuseditProfile : Fragment() {
         return Uri.parse(path)
     }
 
-    fun saveAdminData(customer: Customer, customerid: String) {
+    fun saveAdminData(customer: Customer, username: String) {
         // Your code to save the admin data
     }
     companion object {
