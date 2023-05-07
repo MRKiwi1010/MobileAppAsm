@@ -192,15 +192,44 @@ class CuseditProfile : Fragment() {
                                 val username = dataSnapshot.child("username").value.toString()
                                 if (newName == username && newEmail == dataSnapshot.child("email").value.toString() &&
                                     newPassword == "" && selectedImageUri == null
-                                )
-
-
-                                {
+                                ) {
                                     Toast.makeText(requireContext(), "No changes to update", Toast.LENGTH_SHORT).show()
                                     return
                                 }
 
                                 val customer = Customer(newEmail, newName, newPassword, username, selectedImageUri.toString())
+
+                                if (username.isEmpty() || newEmail.isEmpty() || newPassword.isEmpty() || newPassword2.isEmpty()) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Please fill in all fields",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    return
+                                }
+                                if (newPassword != newPassword2) {
+                                    Toast.makeText(requireContext(), "Passwords do not match", Toast.LENGTH_SHORT).show()
+                                    return
+                                }
+                                if (newPassword.length < 8) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Password must be at least 8 characters",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    return
+                                }
+                                // Check if email is in correct format
+                                val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
+                                if (!newPassword.matches(emailRegex.toRegex())) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Invalid email format",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    return
+                                }
+
 
                                 if (selectedImageUri != null) {
 
@@ -283,12 +312,6 @@ class CuseditProfile : Fragment() {
                     }
                 })
             }
-
-
-
-
-
-
         }
 
 
