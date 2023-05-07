@@ -70,11 +70,11 @@ class cusDonationAdapter(private val context: Context) : RecyclerView.Adapter<cu
             }
 
             fun bind(donation: Donation) {
-                donationChildNameView.text = donation.childName
-                donationAmountView.text = donation.amount.toString()
-                donationDateView.text = donation.date
-                donationTimeView.text = donation.time
-                donationBankTypeView.text = donation.bankType
+                donationChildNameView.text = "Event: " + donation.childName
+                donationAmountView.text = "RM: " +donation.amount.toString()
+                donationDateView.text = "Date: "+donation.date
+                donationTimeView.text = "Time: "+donation.time
+                donationBankTypeView.text = "BankType "+donation.bankType
             }
         }
 }

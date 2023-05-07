@@ -42,7 +42,7 @@ class ItemsAdapter(private val itemsList: List<ItemsDomain>) :
         Glide.with(context).load(currentItem.child_pic).apply(RequestOptions().centerCrop()).into(holder.itemImage)
         holder.itemName.text = currentItem.child_name
         holder.itemNation.text = currentItem.childNation
-        holder.itemReceived.text = currentItem.totalReceive.toString()
+        holder.itemReceived.text = "RM "+currentItem.totalReceive.toString()
         holder.button3.setOnClickListener {
             val childname = currentItem.child_name
             val viewModel = ViewModelProvider(context as FragmentActivity).get(cusViewModel::class.java)

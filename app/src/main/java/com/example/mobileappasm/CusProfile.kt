@@ -148,7 +148,7 @@ class CusProfile : Fragment() {
         val historyNavi = rootView.findViewById<LinearLayout>(R.id.historyNavi)
         textView52.setOnClickListener{ rootView.findNavController().navigate(R.id.cuseditProfile) }
         button.setOnClickListener { rootView.findNavController().navigate(R.id.cuseditProfile) }
-        paymentNavi.setOnClickListener { rootView.findNavController().navigate(R.id.cusDonateNow) }
+        paymentNavi.setOnClickListener { rootView.findNavController().navigate(R.id.cusDonatePersonalDetails) }
         locationNavi.setOnClickListener { rootView.findNavController().navigate(R.id.cusAboutUs) }
         historyNavi.setOnClickListener { rootView.findNavController().navigate(R.id.cusDonationHistory) }
 
